@@ -1,0 +1,17 @@
+.footer_sec{
+    background-color: #1D293A;
+    color: #fff;
+}
+
+ul li {
+    list-style: none;
+    color: black;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    color: #fff;
+}
+.copyright_sec{
+  background: #222429;
+  color: #39BB46;
+}

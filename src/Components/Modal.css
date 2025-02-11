@@ -1,0 +1,23 @@
+.modal_wrapper{
+    width: 100%;
+    height: 100%;
+    background-color: #00000014;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+   
+
+}
+.modal_wrapper .modal_area{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%,-30%);
+   
+}
+.modal_area img{
+    width: 50px;
+}

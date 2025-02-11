@@ -1,0 +1,25 @@
+.orange_bg_pt{
+    background: #56AB2F;
+}
+.orange_bg img{
+    width: 500px;
+}
+.game_workspace img{
+    width: 150px;
+   
+}
+.button_sec_workspace button{
+    background-color: #4CBB16;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+}
+.sky_bg{
+    background: #47AEF0;
+    border-radius: 10px;
+}
+.goto_workspace_btn{
+    border-radius: 8px;
+    border: none;
+    
+}

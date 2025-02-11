@@ -1,0 +1,223 @@
+.hero_btn_sec {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+
+.hero_section {
+  width: 100%;
+  background-image: url(../assets/hero_bg.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.regular_update_sec .container {
+  background-color: #e4e4e4;
+  border-radius: 20px;
+}
+.regular_update_sec img {
+  width: 12rem;
+}
+.regular_update_sec p {
+  margin-top: -2rem;
+  font-weight: bolder;
+}
+.orange_card {
+  background: #fa7d26;
+  border-radius: 10px;
+}
+.orange_card2 {
+  background: #009aff;
+  border-radius: 10px;
+}
+.orange_card3 {
+  background: #4ac74f;
+  border-radius: 10px;
+}
+.orange_card4 {
+  background: #676ddc;
+  border-radius: 10px;
+}
+.sky_btn{
+  background-color: #80ccff;
+}
+.green_btn{
+  background-color: #9ee1a0;
+}
+.violet_btn{
+  background-color: #979be7;
+}
+.orange_btn{
+  background-color: #fcb482;
+  
+}
+.orange_btn:hover{
+  background-color: #FA7D26;
+}
+.sky_btn:hover{
+  background-color: #009AFF;
+}
+.green_btn:hover{
+  background-color: #4AC74F;
+}
+.violet_btn:hover{
+  background-color: #676DDC;
+}
+
+.card-body img {
+  width: 12rem;
+}
+.arrows {
+  display: flex;
+  gap: 1rem;
+}
+.arrows img {
+  width: 2rem;
+}
+.arrows .left_arrow {
+  border: 1px solid black;
+  background-color: #e2dddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+}
+.arrows .right_arrow {
+  border: 1px solid black;
+  background-color: #e2dddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+}
+
+.arrows .left_arrow :hover {
+  background: #4cbb16;
+  border-radius: 50px;
+}
+.react-multiple-carousel__arrow--right:hover{
+  background: #fff;
+  
+}
+.react-multiple-carousel__arrow--left:hover{
+  background: #fff;
+  
+}
+
+.arrows .right_arrow :hover {
+  background: #4cbb16;
+  border-radius: 50px;
+}
+.slider img {
+  width: 20rem;
+}
+.card_text {
+  font-weight: bolder;
+  background-color: #55BA5C;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.img_wrapper {
+  background-color: #e3e3e3;
+  border-radius: 10px;
+  color: #000;
+  transition: 0.5s;
+  cursor: pointer;
+}
+.img_wrapper img {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.img_wrapper:hover {
+  color: #fff;
+  
+  border-radius: 10px;
+}
+.react-multi-carousel-list {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 0rem;
+  position: relative;
+}
+.react-multiple-carousel__arrow {
+  position: absolute;
+  outline: 0;
+  transition: all 0.5s;
+  border-radius: 35px;
+  z-index: 1000;
+  border: 0;
+  background-color: #fff;
+  min-width: 62px;
+  min-height: 62px;
+  opacity: 1;
+  cursor: pointer;
+}
+.react-multiple-carousel__arrow::before {
+   font-size: 30px;
+   color: #4CBB16;
+   display: block;
+   font-family: revicons;
+   text-align: center;
+   z-index: 2;
+   position: relative;
+}
+.react-multiple-carousel__arrow--right {
+   right: calc(4% + 1px);
+   top: calc(26% + 1px);
+}
+.react-multiple-carousel__arrow--left {
+   left: calc(4% + 1px);
+   top: calc(26% + 1px);
+}
+
+.aboutus {
+  background-color: #55ba5c;
+  border-radius: 10px;
+}
+
+.banner_vtx {
+  /* background-image: url(../assets/vtx_banner_gamesite.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; */
+  background-image: linear-gradient(-90deg, #F7B733, #5ea92fc4 );
+  border-radius: 10px;
+  height: auto;
+}
+
+.share_thought {
+  background: #f6f6f6;
+  border-radius: 10px;
+  border: 2px solid #d3d3d3;
+}
+
+.send_btn_home {
+  background-color: #fec847;
+}
+.share_thought input {
+  width: 70%;
+}
+.share_thought textarea {
+  width: 95%;
+}
+
+.react-multi-carousel-dot-list {
+  position: absolute;
+  bottom: 0;
+  display: none;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  margin: auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}
+
+@media screen and (max-width: 1356px) {
+  /* .share_thought input{
+      width: 60%;
+   } */
+}

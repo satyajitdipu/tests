@@ -1,0 +1,47 @@
+.profile_pic img{
+    width: 150px;
+    border-radius: 50%;
+}
+.myprofile_text_green {
+    color: #4CBB16;
+    cursor: pointer;
+    
+}
+.profile_bg_blue{
+    background: #0097C2;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.profile_bg_grey{
+    background: #949494;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.profile_bg_grey button{
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.profile_bg_grey2{
+    background-color: #DCDCDC;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.profile_input_box{
+     border-radius: 9px;
+     border: none;
+}
+.profile_btn_bg{
+    background-color: #4CBB16;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    color: #fff;
+}
+.vtx_monthly_plan_input .toggle{
+    width: 72px;
+}
+input.largerCheckbox {
+    transform: scale(2);
+}
+

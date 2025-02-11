@@ -1,0 +1,49 @@
+.create_acc_sec{
+    background-color: #E9F7FF;
+}
+.form_sec{
+  background-color: #00000029;
+  border-radius: 10px;
+}
+.create_acc_sec .log_in_btn{
+    background:#6F6F6F; 
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+}
+.create_acc_sec .log_in_btn_green{
+    background:#4CBB16; 
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+}
+.create_acc_inputs input{
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+.button_sec_create_acc{
+    transform: translate(-50%, -50%);
+    top: 0%;
+    left: 50%;
+    width: 100%;
+}
+.create_acc_checkbox .checkbox{
+    width: 5%;
+}
+.create_acc_submit button{
+    background:#4CBB16; 
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+}
+
+.green_txt{
+    color: #4CBB16;
+    cursor: pointer;
+}
+
+.custom-dialog2{
+    top: 60%;
+}

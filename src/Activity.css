@@ -1,0 +1,211 @@
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay-button {
+  position: absolute;
+  bottom: 22%;
+  right: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  /* color: white; */
+  border: none;
+  /* padding: 10px 20px; */
+  cursor: pointer;
+  border-radius: 5px;
+}
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Above other elements */
+}
+
+.modal-content {
+  background-color: transparent;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+  width: 60%;
+  border: navajowhite;
+}
+
+.close-button {
+ 
+  /* left: 80px; */
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 7px;
+  color: grey;
+}
+.close_btn_subcat {
+ 
+  background:#4cbb16;
+ 
+  padding: 0.6rem 1.3rem;
+  color: #fff;
+  border-radius: 4px;
+  left: 273px;
+  /* top: 204px; */
+}
+
+.articulation_button {
+  color: grey;
+  border: navajowhite;
+  border-radius: 14px;
+}
+
+.modal-container,
+.articulation-modal-container,
+.language-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(./assets/bg_activity.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 1050; /* Adjust to overlay properly */
+}
+.close_button_new_modal {
+  bottom: 141px;
+  left: -3px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #000;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.default-bg {
+  background-color: #fff;
+  color: gray;
+}
+.active{
+  display: block;
+}
+
+.selected-bg {
+  background-color: #4cbb16;
+  color: #fff;
+}
+
+.disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+#fluencySlider{
+  background: #FFFF !important;
+}
+
+
+/* slider */
+/* Add this to your CSS file or style block */
+.carousel-item {
+  transition: none !important; /* Disable transition */
+}
+
+@keyframes fade-slide {
+  from {
+    transform: translateY(-10px) translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+.language_btn_bg{
+  background-color: #4cbb16;
+}
+.popup {
+  position: fixed;
+  top: -100px; /* Start off-screen */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #E36D00;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 1000;
+  transition: top 0.5s ease-in-out;
+}
+
+.popup.slide-down {
+  top: 20px; /* Slide into view */
+}
+
+.sound_name{
+  text-align-last:center;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  padding: 1rem;
+  font-weight: bold;
+  background-color: #ffffff99!important;
+}
+
+.carousel-caption {
+  position: absolute;
+    right: 25%;
+    width: 100%;
+    bottom: -3.75rem;
+    /* z-index: 8888888; */
+    left: 0%;
+    padding-top: 0.4rem;
+    padding-bottom: -3.75rem;
+    color: #fff;
+    text-align: center;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.sound_position{
+  text-align-last:center;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  background-color: #ffffff99!important;
+}
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+
+
+
+
+

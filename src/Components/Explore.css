@@ -1,0 +1,101 @@
+.explore_games_sec{
+  
+    background-image: url(../assets/hero_bg.png);
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.games_section_explore img{
+    width: 100%;
+}
+.dark_blue_bg{
+    background-color: #1D293A;
+    
+}
+.grey_bg{
+    background-color: #E4E4E4;
+    cursor: pointer;
+    transition: 0.6s;
+   
+}
+.grey_bg:hover{
+    background-color: #4CBB16;
+    color: #fff;
+    padding-left: 1rem;
+   
+}
+
+.grey_bg2{
+    background-color: #55BA5C;
+    cursor: pointer;
+    transition: 0.6s;
+   
+}
+
+/* Default button style */
+.grey_bg {
+    
+    color: black;
+  }
+  
+  /* Active button style (red background, white text) */
+  .active_class {
+    background-color: #4CBB16 !important;
+    color: white !important;
+  }
+.grey_bg2:hover{
+    background-color: #4CBB16;
+    color: #fff;
+    padding-left: 1rem;
+   
+}
+
+.category2_bg:hover{
+    background-color: #4CBB16;
+    color: #fff;
+    padding-left: 1rem;
+   
+}
+.dropdown button:hover{
+    color: #fff!important;
+}
+.rounded_btm{
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.rounded_top{
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.green_bg{
+    background-color:#4CBB16;
+    cursor: pointer;
+    color: #fff;
+}
+.category2_bg {
+    background-color: #D3E9C8;
+    cursor: pointer;
+    border: 2px solid #4CBB16;
+    font-size: 0.8rem;
+    font-weight: bolder;
+    transition: 0.6s;
+}
+.active_class{
+    background: #4CBB16;
+    color: #1D293A;
+}
+.active_class2{
+    background: #4CBB16;
+    color: #fff;
+}
+.bg-grey{
+    background-color:#F5F5F5 ;
+}
+.category2_bg_green{
+    background-color:#4CBB16;
+    cursor: pointer;
+    color: #fff;
+    font-size: 0.8rem;
+    border: 1px solid #4CBB16;
+}

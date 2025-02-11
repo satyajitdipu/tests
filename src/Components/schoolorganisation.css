@@ -1,0 +1,64 @@
+
+.hub_header button{
+    border-radius: 9px;
+    border: none;
+}
+.hub_bg_orga{
+    background: transparent linear-gradient(363deg, #4E54C8 63%, #8F94FB 105%) 30% 0%;
+    border-radius: 10px;
+    min-height: 20rem;
+}
+.hub_img{
+    width: 20%;
+    left: 5%;
+    top: 35%;
+}
+.neon_green{
+    background: #54BC60;
+    border-radius: 10px;
+}
+.neon_green textarea{
+    width: 100%;
+    border-radius: 10px;
+}
+.send_btn_home {
+    background-color: #fec847;
+    border-radius: 8px;
+    color: #000;
+    border: none;
+}
+.my_current_plan{
+    background-color: #009FC9;
+    border-radius: 10px;
+}
+.btn_sec_my_current_plan button{
+    border: none;
+    border-radius: 9px;
+}
+
+.btn_sec_my_current_plan .grey_btn{
+    background:#E4E4E4 ;
+}
+.my_plan_img img{
+    width:500px;
+}
+
+
+
+@media screen and (max-width:300px) {
+
+    h1{
+        font-size: calc(1.2rem + 1.5vw);
+    }
+    .hub_bg{
+        background: transparent linear-gradient(363deg, #EAAB00 63%, #FFFB00 105%) 30% 0%;
+        border-radius: 10px;
+        min-height: 10rem;
+    }
+    .hub_img{
+        width: 20%;
+        left: 5%;
+        top: 75%;
+    }
+}
+

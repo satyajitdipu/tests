@@ -1,0 +1,126 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html{
+  scroll-behavior: smooth;
+}
+body {
+  font-family: "Poppins", sans-serif;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+.button_class {
+  background-color: #4CBB16;
+  color: #fff;
+  padding: 0.6rem 1.8rem;
+  border: none;
+  font-weight: lighter;
+  border-radius: 5px;
+  transition: 0.6s;
+}
+.button_class2 {
+  color: #000;
+    padding: 1rem 1.8rem;
+    border: none;
+    font-weight: 500;
+    border-radius: 7px;
+    transition: 0.6s;
+    font-size: 0.7rem;
+    border: 2.5px solid black;
+}
+
+    
+.button_class2:hover{
+  background-color: #4CBB16;
+  color: #fff;
+}
+.large_font{
+  font-size: 3.1rem;
+}
+.large_font2{
+  font-size: 1.5rem;
+}
+.buttonWrapper {
+  padding-top: 67px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.btn-link {
+  height: 104px;
+  padding: 0 49px;
+  border-radius: 70px;
+  font-size: 25px;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 500;
+  position: relative;
+}
+.btn-fill {
+  background: #8330c2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  transform: translateZ(0);
+  border-radius: inherit;
+  transition: background 0.3s;
+}
+
+.btn-title {
+  position: relative;
+  top: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  transform: translateZ(0);
+}
+.btn-content {
+  font-weight: 500;
+  color: white;
+}
+.btn-ripple {
+  display: none;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: inherit;
+}
+.btn-ripple.v1 {
+  background: #933bd7;
+}
+.btn-ripple.v2 {
+  background: #9e4cdc;
+}
+
+
+
+@media screen and (max-width:800px) {
+  .large_font{
+    font-size: 1.9rem;
+  }
+  .large_font2{
+    font-size: 1rem;
+  }
+}
+@media screen and (max-width:300px) {
+  .large_font{
+    font-size: 1.2rem;
+  }
+  .large_font2{
+    font-size: 1rem;
+  }
+}

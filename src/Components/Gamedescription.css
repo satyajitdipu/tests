@@ -1,0 +1,61 @@
+.gamevideo_sec {
+  width: 100%;
+  height: 90vh;
+}
+.gamevideo_sec #game_vid {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gamevideo_sec .share {
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.share img {
+  width: 30px;
+}
+.play_icon img{
+  width: 150px;
+}
+.yellow_btn{
+  background: #FFC800;
+
+  border: none;
+  color: #000;
+  border-radius: 9px;
+  font-weight: 500;
+}
+.steps{
+  color: #4CBB16;
+  font-size: 2rem;
+  font-weight: bold;
+  background: #E4E4E4;
+
+}
+.bg_green{
+ background: #4CBB16;
+ border: none;
+ border-radius: 8px;
+ color: #F5F5F5;
+}
+.text_area_bg{
+  background-color: #F5F5F5;
+}
+.user_review_stars img{
+  width: 20px;
+}
+
+.v_line{
+  width: 0.1rem;
+  height: 5rem;
+  background-color: #F5F5F5;
+}
+@media screen and (max-width: 910px) {
+    .gamevideo_sec {
+        width: 100%;
+        height: 45vh;
+    }
+}
