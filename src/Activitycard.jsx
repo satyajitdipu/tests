@@ -78,8 +78,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [isAnyChecked, setIsAnyChecked] = useState(false);
   
   // Handle dropdown selection
-  const handleFluencyChange = (event) => {
-    const fluencyId = event.target.value;
+  const handleFluencyChange = (e) => {
+    const fluencyId = e.target.value;
     setSelectedFluencyId(fluencyId);
 
     // Find selected fluency and update sentences
@@ -88,7 +88,15 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     );
     setSelectedSentences(selectedFluency ? selectedFluency.levels : []);
     setActiveIndex(0); // Reset index when changing fluency
-  };
+};
+
+// Auto-select first fluency when FluencyData is available
+useEffect(() => {
+    if (FluencyData.length > 0) {
+        setSelectedFluencyId(FluencyData[0].fluency_id);
+        setSelectedSentences(FluencyData[0].levels);
+    }
+}, [FluencyData]);
   const [hasData, setHasData] = useState({
     articulation: false,
     language: false,
@@ -1746,11 +1754,12 @@ useEffect(() => {
                   activeSections === "fluency" ? "" : "d-none"
                 }`}
               >
-                  <select
+                < select
         name="fluency"
         id="fluency"
         className="w-100 my-4 sound_position"
         onChange={handleFluencyChange}
+        value={selectedFluencyId} // ✅ Bind value to selectedFluencyId
     >
         <option value="">Select Fluency</option>
         {FluencyData.map((fluency) => (
@@ -1759,6 +1768,7 @@ useEffect(() => {
             </option>
         ))}
     </select>
+
                 <div onClick={closeNewModal} className="back_to_main_menu mt-5">
                   <button className="px-4 py-2  w-100 mt-5" style={{borderRadius: "9px",background:"#F0F0F0",fontWeight:"500"}}> Back to main menu</button>
                  
