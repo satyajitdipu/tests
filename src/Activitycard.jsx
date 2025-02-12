@@ -69,13 +69,14 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [selectedLanguageType, setSelectedLanguageType] = useState("");
   const [selectedQuestionType, setSelectedQuestionType] = useState("");
-  const [Languageallquestion,setLanguageallquestion]= useState([]);
-  const [Filtersubcat,setFiltersubcat]=useState([]);
-  const [Filtercat,setFiltercat]=useState([]);
+  const [Languageallquestion, setLanguageallquestion] = useState([]);
+  const [Filtersubcat, setFiltersubcat] = useState([]);
+  const [Filtercat, setFiltercat] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [filteredSubCategories, setfilteredSubCategories] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
-
+  const [isAnyChecked, setIsAnyChecked] = useState(false);
+  
   // Handle dropdown selection
   const handleFluencyChange = (event) => {
     const fluencyId = event.target.value;
@@ -109,63 +110,80 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
   //articulation filter
   const positionMapping = {
-    "Initial": 1,
-    "Middle": 2,
-    "Final": 3
+    Initial: 1,
+    Middle: 2,
+    Final: 3,
   };
-  
-  useEffect(() => {
-    const firstSound = Object.keys(storedSelections)[0]; // Get the first sound
-    if (firstSound) {
-      setSelectedSound(firstSound);
-      setSelectedPosition(storedSelections[firstSound][0][0] || ""); // First position
-      setSelectedSentence(storedSelections[firstSound][1][0] || ""); // First sentence type
-    }
-  }, []);
 
-  // Update selectedPosition & selectedSentence when selectedSound changes
   useEffect(() => {
-    if (selectedSound && storedSelections[selectedSound]) {
-      setSelectedPosition(storedSelections[selectedSound][0][0] || ""); // First position
-      setSelectedSentence(storedSelections[selectedSound][1][0] || ""); // First sentence type
+    if (storedSelections && Object.keys(storedSelections).length > 0) {
+        const firstSound = Object.keys(storedSelections)[0]; // Get the first sound
+        if (firstSound) {
+            setSelectedSound(firstSound);
+            setSelectedPosition(storedSelections[firstSound]?.[0]?.[0] || ""); // First position
+            setSelectedSentence(storedSelections[firstSound]?.[1]?.[0] || ""); // First sentence type
+        }
     }
-  }, [selectedSound]);
-  
+}, [storedSelections]); // Added dependency to re-run if storedSelections updates
+
+// Update selectedPosition & selectedSentence when selectedSound changes
+useEffect(() => {
+    if (selectedSound && storedSelections[selectedSound]) {
+        setSelectedPosition(storedSelections[selectedSound]?.[0]?.[0] || ""); // First position
+        setSelectedSentence(storedSelections[selectedSound]?.[1]?.[0] || ""); // First sentence type
+    }
+}, [selectedSound, storedSelections]); // Added storedSelections as dependency
+
+
   const ArfilteredData = Object.keys(ArticulationData)
     .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
     .reduce((acc, key) => {
       acc[key] = ArticulationData[key].filter((item) => {
         const mappedPosition = positionMapping[selectedPosition] || null;
-        const matchesPosition = !selectedPosition || item.position_mapped == mappedPosition;
-        const matchesSentence = !selectedSentence || item.sentence === selectedSentence;
+        const matchesPosition =
+          !selectedPosition || item.position_mapped == mappedPosition;
+        const matchesSentence =
+          !selectedSentence || item.sentence === selectedSentence;
         return matchesPosition && matchesSentence;
       });
       return acc;
     }, {});
 
-  //language filter 
+  //language filter
 
   useEffect(() => {
     let filtered = LanguageData;
     console.log(selectedQuestionType);
     if (selectedLanguageType) {
-      filtered = filtered.filter((item) => item.language_type_id == selectedLanguageType);
+      filtered = filtered.filter(
+        (item) => item.language_type_id == selectedLanguageType
+      );
     }
     if (selectedSubCategory) {
-      filtered = filtered.filter((item) => item.sub_category_id == selectedSubCategory);
+      filtered = filtered.filter(
+        (item) => item.sub_category_id == selectedSubCategory
+      );
     }
     if (selectedQuestionType) {
-      filtered = filtered.filter((item) => item.question_type_id == selectedQuestionType);
+      filtered = filtered.filter(
+        (item) => item.question_type_id == selectedQuestionType
+      );
     }
 
     setFilteredData(filtered);
-  }, [selectedLanguageType, selectedSubCategory, selectedQuestionType, LanguageData]);
+  }, [
+    selectedLanguageType,
+    selectedSubCategory,
+    selectedQuestionType,
+    LanguageData,
+  ]);
 
   // Filter subcategories based on selected language type
   useEffect(() => {
-    
     if (selectedLanguageType) {
-      const filteredSub = Filtersubcat.filter((sub) => sub.cat_id == selectedLanguageType);
+      const filteredSub = Filtersubcat.filter(
+        (sub) => sub.cat_id == selectedLanguageType
+      );
       console.log(filteredData);
       setfilteredSubCategories(filteredSub);
       setSelectedSubCategory(filteredSub.length > 0 ? filteredSub[0].id : ""); // Auto-select first subcategory
@@ -178,7 +196,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
   // 🔹 Extract unique question_type_id based on selected sub_category_id and language_type_id
   useEffect(() => {
-    
     if (selectedLanguageType && selectedSubCategory) {
       const filtered = LanguageData.filter(
         (item) =>
@@ -187,7 +204,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       );
 
       // Extract unique question_type_id values
-      const uniqueQuestionTypeIds = [...new Set(filtered.map((item) => item.question_type_id))];
+      const uniqueQuestionTypeIds = [
+        ...new Set(filtered.map((item) => item.question_type_id)),
+      ];
 
       // Filter Languageallquestion to match question_type_id
       const matchingQuestions = Languageallquestion.filter((q) =>
@@ -195,12 +214,23 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       );
 
       setFilteredQuestions(matchingQuestions);
-      setSelectedQuestionType(matchingQuestions.length > 0 ? matchingQuestions[0].question_type_id : "");
+      setSelectedQuestionType(
+        matchingQuestions.length > 0
+          ? matchingQuestions[0].question_type_id
+          : ""
+      );
     } else {
       setFilteredQuestions([]);
       setSelectedQuestionType("");
     }
-  }, [selectedLanguageType, selectedSubCategory, LanguageData, Languageallquestion]);
+  }, [
+    selectedLanguageType,
+    selectedSubCategory,
+    LanguageData,
+    Languageallquestion,
+  ]);
+
+
   // State to track the active section
   const [activeSections, setActiveSections] = useState("articulation");
 
@@ -279,20 +309,46 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   };
 
   // Handles checkbox selection
-  const handleCheckboxChange = (categoryId, subCategoryId) => {
+  const handleCheckboxChange = (sectionIndex, item) => {
     setSelectedCheckboxes((prev) => {
-      // Get the current selections for the category
-      const currentSelections = prev[categoryId] || [];
+      const currentSelections = prev[sectionIndex] || [];
+      const isSelected = currentSelections.includes(item);
 
-      // Check if the subcategory is already selected
-      const isSelected = currentSelections.includes(subCategoryId);
-
-      return {
+      // Update the selections for the active section
+      const updatedSelections = {
         ...prev,
-        [categoryId]: isSelected
-          ? currentSelections.filter((id) => id !== subCategoryId) // Remove if already selected
-          : [...currentSelections, subCategoryId], // Add if not selected
+        [sectionIndex]: isSelected
+          ? currentSelections.filter((i) => i !== item) // Remove if already selected
+          : [...currentSelections, item], // Add if not selected
       };
+
+      // Check if no checkboxes are selected after the update
+      if (updatedSelections[sectionIndex].length === 0) {
+        // Perform your existing actions
+        setCompletedSections((prevCompleted) =>
+          prevCompleted.filter((section) => section !== sectionIndex)
+        );
+        setActiveSection(null);
+        setAlertStates((prev) => ({
+          ...prev,
+          [sectionIndex]: true, // Show alert for the current button
+        }));
+        setTimeout(() => {
+          setAlertStates((prev) => ({
+            ...prev,
+            [sectionIndex]: false, // Hide alert after 3 seconds
+          }));
+        }, 3000);
+        setIsSubLanguageModalOpen(false);
+      }
+
+      // Check if any checkbox is selected in any section
+      const anyCheckboxSelected = Object.values(updatedSelections).some(
+        (selections) => selections.length > 0
+      );
+      setIsAnyChecked(anyCheckboxSelected);
+
+      return updatedSelections;
     });
   };
   // Handles Done button click
@@ -425,83 +481,100 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
   const handleProceed = async () => {
     try {
-        setIsProceedClicked(true);
-        
-        let response;
-        
-        // Fetch articulation images if selections exist
-        if (storedSelections && Object.keys(storedSelections).length > 0) {
-            response = await axios.post(
-                "https://virtualtxai.com/api/get-image-by-artic-id-and-sentence",
-                storedSelections
-            );
-            if (response.data.success) {
-                setArticulationData(response.data.data);
-                setHasData((prev) => ({ ...prev, articulation: true }));
-            } else {
-                console.error("Image API Error:", response.data.message);
-            }
+      setIsProceedClicked(true);
+      let response;
+  
+      // Initialize a local object to track data availability
+      const localHasData = {
+        articulation: false,
+        fluency: false,
+        language: false,
+      };
+  
+      // Fetch articulation images if selections exist
+      if (storedSelections && Object.keys(storedSelections).length > 0) {
+        response = await axios.post(
+          "https://virtualtxai.com/api/get-image-by-artic-id-and-sentence",
+          storedSelections
+        );
+        if (response.data.success) {
+          setArticulationData(response.data.data);
+          localHasData.articulation = true; // Articulation data is available
+        } else {
+          console.error("Image API Error:", response.data.message);
         }
-
-        // Fetch fluency sentences if selected IDs exist
-        if (selectedIds && selectedIds.length > 0) {
-            try {
-                const fluencyResponse = await axios.post(
-                    "https://virtualtxai.com/api/get-fluency-sentences",
-                    { ids: selectedIds }
-                );
-                if (fluencyResponse.data.success) {
-                    setFluencyData(fluencyResponse.data.data); // Store sentences data
-                    setHasData((prev) => ({ ...prev, fluency: true }));
-                    console.log("Fluency API Response:", fluencyResponse.data.data);
-                } else {
-                    console.error("Fluency API Error:", fluencyResponse.data.message);
-                }
-            } catch (error) {
-                console.error("Error fetching fluency sentences:", error);
-            }
+      }
+  
+      // Fetch fluency sentences if selected IDs exist
+      if (selectedIds && selectedIds.length > 0) {
+        try {
+          const fluencyResponse = await axios.post(
+            "https://virtualtxai.com/api/get-fluency-sentences",
+            { ids: selectedIds }
+          );
+          if (fluencyResponse.data.success) {
+            setFluencyData(fluencyResponse.data.data); // Store sentences data
+            localHasData.fluency = true; // Fluency data is available
+          } else {
+            console.error("Fluency API Error:", fluencyResponse.data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching fluency sentences:", error);
         }
-
-        // Fetch language data if formatted selections exist
-        if (formattedSelections && formattedSelections.filters?.length > 0) {
-            try {
-                const languageResponse = await axios.post(
-                    "https://virtualtxai.com/api/language-children-multiple",
-                    formattedSelections
-                );
-
-                const languageQuesResponse = await axios.get(
-                    "https://virtualtxai.com/api/language-question-types"
-                );
-
-                if (languageResponse.data.success) {
-                    setLanguageData(languageResponse.data.data);
-                    setFiltersubcat(languageResponse.data.filter);
-                    setFiltercat(languageResponse.data.catagory);
-                    setLanguageallquestion(languageQuesResponse.data.data);
-                    console.log("Language Questions:", languageQuesResponse.data.data);
-                    setHasData((prev) => ({ ...prev, language: true }));
-                }
-            } catch (error) {
-                console.error("Error fetching language data:", error);
-            }
+      }
+  
+      // Fetch language data if formatted selections exist
+      if (formattedSelections && formattedSelections.filters?.length > 0) {
+        try {
+          const languageResponse = await axios.post(
+            "https://virtualtxai.com/api/language-children-multiple",
+            formattedSelections
+          );
+          const languageQuesResponse = await axios.get(
+            "https://virtualtxai.com/api/language-question-types"
+          );
+          if (languageResponse.data.success) {
+            setLanguageData(languageResponse.data.data);
+            setFiltersubcat(languageResponse.data.filter);
+            setFiltercat(languageResponse.data.catagory);
+            setLanguageallquestion(languageQuesResponse.data.data);
+            localHasData.language = true; // Language data is available
+          }
+        } catch (error) {
+          console.error("Error fetching language data:", error);
         }
-
-        // Clear selections after processing
-        if (
-            (storedSelections && Object.keys(storedSelections).length > 0) ||
-            (selectedIds && selectedIds.length > 0) ||
-            (formattedSelections && formattedSelections.filters?.length > 0)
-        ) {
-            setSelectedArticulations([]);
-            alert("Selections have been cleared.");
-        }
-
-        setIsNewModalOpen(true);
+      }
+  
+      // Update hasData state based on localHasData
+      setHasData(localHasData);
+  
+      // Update active sections based on available data
+      if (localHasData.fluency && !localHasData.articulation && !localHasData.language) {
+        setActiveSections("fluency");
+      } else if (!localHasData.fluency && localHasData.articulation && !localHasData.language) {
+        setActiveSections("articulation");
+      } else if (!localHasData.fluency && !localHasData.articulation && localHasData.language) {
+        setActiveSections("language");
+      } else {
+        setActiveSections("articulation"); // If multiple data types are available
+      }
+  
+      // Clear selections after processing
+      if (
+        (storedSelections && Object.keys(storedSelections).length > 0) ||
+        (selectedIds && selectedIds.length > 0) ||
+        (formattedSelections && formattedSelections.filters?.length > 0)
+      ) {
+        setSelectedArticulations([]);
+        alert("Selections have been cleared.");
+      }
+      setIsNewModalOpen(true);
     } catch (error) {
-        console.error("Error calling the API:", error);
+      console.error("Error calling the API:", error);
     }
-};
+  };
+  
+  
 
   useEffect(() => {
     const savedSelections = JSON.parse(
@@ -722,7 +795,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
           <div className="modal-content " onClick={(e) => e.stopPropagation()}>
             <div className="d-flex justify-content-center flex-column gap-4 ">
               <div className="d-flex justify-content-center gap-4 position-relative">
-                {["Articulation", "Language", "Fluency"].map((buttonLabel) => (
+                {["Articulation", "Fluency"].map((buttonLabel) => (
                   <button
                     key={buttonLabel}
                     className={`articulation_button px-4 py-5 fw-bold fs-2 d-flex justify-content-center align-items-center ${
@@ -812,7 +885,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     borderRadius: "5px",
                     cursor: "pointer",
                   }}
-                  className="px-3 py-2 rounded me-3"
+                  className="px-3 py-2 rounded me-3 d-none"
                 >
                   Language
                 </button>
@@ -1045,7 +1118,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
       {/* Language Modal */}
       {isLanguageModalOpen && (
-        <div className="modal-container" onClick={closeModal}>
+        <div className="modal-container " onClick={closeModal}>
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
@@ -1081,7 +1154,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 </button>
 
                 {/* Active Language Button */}
-                <button
+                <button className="d-none"
                   style={{
                     marginTop: "0px",
                     padding: "10px 20px",
@@ -1417,7 +1490,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                   Articulation
                 </button>
 
-                <button
+                <button className="d-none"
                   onClick={() => {
                     closeModal();
                     setIsLanguageModalOpen(true);
@@ -1538,50 +1611,57 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
             style={{ background: "transparent" }}
           >
             <div className="slider_area d-flex p-1 justify-content-center align-items-center vh-100">
-          {/* Left Section */}
-          <div
-            className={`drop_down_section w-25 articulation_dropdowns ${
-              activeSections === "articulation" ? "" : "d-none"
-            }`}
-          >
-    {/* Sound Dropdown */}
-    <div>
-    {/* 🔹 1st Dropdown: Select Sound */}
-    <select onChange={(e) => setSelectedSound(e.target.value)} value={selectedSound}>
-      <option value="">Select Sound</option>
-      {Object.keys(storedSelections).map((sound) => (
-        <option key={sound} value={sound}>
-          {sound}
-        </option>
-      ))}
-    </select>
+              {/* Left Section */}
+              <div
+                className={`drop_down_section w-25 articulation_dropdowns ${
+                  activeSections === "articulation" ? "" : "d-none"
+                }`}
+              >
+                {/* Sound Dropdown */}
+              
+                  {/* 🔹 1st Dropdown: Select Sound */}
+                  <select className="w-100 sound_name"
+                    onChange={(e) => setSelectedSound(e.target.value)}
+                    value={selectedSound}
+                  >
+                    <option value="">Select Sound</option>
+                    {Object.keys(storedSelections).map((sound) => (
+                      <option key={sound} value={sound}>
+                        {sound}
+                      </option>
+                    ))}
+                  </select>
 
-    {/* 🔹 2nd Dropdown: Show 1st Array (Initial, Middle, Final) */}
-    {selectedSound && (
-      <select onChange={(e) => setSelectedPosition(e.target.value)} value={selectedPosition}>
-        <option value="">Select Position</option>
-        {storedSelections[selectedSound][0].map((item, index) => (
-          <option key={index} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-    )}
+                  {/* 🔹 2nd Dropdown: Show 1st Array (Initial, Middle, Final) */}
+                  {selectedSound && (
+                    <select className="w-100 my-4 sound_position"
+                      onChange={(e) => setSelectedPosition(e.target.value)}
+                      value={selectedPosition}
+                    >
+                      <option value="">Select Position</option>
+                      {storedSelections[selectedSound][0].map((item, index) => (
+                        <option key={index} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  )}
 
-    {/* 🔹 3rd Dropdown: Show 2nd Array (Sentences, Phrases, Words) */}
-    {selectedSound && selectedPosition && (
-      <select onChange={(e) => setSelectedSentence(e.target.value)} value={selectedSentence}>
-        <option value="">Select Type</option>
-        {storedSelections[selectedSound][1].map((item, index) => (
-          <option key={index} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-    )}
-  </div>
-
-  
+                  {/* 🔹 3rd Dropdown: Show 2nd Array (Sentences, Phrases, Words) */}
+                  {selectedSound && selectedPosition && (
+                    <select className="w-100 my-4 sound_position"
+                      onChange={(e) => setSelectedSentence(e.target.value)}
+                      value={selectedSentence}
+                    >
+                      <option value="">Select Type</option>
+                      {storedSelections[selectedSound][1].map((item, index) => (
+                        <option key={index} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+              
 
                 <div
                   className="annotator d-none flex-column gap-2 justify-content-center align-items-center text-light mt-4"
@@ -1594,50 +1674,60 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                   />
                   Annotator
                 </div>
+                <div onClick={closeNewModal} className="back_to_main_menu mt-5">
+                  <button className="px-4 py-2  w-100 mt-5" style={{borderRadius: "9px",background:"#F0F0F0",fontWeight:"500"}}> Back to main menu</button>
+                 
+                </div>
               </div>
-
               <div
                 className={`drop_down_section w-25 language_dropdowns ${
                   activeSections === "language" ? "" : "d-none"
                 }`}
               >
-              <div>
-      {/* 🔹 1st Dropdown: Select Language Type */}
-      <select onChange={(e) => setSelectedLanguageType(e.target.value)} value={selectedLanguageType}>
-        <option value="">Select Language Type</option>
-        {Filtercat.map((lang) => (
-          <option key={lang.id} value={lang.id}>
-            {lang.category_name}
-          </option>
-        ))}
-      </select>
+                <div>
+                  {/* 🔹 1st Dropdown: Select Language Type */}
+                  <select
+                    onChange={(e) => setSelectedLanguageType(e.target.value)}
+                    value={selectedLanguageType}
+                  >
+                    <option value="">Select Language Type</option>
+                    {Filtercat.map((lang) => (
+                      <option key={lang.id} value={lang.id}>
+                        {lang.category_name}
+                      </option>
+                    ))}
+                  </select>
 
-      {/* 🔹 2nd Dropdown: Filtered Subcategories */}
-      {selectedLanguageType && (
-        <select onChange={(e) => setSelectedSubCategory(e.target.value)} value={selectedSubCategory}>
-          <option value="">Select Subcategory</option>
-          {filteredSubCategories.map((sub) => (
-            <option key={sub.id} value={sub.id}>
-              {sub.category_name}
-            </option>
-          ))}
-        </select>
-      )}
+                  {/* 🔹 2nd Dropdown: Filtered Subcategories */}
+                  {selectedLanguageType && (
+                    <select
+                      onChange={(e) => setSelectedSubCategory(e.target.value)}
+                      value={selectedSubCategory}
+                    >
+                      <option value="">Select Subcategory</option>
+                      {filteredSubCategories.map((sub) => (
+                        <option key={sub.id} value={sub.id}>
+                          {sub.category_name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
 
-      {/* 🔹 3rd Dropdown: Filtered Question Types */}
-      {selectedLanguageType && selectedSubCategory && (
-        <select onChange={(e) => setSelectedQuestionType(e.target.value)} value={selectedQuestionType}>
-          <option value="">Select Question Type</option>
-          {filteredQuestions.map((question, index) => (
-            <option key={index} value={question.question_type_id}>
-              {question.question_type_name}
-            </option>
-          ))}
-        </select>
-      )}
-    </div>
-
-
+                  {/* 🔹 3rd Dropdown: Filtered Question Types */}
+                  {selectedLanguageType && selectedSubCategory && (
+                    <select
+                      onChange={(e) => setSelectedQuestionType(e.target.value)}
+                      value={selectedQuestionType}
+                    >
+                      <option value="">Select Question Type</option>
+                      {filteredQuestions.map((question, index) => (
+                        <option key={index} value={question.question_type_id}>
+                          {question.question_type_name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
 
                 <div
                   className="annotator d-none flex-column gap-2 justify-content-center align-items-center text-light mt-4"
@@ -1651,83 +1741,108 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                   Annotator
                 </div>
               </div>
-
-                <div
-        className={`drop_down_section w-25 fluency_dropdowns ${
-          activeSections === "fluency" ? "" : "d-none"
-        }`}
-      >
-        <select
-          name="fluency"
-          id="fluency"
-          className="w-100 my-4 sound_position"
-          onChange={handleFluencyChange}
-        >
-          <option value="">Select Fluency</option>
-          {FluencyData.map((fluency) => (
+              <div
+                className={`drop_down_section w-25 fluency_dropdowns ${
+                  activeSections === "fluency" ? "" : "d-none"
+                }`}
+              >
+                  <select
+        name="fluency"
+        id="fluency"
+        className="w-100 my-4 sound_position"
+        onChange={handleFluencyChange}
+    >
+        <option value="">Select Fluency</option>
+        {FluencyData.map((fluency) => (
             <option key={fluency.fluency_id} value={fluency.fluency_id}>
-              {fluency.fluency_name}
+                {fluency.fluency_name}
             </option>
-          ))}
-        </select>
-      </div>
+        ))}
+    </select>
+                <div onClick={closeNewModal} className="back_to_main_menu mt-5">
+                  <button className="px-4 py-2  w-100 mt-5" style={{borderRadius: "9px",background:"#F0F0F0",fontWeight:"500"}}> Back to main menu</button>
+                 
+                </div>
 
-          {/* Middle Section with Slider */}
-          <div
-  className={`slider_section_for_articulation d-flex flex-column align-items-center w-75 mx-3 p-4 ${
-    activeSections === "articulation" ? "" : "d-none"
-  }`}
-  style={{ borderRadius: "10px", background: "transparent" }}
->
-<div
-              style={{ border: "5px solid #1C2244", borderRadius: "30px",width: "39rem" }}
-              id="articulationSlider"
-              className="carousel bg-light p-4"
-              data-bs-ride="false"
-              data-bs-interval="false"
-              data-bs-pause="true"
-            >
-              {/* Carousel Inner */}
-              <div className="carousel-inner">
-        {Object.keys(ArfilteredData).length > 0 ? (
-          Object.keys(ArfilteredData).map((key, index) => {
-            return ArfilteredData[key].map((item, itemIndex) => {
-              return (item?.images || []).map((child, childIndex) => {
-                return (
-                  <div
-                    className={`carousel-item ${index === 0 && itemIndex === 0 && childIndex === 0 ? "active" : ""}`}
-                    key={child.id}
-                  >
-                    <img
-                      src={child.image}
-                      className="d-block w-100 img-fluid"
-                      alt={`Slide ${childIndex + 1}`}
-                      style={{ height: "560px", objectFit: "cover" }}
-                    />
+              </div>
+              {/* Middle Section with Slider */}
+              <div
+                className={`slider_section_for_articulation d-flex flex-column align-items-center w-75 mx-3 p-4 ${
+                  activeSections === "articulation" ? "" : "d-none"
+                }`}
+                style={{ borderRadius: "10px", background: "transparent" }}
+              >
+                <div
+                  style={{
+                    border: "5px solid #1C2244",
+                    borderRadius: "30px",
+                    width: "44rem",
+                  }}
+                  id="articulationSlider"
+                  className="carousel bg-light p-4"
+                  data-bs-ride="false"
+                  data-bs-interval="false"
+                  data-bs-pause="true"
+                >
+                  {/* Carousel Inner */}
+                  <div className="carousel-inner">
+                    {Object.keys(ArfilteredData).length > 0 ? (
+                      Object.keys(ArfilteredData).map((key, index) => {
+                        return ArfilteredData[key].map((item, itemIndex) => {
+                          return (item?.images || []).map(
+                            (child, childIndex) => {
+                              return (
+                                <div
+                                  className={`carousel-item ${
+                                    index === 0 &&
+                                    itemIndex === 0 &&
+                                    childIndex === 0
+                                      ? "active"
+                                      : ""
+                                  }`}
+                                  key={child.id}
+                                >
+                                  <img
+                                    src={child.image}
+                                    className="d-block w-100 img-fluid"
+                                    alt={`Slide ${childIndex + 1}`}
+                                    style={{
+                                      height: "600px",
+                                      objectFit: "contain",
+                                    }}
+                                  />
 
-                    {item.words && (
-                      <div className="carousel-caption d-none d-md-block">
-                        <h3 className="mx-4 text-center" style={{ minWidth: "200px", color: "black", fontWeight: "bold" }}>
-                          {item.words}
-                        </h3>
+                                  {item.words && (
+                                    <div className="carousel-caption d-none d-md-block">
+                                      <h3
+                                        className="mx-4 text-center"
+                                        style={{
+                                          minWidth: "200px",
+                                          color: "black",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        {item.words}
+                                      </h3>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            }
+                          );
+                        });
+                      })
+                    ) : (
+                      <div className="carousel-item active">
+                        <img
+                          src="default-image-url"
+                          className="d-block w-100 img-fluid"
+                          alt="Default Slide"
+                          style={{ height: "600px", objectFit: "contain" }}
+                        />
                       </div>
                     )}
                   </div>
-                );
-              });
-            });
-          })
-        ) : (
-          <div className="carousel-item active">
-            <img
-              src="default-image-url"
-              className="d-block w-100 img-fluid"
-              alt="Default Slide"
-              style={{ height: "560px", objectFit: "cover" }}
-            />
-          </div>
-        )}
-</div>
 
                   {/* Slider Controls - Placed Below */}
                   <div className="d-flex align-items-center justify-content-center mt-3">
@@ -1750,242 +1865,338 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       />
                     </button>
 
-  {/* Next Button */}
-  <button
-    className="btn btn-light mx-2 position-absolute"
-    type="button"
-    data-bs-target="#articulationSlider"
-    data-bs-slide="next"
-    style={{ left: "39rem", border: "none", background: "transparent" }}
-  >
-    <img src={next_arrow} alt="Next" style={{ width: "5rem" }} />
-  </button>
-</div>
-
-</div>
-          </div>
-          {activeSections === "language" && selectedQuestionType == 5 ? (
-  // Show this section when selectedQuestionType is 5
-  <div
-    className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
-    style={{ borderRadius: "10px", background: "transparent" }}
-  >
-    <div
-      style={{ border: "5px solid #1C2244", borderRadius: "30px", width: "39rem" }}
-      id="languageSlider5"
-      className="carousel bg-light p-4"
-      data-bs-ride="false"
-      data-bs-interval="false"
-      data-bs-pause="true"
-    >
-      <div className="carousel-inner">
-        {filteredData.length > 0 ? (
-          filteredData.map((item, index) => (
-            <div key={item.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-              <img src={item.image_url} className="d-block w-100 img-fluid" alt={`Slide ${index + 1}`} style={{ height: "560px", objectFit: "cover" }} />
-              <div className="carousel-caption d-block">
-                <h3 className="text-black fw-bold">{item.questions}</h3>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="carousel-item active">
-            <img src="default-image-url" className="d-block w-100 img-fluid" alt="Default Slide" style={{ height: "560px", objectFit: "cover" }} />
-            <div className="carousel-caption d-block">
-              <h3 className="text-black fw-bold">No Data Available</h3>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-) : activeSections === "language" && selectedQuestionType == 2 ? (
-  // Show this section when selectedQuestionType is 2
-  <div
-    className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
-    style={{ borderRadius: "10px", background: "transparent" }}
-  >
-    <div
-      style={{ border: "5px solid #1C2244", borderRadius: "30px", width: "39rem" }}
-      id="languageSlider2"
-      className="carousel bg-light p-4"
-      data-bs-ride="false"
-      data-bs-interval="false"
-      data-bs-pause="true"
-    >
-      <div className="carousel-inner">
-        {filteredData.length > 0 ? (
-          filteredData.map((item, index) => (
-            <div key={item.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-              <img src={item.image_url} className="d-block w-100 img-fluid" alt={`Slide ${index + 1}`} style={{ height: "560px", objectFit: "cover" }} />
-              <div className="carousel-caption d-block">
-                <h3 className="text-black fw-bold">{item.questions}</h3>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="carousel-item active">
-            <img src="default-image-url" className="d-block w-100 img-fluid" alt="Default Slide" style={{ height: "560px", objectFit: "cover" }} />
-            <div className="carousel-caption d-block">
-              <h3 className="text-black fw-bold">No Data Available</h3>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-) : activeSections === "language" ? (
-  // Default section when selectedQuestionType is NOT 5 or 2
-  <div
-    className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
-    style={{ borderRadius: "10px", background: "transparent" }}
-  >
-    <div
-      style={{ border: "5px solid #1C2244", borderRadius: "30px", width: "39rem" }}
-      id="languageSliderDefault"
-      className="carousel bg-light p-4"
-      data-bs-ride="false"
-      data-bs-interval="false"
-      data-bs-pause="true"
-    >
-      <div className="carousel-inner">
-        {filteredData.length > 0 ? (
-          filteredData.map((item, index) => (
-            <div key={item.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-              <img src={item.image_url} className="d-block w-100 img-fluid" alt={`Slide ${index + 1}`} style={{ height: "560px", objectFit: "cover" }} />
-              <div className="carousel-caption d-block">
-                <h3 className="text-black fw-bold">{item.picture_descrs}</h3>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="carousel-item active">
-            <img src="default-image-url" className="d-block w-100 img-fluid" alt="Default Slide" style={{ height: "560px", objectFit: "cover" }} />
-            <div className="carousel-caption d-block">
-              <h3 className="text-black fw-bold">No Data Available</h3>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-) : null}
-
-<div
-  className={`slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4 ${
-    activeSections === "language" ? "" : "d-none"
-  }`}
-  style={{ borderRadius: "10px", background: "transparent" }}
->
-  {/* Navigation Buttons */}
-  {filteredData.length > 1 && (
-    <div className="d-flex align-items-center justify-content-center mt-3">
-      {/* Prev Button */}
-      <button
-        className="btn btn-light mx-2 position-absolute"
-        type="button"
-        data-bs-target={`#${selectedQuestionType === 5 ? "languageSlider5" : selectedQuestionType === 2 ? "languageSlider2" : "languageSliderDefault"}`}
-        data-bs-slide="prev"
-        style={{
-          right: "39rem",
-          border: "none",
-          background: "transparent",
-        }}
-      >
-        <img src="back_to_card.png" alt="Previous" style={{ width: "5rem" }} />
-      </button>
-
-      {/* Next Button */}
-      <button
-        className="btn btn-light mx-2 position-absolute"
-        type="button"
-        data-bs-target={`#${selectedQuestionType === 5 ? "languageSlider5" : selectedQuestionType === 2 ? "languageSlider2" : "languageSliderDefault"}`}
-        data-bs-slide="next"
-        style={{
-          left: "39rem",
-          border: "none",
-          background: "transparent",
-        }}
-      >
-        <img src="next_arrow.png" alt="Next" style={{ width: "5rem" }} />
-      </button>
-    </div>
-  )}
-</div>
-
-
-              <div
-        className={`slider_section_for_articulation d-flex flex-column align-items-center w-75 mx-3 p-4 ${
-          activeSections === "fluency" ? "" : "d-none"
-        }`}
-        style={{ borderRadius: "10px", background: "transparent" }}
-      >
-        <div
-          style={{
-            border: "5px solid #1C2244",
-            borderRadius: "30px",
-            width: "39rem",
-            height: "40rem",
-          }}
-          className="carousel bg-light p-4 ms-5"
-        >
-          {/* Carousel Inner */}
-          <div className="carousel-inner h-100">
-            {selectedSentences.length > 0 ? (
-              selectedSentences.map((sentence, index) => (
-                <div
-                  key={sentence.id}
-                  className={`carousel-item ${
-                    index === activeIndex ? "active" : "d-none"
-                  } h-100 text-dark d-flex align-items-center justify-content-center`}
-                >
-                  <h2>{sentence.sentence}</h2>
+                    {/* Next Button */}
+                    <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target="#articulationSlider"
+                      data-bs-slide="next"
+                      style={{
+                        left: "44rem",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src={next_arrow}
+                        alt="Next"
+                        style={{ width: "3rem" }}
+                      />
+                    </button>
+                  </div>
                 </div>
-              ))
-            ) : (
-              <div className="carousel-item active h-100 text-dark d-flex align-items-center justify-content-center">
-                <h2>No sentences available</h2>
               </div>
-            )}
-          </div>
-
-          {/* Slider Controls */}
-          {selectedSentences.length > 1 && (
-            <div className="d-flex align-items-center justify-content-center mt-3">
-              {/* Prev Button */}
-              <button
-                className="btn btn-light mx-2 position-absolute"
-                onClick={handlePrev}
-                style={{
-                  right: "39rem",
-                  border: "none",
-                  background: "transparent",
-                }}
+              {activeSections === "language" && selectedQuestionType == 5 ? (
+                // Show this section when selectedQuestionType is 5
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      border: "5px solid #1C2244",
+                      borderRadius: "30px",
+                      width: "39rem",
+                    }}
+                    id="languageSlider5"
+                    className="carousel bg-light p-4"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <img
+                              src={item.image_url}
+                              className="d-block w-100 img-fluid"
+                              alt={`Slide ${index + 1}`}
+                              style={{ height: "560px", objectFit: "cover" }}
+                            />
+                            <div className="carousel-caption d-block">
+                              <h3 className="text-black fw-bold">
+                                {item.questions}
+                              </h3>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "560px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : activeSections === "language" && selectedQuestionType == 2 ? (
+                // Show this section when selectedQuestionType is 2
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      border: "5px solid #1C2244",
+                      borderRadius: "30px",
+                      width: "39rem",
+                    }}
+                    id="languageSlider2"
+                    className="carousel bg-light p-4"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <img
+                              src={item.image_url}
+                              className="d-block w-100 img-fluid"
+                              alt={`Slide ${index + 1}`}
+                              style={{ height: "560px", objectFit: "cover" }}
+                            />
+                            <div className="carousel-caption d-block">
+                              <h3 className="text-black fw-bold">
+                                {item.questions}
+                              </h3>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "560px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : activeSections === "language" ? (
+                // Default section when selectedQuestionType is NOT 5 or 2
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      border: "5px solid #1C2244",
+                      borderRadius: "30px",
+                      width: "39rem",
+                    }}
+                    id="languageSliderDefault"
+                    className="carousel bg-light p-4"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <img
+                              src={item.image_url}
+                              className="d-block w-100 img-fluid"
+                              alt={`Slide ${index + 1}`}
+                              style={{ height: "560px", objectFit: "cover" }}
+                            />
+                            <div className="carousel-caption d-block">
+                              <h3 className="text-black fw-bold">
+                                {item.picture_descrs}
+                              </h3>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "560px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <div
+                className={`slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4 ${
+                  activeSections === "language" ? "" : "d-none"
+                }`}
+                style={{ borderRadius: "10px", background: "transparent" }}
               >
-                <img
-                  src={back_to_card}
-                  alt="Previous"
-                  style={{ width: "5rem" }}
-                />
-              </button>
+                {/* Navigation Buttons */}
+                {filteredData.length > 1 && (
+                  <div className="d-flex align-items-center justify-content-center mt-3">
+                    {/* Prev Button */}
+                    <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target={`#${
+                        selectedQuestionType === 5
+                          ? "languageSlider5"
+                          : selectedQuestionType === 2
+                          ? "languageSlider2"
+                          : "languageSliderDefault"
+                      }`}
+                      data-bs-slide="prev"
+                      style={{
+                        right: "39rem",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src="back_to_card.png"
+                        alt="Previous"
+                        style={{ width: "5rem" }}
+                      />
+                    </button>
 
-              {/* Next Button */}
-              <button
-                className="btn btn-light mx-2 position-absolute"
-                onClick={handleNext}
-                style={{
-                  left: "39rem",
-                  border: "none",
-                  background: "transparent",
-                }}
+                    {/* Next Button */}
+                    <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target={`#${
+                        selectedQuestionType === 5
+                          ? "languageSlider5"
+                          : selectedQuestionType === 2
+                          ? "languageSlider2"
+                          : "languageSliderDefault"
+                      }`}
+                      data-bs-slide="next"
+                      style={{
+                        left: "39rem",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src="next_arrow.png"
+                        alt="Next"
+                        style={{ width: "5rem" }}
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div
+                className={`slider_section_for_articulation d-flex flex-column align-items-center w-75 mx-3 p-4 ${
+                  activeSections === "fluency" ? "" : "d-none"
+                }`}
+                style={{ borderRadius: "10px", background: "transparent" }}
               >
-                <img src={next_arrow} alt="Next" style={{ width: "5rem" }} />
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+                <div
+                  style={{
+                    border: "5px solid #1C2244",
+                    borderRadius: "30px",
+                    width: "44rem",
+                    height: "43rem",
+                  }}
+                  className="carousel bg-light p-4 ms-5"
+                >
+                  {/* Carousel Inner */}
+                  <div className="carousel-inner h-100">
+                    {selectedSentences.length > 0 ? (
+                      selectedSentences.map((sentence, index) => (
+                        <div
+                          key={sentence.id}
+                          className={`carousel-item ${
+                            index === activeIndex ? "active" : "d-none"
+                          } h-100 text-dark d-flex align-items-center justify-content-center`}
+                        >
+                          <h2>{sentence.sentence}</h2>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="carousel-item active h-100 text-dark d-flex align-items-center justify-content-center">
+                        <h2>No sentences available</h2>
+                      </div>
+                    )}
+                  </div>
 
+                  {/* Slider Controls */}
+                  {selectedSentences.length > 1 && (
+                    <div className="d-flex align-items-center justify-content-center mt-3">
+                      {/* Prev Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        onClick={handlePrev}
+                        style={{
+                          right: "44rem",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={back_to_card}
+                          alt="Previous"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+
+                      {/* Next Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        onClick={handleNext}
+                        style={{
+                          left: "44rem",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={next_arrow}
+                          alt="Next"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
               {/* Right Section */}
               <div className="button_section d-flex w-25 flex-column  justify-content-center">
                 <div className="d-flex flex-column gap-5 align-items-center">
@@ -2010,78 +2221,95 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                   </button>
 
                   {hasData.articulation && (
-      <div className="d-flex flex-column align-items-center gap-2 text-light">
-        <img
-          style={{ width: "5rem" }}
-          src={
-            activeSections === "articulation"
-              ? imageMap.articulation
-              : articulation_img
-          }
-          alt="articulation_img"
-          className="img-fluid cursor-pointer"
-          onClick={() => setActiveSections("articulation")}
-        />
-        <h4
-          style={{
-            color: activeSections === "articulation" ? "#E77519" : "#fff",
-            fontWeight: activeSections === "articulation" ? "bold" : "normal",
-          }}
-        >
-          Articulation
-        </h4>
-      </div>
-    )}
+                    <div className="d-flex flex-column align-items-center gap-2 text-light">
+                      <img
+                        style={{ width: "5rem" }}
+                        src={
+                          activeSections === "articulation"
+                            ? imageMap.articulation
+                            : articulation_img
+                        }
+                        alt="articulation_img"
+                        className="img-fluid cursor-pointer"
+                        onClick={() => setActiveSections("articulation")}
+                      />
+                      <h4
+                        style={{
+                          color:
+                            activeSections === "articulation"
+                              ? "#E77519"
+                              : "#fff",
+                          fontWeight:
+                            activeSections === "articulation"
+                              ? "bold"
+                              : "normal",
+                        }}
+                      >
+                        Articulation
+                      </h4>
+                    </div>
+                  )}
 
-    {hasData.language && (
-      <div className="d-flex flex-column align-items-center gap-2 text-light">
-        <img
-          style={{ width: "5rem" }}
-          src={activeSections === "language" ? imageMap.language : language_img}
-          alt="language_btn"
-          className="img-fluid cursor-pointer"
-          onClick={() => setActiveSections("language")}
-        />
-        <h4
-          style={{
-            color: activeSections === "language" ? "#E77519" : "#fff",
-            fontWeight: activeSections === "language" ? "bold" : "normal",
-          }}
-        >
-          Language
-        </h4>
-      </div>
-    )}
+                  {hasData.language && (
+                    <div className="d-flex flex-column align-items-center gap-2 text-light">
+                      <img
+                        style={{ width: "5rem" }}
+                        src={
+                          activeSections === "language"
+                            ? imageMap.language
+                            : language_img
+                        }
+                        alt="language_btn"
+                        className="img-fluid cursor-pointer"
+                        onClick={() => setActiveSections("language")}
+                      />
+                      <h4
+                        style={{
+                          color:
+                            activeSections === "language" ? "#E77519" : "#fff",
+                          fontWeight:
+                            activeSections === "language" ? "bold" : "normal",
+                        }}
+                      >
+                        Language
+                      </h4>
+                    </div>
+                  )}
 
-    {hasData.fluency && (
-      <div className="d-flex flex-column align-items-center gap-2 text-light">
-        <img
-          style={{ width: "5rem" }}
-          src={activeSections === "fluency" ? imageMap.fluency : fluenc_img}
-          alt="fluency_img"
-          className="img-fluid cursor-pointer"
-          onClick={() => setActiveSections("fluency")}
-        />
-        <h4
-          style={{
-            color: activeSections === "fluency" ? "#E77519" : "#fff",
-            fontWeight: activeSections === "fluency" ? "bold" : "normal",
-          }}
-        >
-          Fluency
-        </h4>
-      </div>
-    )}
-  </div>
-</div>;
+                  {hasData.fluency && (
+                    <div className="d-flex flex-column align-items-center gap-2 text-light">
+                      <img
+                        style={{ width: "5rem" }}
+                        src={
+                          activeSections === "fluency"
+                            ? imageMap.fluency
+                            : fluenc_img
+                        }
+                        alt="fluency_img"
+                        className="img-fluid cursor-pointer"
+                        onClick={() => setActiveSections("fluency")}
+                      />
+                      <h4
+                        style={{
+                          color:
+                            activeSections === "fluency" ? "#E77519" : "#fff",
+                          fontWeight:
+                            activeSections === "fluency" ? "bold" : "normal",
+                        }}
+                      >
+                        Fluency
+                      </h4>
+                    </div>
+                  )}
                 </div>
               </div>
+              ;
             </div>
-         
+          </div>
+        </div>
       )}
     </div>
   );
 };
-
 
 export default Activitycard;
