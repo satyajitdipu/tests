@@ -76,7 +76,24 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [filteredSubCategories, setfilteredSubCategories] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [isAnyChecked, setIsAnyChecked] = useState(false);
-  
+  const [inputValue, setInputValue] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // show answer function
+
+ const ShowAns = (answer)=>{
+  setInputValue(answer)
+ }
+
+ const handleNextSinglequestion = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % filteredData.length);
+    setInputValue(''); // Clear input on next
+  };
+
+  const handlePrevSinglequestion = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + filteredData.length) % filteredData.length);
+    setInputValue(''); // Clear input on prev
+  };
+
   // Handle dropdown selection
   const handleFluencyChange = (e) => {
     const fluencyId = e.target.value;
@@ -166,16 +183,19 @@ useEffect(() => {
       filtered = filtered.filter(
         (item) => item.language_type_id == selectedLanguageType
       );
+      setInputValue(''); // Clear input on next
     }
     if (selectedSubCategory) {
       filtered = filtered.filter(
         (item) => item.sub_category_id == selectedSubCategory
       );
+      setInputValue(''); // Clear input on next
     }
     if (selectedQuestionType) {
       filtered = filtered.filter(
         (item) => item.question_type_id == selectedQuestionType
       );
+      setInputValue(''); // Clear input on next
     }
 
     setFilteredData(filtered);
@@ -491,14 +511,14 @@ useEffect(() => {
     try {
       setIsProceedClicked(true);
       let response;
-  
+
       // Initialize a local object to track data availability
       const localHasData = {
         articulation: false,
         fluency: false,
         language: false,
       };
-  
+
       // Fetch articulation images if selections exist
       if (storedSelections && Object.keys(storedSelections).length > 0) {
         response = await axios.post(
@@ -512,7 +532,7 @@ useEffect(() => {
           console.error("Image API Error:", response.data.message);
         }
       }
-  
+
       // Fetch fluency sentences if selected IDs exist
       if (selectedIds && selectedIds.length > 0) {
         try {
@@ -530,7 +550,7 @@ useEffect(() => {
           console.error("Error fetching fluency sentences:", error);
         }
       }
-  
+
       // Fetch language data if formatted selections exist
       if (formattedSelections && formattedSelections.filters?.length > 0) {
         try {
@@ -552,21 +572,39 @@ useEffect(() => {
           console.error("Error fetching language data:", error);
         }
       }
-  
+
       // Update hasData state based on localHasData
       setHasData(localHasData);
-  
+
       // Update active sections based on available data
-      if (localHasData.fluency && !localHasData.articulation && !localHasData.language) {
+      if (
+        localHasData.fluency &&
+        !localHasData.articulation &&
+        !localHasData.language
+      ) {
         setActiveSections("fluency");
-      } else if (!localHasData.fluency && localHasData.articulation && !localHasData.language) {
+      } else if (
+        !localHasData.fluency &&
+        localHasData.articulation &&
+        !localHasData.language
+      ) {
         setActiveSections("articulation");
-      } else if (!localHasData.fluency && !localHasData.articulation && localHasData.language) {
+      } else if (
+        !localHasData.fluency &&
+        !localHasData.articulation &&
+        localHasData.language
+      ) {
+        setActiveSections("language");
+      } else if (
+        localHasData.fluency &&
+        !localHasData.articulation &&
+        localHasData.language
+      ) {
         setActiveSections("language");
       } else {
         setActiveSections("articulation"); // If multiple data types are available
       }
-  
+
       // Clear selections after processing
       if (
         (storedSelections && Object.keys(storedSelections).length > 0) ||
@@ -581,8 +619,6 @@ useEffect(() => {
       console.error("Error calling the API:", error);
     }
   };
-  
-  
 
   useEffect(() => {
     const savedSelections = JSON.parse(
@@ -803,7 +839,7 @@ useEffect(() => {
           <div className="modal-content " onClick={(e) => e.stopPropagation()}>
             <div className="d-flex justify-content-center flex-column gap-4 ">
               <div className="d-flex justify-content-center gap-4 position-relative">
-                {["Articulation", "Fluency"].map((buttonLabel) => (
+                {["Articulation", "Language", "Fluency"].map((buttonLabel) => (
                   <button
                     key={buttonLabel}
                     className={`articulation_button px-4 py-5 fw-bold fs-2 d-flex justify-content-center align-items-center ${
@@ -893,7 +929,7 @@ useEffect(() => {
                     borderRadius: "5px",
                     cursor: "pointer",
                   }}
-                  className="px-3 py-2 rounded me-3 d-none"
+                  className="px-3 py-2 rounded me-3"
                 >
                   Language
                 </button>
@@ -1162,7 +1198,7 @@ useEffect(() => {
                 </button>
 
                 {/* Active Language Button */}
-                <button className="d-none"
+                <button
                   style={{
                     marginTop: "0px",
                     padding: "10px 20px",
@@ -1498,7 +1534,7 @@ useEffect(() => {
                   Articulation
                 </button>
 
-                <button className="d-none"
+                <button
                   onClick={() => {
                     closeModal();
                     setIsLanguageModalOpen(true);
@@ -1626,50 +1662,52 @@ useEffect(() => {
                 }`}
               >
                 {/* Sound Dropdown */}
-              
-                  {/* 🔹 1st Dropdown: Select Sound */}
-                  <select className="w-100 sound_name"
-                    onChange={(e) => setSelectedSound(e.target.value)}
-                    value={selectedSound}
+
+                {/* 🔹 1st Dropdown: Select Sound */}
+                <select
+                  className="w-100 sound_name"
+                  onChange={(e) => setSelectedSound(e.target.value)}
+                  value={selectedSound}
+                >
+                  <option value="">Select Sound</option>
+                  {Object.keys(storedSelections).map((sound) => (
+                    <option key={sound} value={sound}>
+                      {sound}
+                    </option>
+                  ))}
+                </select>
+
+                {/* 🔹 2nd Dropdown: Show 1st Array (Initial, Middle, Final) */}
+                {selectedSound && (
+                  <select
+                    className="w-100 my-4 sound_position"
+                    onChange={(e) => setSelectedPosition(e.target.value)}
+                    value={selectedPosition}
                   >
-                    <option value="">Select Sound</option>
-                    {Object.keys(storedSelections).map((sound) => (
-                      <option key={sound} value={sound}>
-                        {sound}
+                    <option value="">Select Position</option>
+                    {storedSelections[selectedSound][0].map((item, index) => (
+                      <option key={index} value={item}>
+                        {item}
                       </option>
                     ))}
                   </select>
+                )}
 
-                  {/* 🔹 2nd Dropdown: Show 1st Array (Initial, Middle, Final) */}
-                  {selectedSound && (
-                    <select className="w-100 my-4 sound_position"
-                      onChange={(e) => setSelectedPosition(e.target.value)}
-                      value={selectedPosition}
-                    >
-                      <option value="">Select Position</option>
-                      {storedSelections[selectedSound][0].map((item, index) => (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-
-                  {/* 🔹 3rd Dropdown: Show 2nd Array (Sentences, Phrases, Words) */}
-                  {selectedSound && selectedPosition && (
-                    <select className="w-100 my-4 sound_position"
-                      onChange={(e) => setSelectedSentence(e.target.value)}
-                      value={selectedSentence}
-                    >
-                      <option value="">Select Type</option>
-                      {storedSelections[selectedSound][1].map((item, index) => (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-              
+                {/* 🔹 3rd Dropdown: Show 2nd Array (Sentences, Phrases, Words) */}
+                {selectedSound && selectedPosition && (
+                  <select
+                    className="w-100 my-4 sound_position"
+                    onChange={(e) => setSelectedSentence(e.target.value)}
+                    value={selectedSentence}
+                  >
+                    <option value="">Select Type</option>
+                    {storedSelections[selectedSound][1].map((item, index) => (
+                      <option key={index} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                )}
 
                 <div
                   className="annotator d-none flex-column gap-2 justify-content-center align-items-center text-light mt-4"
@@ -1683,8 +1721,17 @@ useEffect(() => {
                   Annotator
                 </div>
                 <div onClick={closeNewModal} className="back_to_main_menu mt-5">
-                  <button className="px-4 py-2  w-100 mt-5" style={{borderRadius: "9px",background:"#F0F0F0",fontWeight:"500"}}> Back to main menu</button>
-                 
+                  <button
+                    className="px-4 py-2  w-100 mt-5"
+                    style={{
+                      borderRadius: "9px",
+                      background: "#F0F0F0",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {" "}
+                    Back to main menu
+                  </button>
                 </div>
               </div>
               <div
@@ -1695,6 +1742,7 @@ useEffect(() => {
                 <div>
                   {/* 🔹 1st Dropdown: Select Language Type */}
                   <select
+                    className="w-100 my-4 sound_position"
                     onChange={(e) => setSelectedLanguageType(e.target.value)}
                     value={selectedLanguageType}
                   >
@@ -1709,6 +1757,7 @@ useEffect(() => {
                   {/* 🔹 2nd Dropdown: Filtered Subcategories */}
                   {selectedLanguageType && (
                     <select
+                      className="w-100 my-4 sound_position"
                       onChange={(e) => setSelectedSubCategory(e.target.value)}
                       value={selectedSubCategory}
                     >
@@ -1724,6 +1773,7 @@ useEffect(() => {
                   {/* 🔹 3rd Dropdown: Filtered Question Types */}
                   {selectedLanguageType && selectedSubCategory && (
                     <select
+                      className="w-100 my-4 sound_position"
                       onChange={(e) => setSelectedQuestionType(e.target.value)}
                       value={selectedQuestionType}
                     >
@@ -1770,10 +1820,18 @@ useEffect(() => {
     </select>
 
                 <div onClick={closeNewModal} className="back_to_main_menu mt-5">
-                  <button className="px-4 py-2  w-100 mt-5" style={{borderRadius: "9px",background:"#F0F0F0",fontWeight:"500"}}> Back to main menu</button>
-                 
+                  <button
+                    className="px-4 py-2  w-100 mt-5"
+                    style={{
+                      borderRadius: "9px",
+                      background: "#F0F0F0",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {" "}
+                    Back to main menu
+                  </button>
                 </div>
-
               </div>
               {/* Middle Section with Slider */}
               <div
@@ -1906,10 +1964,10 @@ useEffect(() => {
                     style={{
                       border: "5px solid #1C2244",
                       borderRadius: "30px",
-                      width: "39rem",
+                      width: "44rem",
                     }}
                     id="languageSlider5"
-                    className="carousel bg-light p-4"
+                    className="carousel bg-light p-4 ms-5"
                     data-bs-ride="false"
                     data-bs-interval="false"
                     data-bs-pause="true"
@@ -1927,10 +1985,10 @@ useEffect(() => {
                               src={item.image_url}
                               className="d-block w-100 img-fluid"
                               alt={`Slide ${index + 1}`}
-                              style={{ height: "560px", objectFit: "cover" }}
+                              style={{ height: "600px", objectFit: "contain" }}
                             />
                             <div className="carousel-caption d-block">
-                              <h3 className="text-black fw-bold">
+                              <h3 className="text-black fw-bold bg-primary">
                                 {item.questions}
                               </h3>
                             </div>
@@ -1955,7 +2013,7 @@ useEffect(() => {
                   </div>
                 </div>
               ) : activeSections === "language" && selectedQuestionType == 2 ? (
-                // Show this section when selectedQuestionType is 2
+                // Show this section when selectedQuestionType is multiple choice questions
                 <div
                   className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
                   style={{ borderRadius: "10px", background: "transparent" }}
@@ -1964,10 +2022,10 @@ useEffect(() => {
                     style={{
                       border: "5px solid #1C2244",
                       borderRadius: "30px",
-                      width: "39rem",
+                      width: "44rem",
                     }}
                     id="languageSlider2"
-                    className="carousel bg-light p-4"
+                    className="carousel bg-light p-4 ms-5"
                     data-bs-ride="false"
                     data-bs-interval="false"
                     data-bs-pause="true"
@@ -1985,10 +2043,10 @@ useEffect(() => {
                               src={item.image_url}
                               className="d-block w-100 img-fluid"
                               alt={`Slide ${index + 1}`}
-                              style={{ height: "560px", objectFit: "cover" }}
+                              style={{ height: "600px", objectFit: "contain" }}
                             />
                             <div className="carousel-caption d-block">
-                              <h3 className="text-black fw-bold">
+                              <h3 className="text-black fw-bold text-dark">
                                 {item.questions}
                               </h3>
                             </div>
@@ -2000,7 +2058,7 @@ useEffect(() => {
                             src="default-image-url"
                             className="d-block w-100 img-fluid"
                             alt="Default Slide"
-                            style={{ height: "560px", objectFit: "cover" }}
+                            style={{ height: "600px", objectFit: "cover" }}
                           />
                           <div className="carousel-caption d-block">
                             <h3 className="text-black fw-bold">
@@ -2009,6 +2067,45 @@ useEffect(() => {
                           </div>
                         </div>
                       )}
+                    </div>
+                    <div className="d-flex align-items-center justify-content-center mt-3">
+                      {/* Prev Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider2"
+                        data-bs-slide="prev"
+                        style={{
+                          right: "44rem",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={back_to_card}
+                          alt="Previous"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+
+                      {/* Next Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider2"
+                        data-bs-slide="next"
+                        style={{
+                          left: "44rem",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={next_arrow}
+                          alt="Next"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -2022,7 +2119,8 @@ useEffect(() => {
                     style={{
                       border: "5px solid #1C2244",
                       borderRadius: "30px",
-                      width: "39rem",
+                      width: "44rem",
+                      height: "43rem",
                     }}
                     id="languageSliderDefault"
                     className="carousel bg-light p-4"
@@ -2039,16 +2137,53 @@ useEffect(() => {
                               index === 0 ? "active" : ""
                             }`}
                           >
-                            <img
-                              src={item.image_url}
-                              className="d-block w-100 img-fluid"
-                              alt={`Slide ${index + 1}`}
-                              style={{ height: "560px", objectFit: "cover" }}
-                            />
-                            <div className="carousel-caption d-block">
-                              <h3 className="text-black fw-bold">
+                            <div
+                              className="d-flex justify-content-center"
+                              style={{ height: "30rem" }}
+                            >
+                              <img
+                                src={item.image_url}
+                                className="d-block  img-fluid"
+                                alt={`Slide ${index + 1}`}
+                                style={{ height: "32rem", width: "32rem" }}
+                              />
+                            </div>
+                            <div
+                              style={{ top: "31.75rem" }}
+                              className="carousel-caption d-block"
+                            >
+                              <h3 className="text-black fw-bold  text-dark">
                                 {item.picture_descrs}
                               </h3>
+                            </div>
+
+                            {/* show answer section */}
+                            <div
+                              style={{
+                                position: "absolute",
+                                bottom: "-10rem",
+                                width: "100%",
+                              }}
+                              className="show_ans mt-4 d-flex gap-2 justify-content-center align-items-center"
+                            >
+                              <input
+                                value={inputValue}
+                                style={{ borderRadius: "8px", textAlign:"center" }}
+                                className="py-2"
+                                type="text"
+                               
+                              />
+                              <button onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
+                                className="px-3 py-2"
+                                style={{
+                                  background: "#6AB04C",
+                                  borderRadius: "10px",
+                                  color: "#fff",
+                                  border: "none",
+                                }}
+                              >
+                                Show Answer
+                              </button>
                             </div>
                           </div>
                         ))
@@ -2068,70 +2203,68 @@ useEffect(() => {
                         </div>
                       )}
                     </div>
+                    {filteredData.length > 1 && (
+                      <div
+                        style={{ marginTop: "9rem" }}
+                        className="d-flex align-items-center justify-content-center "
+                      >
+                        {/* Prev Button */}
+                        <button
+                        onClick={handlePrevSinglequestion}
+                          className="btn btn-light mx-2 position-absolute"
+                          type="button"
+                          data-bs-target={`#${
+                            selectedQuestionType === 5
+                              ? "languageSlider5"
+                              : selectedQuestionType === 2
+                              ? "languageSlider2"
+                              : "languageSliderDefault"
+                          }`}
+                          data-bs-slide="prev"
+                          style={{
+                            right: "43.5rem",
+                            border: "none",
+                            background: "transparent",
+                          }}
+                        >
+                          <img
+                            src={back_to_card}
+                            alt="Previous"
+                            style={{ width: "3rem" }}
+                          />
+                        </button>
+
+                        {/* Next Button */}
+                        <button
+                         onClick={handleNextSinglequestion}
+                          className="btn btn-light mx-2 position-absolute"
+                          type="button"
+                          data-bs-target={`#${
+                            selectedQuestionType === 5
+                              ? "languageSlider5"
+                              : selectedQuestionType === 2
+                              ? "languageSlider2"
+                              : "languageSliderDefault"
+                          }`}
+                          data-bs-slide="next"
+                          style={{
+                            left: "43.5rem",
+                            border: "none",
+                            background: "transparent",
+                          }}
+                        >
+                          <img
+                            src={next_arrow}
+                            alt="Next"
+                            style={{ width: "3rem" }}
+                          />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : null}
-              <div
-                className={`slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4 ${
-                  activeSections === "language" ? "" : "d-none"
-                }`}
-                style={{ borderRadius: "10px", background: "transparent" }}
-              >
-                {/* Navigation Buttons */}
-                {filteredData.length > 1 && (
-                  <div className="d-flex align-items-center justify-content-center mt-3">
-                    {/* Prev Button */}
-                    <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target={`#${
-                        selectedQuestionType === 5
-                          ? "languageSlider5"
-                          : selectedQuestionType === 2
-                          ? "languageSlider2"
-                          : "languageSliderDefault"
-                      }`}
-                      data-bs-slide="prev"
-                      style={{
-                        right: "39rem",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src="back_to_card.png"
-                        alt="Previous"
-                        style={{ width: "5rem" }}
-                      />
-                    </button>
-
-                    {/* Next Button */}
-                    <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target={`#${
-                        selectedQuestionType === 5
-                          ? "languageSlider5"
-                          : selectedQuestionType === 2
-                          ? "languageSlider2"
-                          : "languageSliderDefault"
-                      }`}
-                      data-bs-slide="next"
-                      style={{
-                        left: "39rem",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src="next_arrow.png"
-                        alt="Next"
-                        style={{ width: "5rem" }}
-                      />
-                    </button>
-                  </div>
-                )}
-              </div>
+              {/* Navigation Buttons */}
               <div
                 className={`slider_section_for_articulation d-flex flex-column align-items-center w-75 mx-3 p-4 ${
                   activeSections === "fluency" ? "" : "d-none"
