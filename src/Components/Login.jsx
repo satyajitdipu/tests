@@ -20,7 +20,7 @@ const Login = () => {
  
 
   const handleClick = () => {
-    navigate("/myaccount");
+    navigate("/pricing");
   };
 
   const handleforgotpassword = () => {
