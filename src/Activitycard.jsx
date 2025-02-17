@@ -364,7 +364,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
       // Make API call to fetch subcategories by category ID
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/lang-subcategories/${id}`,
+        `https://virtualtxai.com/api/lang-subcategories/${id}`,
         {}
       );
 
@@ -568,7 +568,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       // Fetch articulation images if selections exist
       if (storedSelections && Object.keys(storedSelections).length > 0) {
         response = await axios.post(
-          "http://127.0.0.1:8000/api/get-image-by-artic-id-and-sentence",
+          "https://virtualtxai.com/api/get-image-by-artic-id-and-sentence",
           storedSelections
         );
         if (response.data.success) {
@@ -583,7 +583,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       if (selectedIds && selectedIds.length > 0) {
         try {
           const fluencyResponse = await axios.post(
-            "http://127.0.0.1:8000/api/get-fluency-sentences",
+            "https://virtualtxai.com/api/get-fluency-sentences",
             { ids: selectedIds }
           );
           if (fluencyResponse.data.success) {
@@ -601,11 +601,11 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       if (formattedSelections && formattedSelections.filters?.length > 0) {
         try {
           const languageResponse = await axios.post(
-            "http://127.0.0.1:8000/api/language-children-multiple",
+            "https://virtualtxai.com/api/language-children-multiple",
             formattedSelections
           );
           const languageQuesResponse = await axios.get(
-            "http://127.0.0.1:8000/api/language-question-types"
+            "https://virtualtxai.com/api/language-question-types"
           );
           if (languageResponse.data.success) {
             setLanguageData(languageResponse.data.data);
@@ -744,7 +744,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/articulations") // Replace with actual endpoint
+      .get("https://virtualtxai.com/api/articulations") // Replace with actual endpoint
       .then((response) => {
         console.log("Articulations:", response.data.data);
         setArticulations(response.data.data); // Assuming response.data.data is an array
@@ -755,7 +755,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, []);
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/lang-categories") // Replace with actual endpoint
+      .get("https://virtualtxai.com/api/lang-categories") // Replace with actual endpoint
       .then((response) => {
         console.log("Language catagory", response.data.data);
         setLanguage(response.data.data); // Assuming response.data.data is an array
@@ -766,7 +766,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, []);
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/fluency-levels") // Replace with actual endpoint
+      .get("https://virtualtxai.com/api/fluency-levels") // Replace with actual endpoint
       .then((response) => {
         console.log("fluency-levels:", response.data.data);
         setFluency(response.data.data); // Assuming response.data.data is an array

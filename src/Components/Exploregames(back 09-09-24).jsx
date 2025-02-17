@@ -20,7 +20,7 @@ const Exploregames = () => {
   // Fetch games, categories, and age filters from API
   const fetchGamesData = async (ageFilter = '', category = '') => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/all-games?age_filters=${ageFilter}&categories=${category}`);
+      const response = await fetch(`https://virtualtxai.com/api/all-games?age_filters=${ageFilter}&categories=${category}`);
       const data = await response.json();
       setGames(data.all_games);
       console.log(data)
