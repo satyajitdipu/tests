@@ -76,22 +76,53 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [filteredSubCategories, setfilteredSubCategories] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [isAnyChecked, setIsAnyChecked] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [isShowanswer, setShowanswer] = useState(true);
+  const [popupContent, setPopupContent] = useState("");
+
+  const handleDisplayAnswer = (answers) => {
+    console.log(answers);
+    setPopupContent(answers);
+    setIsPopupVisible(true);
+  };
+  useEffect(() => {
+    setIsPopupVisible(false); // Set popup visibility to false on reload
+  }, []);
+
   // show answer function
 
- const ShowAns = (answer)=>{
-  setInputValue(answer)
- }
+  const [highlightedAnswer, setHighlightedAnswer] = useState(null);
 
- const handleNextSinglequestion = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % filteredData.length);
-    setInputValue(''); // Clear input on next
+  const ShowAnsYesno = (answers) => {
+    // Assuming answers is an object with a property that indicates the answer
+
+    setHighlightedAnswer(answers);
+    console.log(answers);
+  };
+
+  const ShowAns = (answers) => {
+    setInputValue(answers);
+    setPopupMessage(answers); // Set the message for the popup
+    setIsPopupVisible(true); // Show the popup
+
+    // Hide the popup after 4 seconds
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 4000);
+  };
+
+  const handleNextSinglequestion = () => {
+    setInputValue(""); // Clear input on next
+    setIsPopupVisible(false);
+    setHighlightedAnswer(null);
   };
 
   const handlePrevSinglequestion = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + filteredData.length) % filteredData.length);
-    setInputValue(''); // Clear input on prev
+    setInputValue(""); // Clear input on prev
+    setIsPopupVisible(false);
+    setHighlightedAnswer(null);
   };
 
   // Handle dropdown selection
@@ -105,15 +136,15 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     );
     setSelectedSentences(selectedFluency ? selectedFluency.levels : []);
     setActiveIndex(0); // Reset index when changing fluency
-};
+  };
 
-// Auto-select first fluency when FluencyData is available
-useEffect(() => {
+  // Auto-select first fluency when FluencyData is available
+  useEffect(() => {
     if (FluencyData.length > 0) {
-        setSelectedFluencyId(FluencyData[0].fluency_id);
-        setSelectedSentences(FluencyData[0].levels);
+      setSelectedFluencyId(FluencyData[0].fluency_id);
+      setSelectedSentences(FluencyData[0].levels);
     }
-}, [FluencyData]);
+  }, [FluencyData]);
   const [hasData, setHasData] = useState({
     articulation: false,
     language: false,
@@ -142,23 +173,22 @@ useEffect(() => {
 
   useEffect(() => {
     if (storedSelections && Object.keys(storedSelections).length > 0) {
-        const firstSound = Object.keys(storedSelections)[0]; // Get the first sound
-        if (firstSound) {
-            setSelectedSound(firstSound);
-            setSelectedPosition(storedSelections[firstSound]?.[0]?.[0] || ""); // First position
-            setSelectedSentence(storedSelections[firstSound]?.[1]?.[0] || ""); // First sentence type
-        }
+      const firstSound = Object.keys(storedSelections)[0]; // Get the first sound
+      if (firstSound) {
+        setSelectedSound(firstSound);
+        setSelectedPosition(storedSelections[firstSound]?.[0]?.[0] || ""); // First position
+        setSelectedSentence(storedSelections[firstSound]?.[1]?.[0] || ""); // First sentence type
+      }
     }
-}, [storedSelections]); // Added dependency to re-run if storedSelections updates
+  }, [storedSelections]); // Added dependency to re-run if storedSelections updates
 
-// Update selectedPosition & selectedSentence when selectedSound changes
-useEffect(() => {
+  // Update selectedPosition & selectedSentence when selectedSound changes
+  useEffect(() => {
     if (selectedSound && storedSelections[selectedSound]) {
-        setSelectedPosition(storedSelections[selectedSound]?.[0]?.[0] || ""); // First position
-        setSelectedSentence(storedSelections[selectedSound]?.[1]?.[0] || ""); // First sentence type
+      setSelectedPosition(storedSelections[selectedSound]?.[0]?.[0] || ""); // First position
+      setSelectedSentence(storedSelections[selectedSound]?.[1]?.[0] || ""); // First sentence type
     }
-}, [selectedSound, storedSelections]); // Added storedSelections as dependency
-
+  }, [selectedSound, storedSelections]); // Added storedSelections as dependency
 
   const ArfilteredData = Object.keys(ArticulationData)
     .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
@@ -175,29 +205,33 @@ useEffect(() => {
     }, {});
 
   //language filter
-
   useEffect(() => {
+    if (Filtercat.length > 0) {
+      setSelectedLanguageType(Filtercat[0].id); // Set first value on render
+    }
+  }, [Filtercat]); // Runs when Filtercat changes
+  useEffect(() => {
+    setIsPopupVisible(false);
     let filtered = LanguageData;
     console.log(selectedQuestionType);
     if (selectedLanguageType) {
       filtered = filtered.filter(
         (item) => item.language_type_id == selectedLanguageType
       );
-      setInputValue(''); // Clear input on next
     }
     if (selectedSubCategory) {
       filtered = filtered.filter(
         (item) => item.sub_category_id == selectedSubCategory
       );
-      setInputValue(''); // Clear input on next
+      setInputValue(""); // Clear input on next
     }
     if (selectedQuestionType) {
       filtered = filtered.filter(
         (item) => item.question_type_id == selectedQuestionType
       );
-      setInputValue(''); // Clear input on next
+      setInputValue(""); // Clear input on next
     }
-
+    console.log(filtered);
     setFilteredData(filtered);
   }, [
     selectedLanguageType,
@@ -258,7 +292,19 @@ useEffect(() => {
     Languageallquestion,
   ]);
 
+  // option answer
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState([]);
 
+  // Handle Show Answer with parameter
+  const handleShowAnswer = (correctOption) => {
+    try {
+      const correctIndexes = JSON.parse(correctOption); // Parse correct indexes
+      setShowCorrectAnswer(correctIndexes.map(Number)); // Convert to numbers
+    } catch (error) {
+      console.error("Error parsing correct_option:", error);
+      setShowCorrectAnswer([]); // Fallback in case of an error
+    }
+  };
   // State to track the active section
   const [activeSections, setActiveSections] = useState("articulation");
 
@@ -318,7 +364,7 @@ useEffect(() => {
 
       // Make API call to fetch subcategories by category ID
       const response = await axios.get(
-        `https://virtualtxai.com/api/lang-subcategories/${id}`,
+        `http://127.0.0.1:8000/api/lang-subcategories/${id}`,
         {}
       );
 
@@ -522,7 +568,7 @@ useEffect(() => {
       // Fetch articulation images if selections exist
       if (storedSelections && Object.keys(storedSelections).length > 0) {
         response = await axios.post(
-          "https://virtualtxai.com/api/get-image-by-artic-id-and-sentence",
+          "http://127.0.0.1:8000/api/get-image-by-artic-id-and-sentence",
           storedSelections
         );
         if (response.data.success) {
@@ -537,7 +583,7 @@ useEffect(() => {
       if (selectedIds && selectedIds.length > 0) {
         try {
           const fluencyResponse = await axios.post(
-            "https://virtualtxai.com/api/get-fluency-sentences",
+            "http://127.0.0.1:8000/api/get-fluency-sentences",
             { ids: selectedIds }
           );
           if (fluencyResponse.data.success) {
@@ -555,11 +601,11 @@ useEffect(() => {
       if (formattedSelections && formattedSelections.filters?.length > 0) {
         try {
           const languageResponse = await axios.post(
-            "https://virtualtxai.com/api/language-children-multiple",
+            "http://127.0.0.1:8000/api/language-children-multiple",
             formattedSelections
           );
           const languageQuesResponse = await axios.get(
-            "https://virtualtxai.com/api/language-question-types"
+            "http://127.0.0.1:8000/api/language-question-types"
           );
           if (languageResponse.data.success) {
             setLanguageData(languageResponse.data.data);
@@ -698,7 +744,7 @@ useEffect(() => {
 
   useEffect(() => {
     axios
-      .get("https://virtualtxai.com/api/articulations") // Replace with actual endpoint
+      .get("http://127.0.0.1:8000/api/articulations") // Replace with actual endpoint
       .then((response) => {
         console.log("Articulations:", response.data.data);
         setArticulations(response.data.data); // Assuming response.data.data is an array
@@ -709,7 +755,7 @@ useEffect(() => {
   }, []);
   useEffect(() => {
     axios
-      .get("https://virtualtxai.com/api/lang-categories") // Replace with actual endpoint
+      .get("http://127.0.0.1:8000/api/lang-categories") // Replace with actual endpoint
       .then((response) => {
         console.log("Language catagory", response.data.data);
         setLanguage(response.data.data); // Assuming response.data.data is an array
@@ -720,7 +766,7 @@ useEffect(() => {
   }, []);
   useEffect(() => {
     axios
-      .get("https://virtualtxai.com/api/fluency-levels") // Replace with actual endpoint
+      .get("http://127.0.0.1:8000/api/fluency-levels") // Replace with actual endpoint
       .then((response) => {
         console.log("fluency-levels:", response.data.data);
         setFluency(response.data.data); // Assuming response.data.data is an array
@@ -1798,26 +1844,39 @@ useEffect(() => {
                   />
                   Annotator
                 </div>
+                <div onClick={closeNewModal} className="back_to_main_menu mt-5">
+                  <button
+                    className="px-4 py-2  w-100 mt-5"
+                    style={{
+                      borderRadius: "9px",
+                      background: "#F0F0F0",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {" "}
+                    Back to main menu
+                  </button>
+                </div>
               </div>
               <div
                 className={`drop_down_section w-25 fluency_dropdowns ${
                   activeSections === "fluency" ? "" : "d-none"
                 }`}
               >
-                < select
-        name="fluency"
-        id="fluency"
-        className="w-100 my-4 sound_position"
-        onChange={handleFluencyChange}
-        value={selectedFluencyId} // ✅ Bind value to selectedFluencyId
-    >
-        <option value="">Select Fluency</option>
-        {FluencyData.map((fluency) => (
-            <option key={fluency.fluency_id} value={fluency.fluency_id}>
-                {fluency.fluency_name}
-            </option>
-        ))}
-    </select>
+                <select
+                  name="fluency"
+                  id="fluency"
+                  className="w-100 my-4 sound_position"
+                  onChange={handleFluencyChange}
+                  value={selectedFluencyId} // ✅ Bind value to selectedFluencyId
+                >
+                  <option value="">Select Fluency</option>
+                  {FluencyData.map((fluency) => (
+                    <option key={fluency.fluency_id} value={fluency.fluency_id}>
+                      {fluency.fluency_name}
+                    </option>
+                  ))}
+                </select>
 
                 <div onClick={closeNewModal} className="back_to_main_menu mt-5">
                   <button
@@ -1955,7 +2014,7 @@ useEffect(() => {
                 </div>
               </div>
               {activeSections === "language" && selectedQuestionType == 5 ? (
-                // Show this section when selectedQuestionType is 5
+                // Show this section when selectedQuestionType is 5 feel in the blanks
                 <div
                   className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
                   style={{ borderRadius: "10px", background: "transparent" }}
@@ -1965,6 +2024,127 @@ useEffect(() => {
                       border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
+                      height: "43rem",
+                    }}
+                    id="languageSlider5"
+                    className="carousel bg-light p-4 ms-5"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <div className="d-flex justify-content-center">
+                              <img
+                                src={item.image_url}
+                                className="d-block  img-fluid"
+                                alt={`Slide ${index + 1}`}
+                                style={{ height: "32rem", width: "32rem" }}
+                              />
+                            </div>
+                            <div
+                              style={{ bottom: "3rem" }}
+                              className="carousel-caption d-block "
+                            >
+                              <h4 className="text-dark fw-bold ">
+                                {item.questions}
+                              </h4>
+                            </div>
+                            <div className="show_ans_feelintheblank">
+                              {isPopupVisible && (
+                                <div
+                                  className="chat-popup "
+                                  style={{
+                                    width: "19rem",
+                                    color: "#fff",
+                                    position: "absolute",
+                                    left: "50%", // Center horizontally
+                                    transform:
+                                      "translateX(-0%) translateY(58%)", // Adjust position to center and move above
+                                    background: "#6AB04C", // Background color for the chat bubble
+                                    color: "white", // Text color
+                                    padding: "10px 15px",
+                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                    border: "5px solid #fff", // Border color
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    zIndex: 1000,
+
+                                    opacity: 1,
+                                    marginBottom: "10px", // Space between popup and content
+                                  }}
+                                >
+                                  <h6 className="text-light">{popupContent}</h6>
+                                  <div
+                                    className="chat-arrow d-none"
+                                    style={{
+                                      position: "absolute",
+                                      top: "100%", // Position the arrow below the popup
+                                      left: "6%", // Center the arrow
+                                      transform: "translateX(-50%)", // Center the arrow
+                                      width: "0",
+                                      height: "0",
+                                      borderLeft: "10px solid transparent",
+                                      borderRight: "10px solid transparent",
+                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              <button
+                                onClick={() =>
+                                  handleDisplayAnswer(item.answers)
+                                }
+                                className="px-3 py-2"
+                                style={{
+                                  background: "#6AB04C",
+                                  borderRadius: "10px",
+                                  color: "#fff",
+                                  border: "none",
+                                  marginTop: "6rem",
+                                }}
+                              >
+                                Show Answer
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "560px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : activeSections == "language" && selectedQuestionType == 4 ? (
+                // Show this section when yes or no is 1
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      border: "5px solid #1C2244",
+                      borderRadius: "30px",
+                      width: "44rem",
+                      height: "43rem",
                     }}
                     id="languageSlider5"
                     className="carousel bg-light p-4 ms-5"
@@ -1985,12 +2165,61 @@ useEffect(() => {
                               src={item.image_url}
                               className="d-block w-100 img-fluid"
                               alt={`Slide ${index + 1}`}
-                              style={{ height: "600px", objectFit: "contain" }}
+                              style={{ height: "32rem", width: "32rem" }}
                             />
                             <div className="carousel-caption d-block">
-                              <h3 className="text-black fw-bold bg-primary">
+                              <h3 className="text-dark fw-bold">
                                 {item.questions}
                               </h3>
+                            </div>
+
+                            <div className="yes_or_no_ans position-absolute w-100 mt-4 pt-5 d-flex justify-content-center align-items-center gap-4">
+                              <div className="d-flex gap-3">
+                                <div
+                                  style={{
+                                    backgroundColor:
+                                      highlightedAnswer === '["Yes"]'
+                                        ? "lightgreen"
+                                        : "transparent",
+                                    padding: "10px",
+                                    borderRadius: "5px",
+                                    color:
+                                      highlightedAnswer === '["Yes"]'
+                                        ? "#fff"
+                                        : "#000",
+                                  }}
+                                >
+                                  Yes
+                                </div>
+                                <div
+                                  style={{
+                                    backgroundColor:
+                                      highlightedAnswer === '["No"]'
+                                        ? "lightcoral"
+                                        : "transparent",
+                                    padding: "10px",
+                                    borderRadius: "5px",
+                                    color:
+                                      highlightedAnswer === '["No"]'
+                                        ? "#fff"
+                                        : "#000",
+                                  }}
+                                >
+                                  No
+                                </div>
+                              </div>
+                              <button
+                                className="px-3 py-2"
+                                style={{
+                                  background: "#6AB04C",
+                                  borderRadius: "10px",
+                                  color: "#fff",
+                                  border: "none",
+                                }}
+                                onClick={() => ShowAnsYesno(item.answers)}
+                              >
+                                Show Answer
+                              </button>
                             </div>
                           </div>
                         ))
@@ -2023,6 +2252,7 @@ useEffect(() => {
                       border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
+                      height: "44rem",
                     }}
                     id="languageSlider2"
                     className="carousel bg-light p-4 ms-5"
@@ -2039,16 +2269,126 @@ useEffect(() => {
                               index === 0 ? "active" : ""
                             }`}
                           >
-                            <img
-                              src={item.image_url}
-                              className="d-block w-100 img-fluid"
-                              alt={`Slide ${index + 1}`}
-                              style={{ height: "600px", objectFit: "contain" }}
-                            />
-                            <div className="carousel-caption d-block">
-                              <h3 className="text-black fw-bold text-dark">
+                            <div className="d-flex flex-column gap-2">
+                              <div className=" d-flex  justify-content-center ">
+                                <img
+                                  src={item.image_url}
+                                  className="d-block  img-fluid"
+                                  alt={`Slide ${index + 1}`}
+                                  style={{
+                                    height: "28rem",
+                                    width: "28rem",
+                                  }}
+                                />
+                              </div>
+
+                              <h4
+                                style={{ marginTop: "1rem" }}
+                                className="text-black fw-bold text-dark w-100  pe-5 "
+                              >
                                 {item.questions}
-                              </h3>
+                              </h4>
+                              <div
+                                style={{ marginTop: "0rem" }}
+                                className="options_section ms-0 d-flex flex-column justify-content-start gap-1  align-items-start "
+                              >
+                                {item.answers &&
+                                  typeof item.answers === "string" &&
+                                  (() => {
+                                    let answersArray;
+                                    try {
+                                      answersArray = JSON.parse(item.answers); // Convert string to array
+                                    } catch (error) {
+                                      console.error(
+                                        "Error parsing answers:",
+                                        error
+                                      );
+                                      answersArray = []; // Fallback in case of an error
+                                    }
+
+                                    return answersArray.length > 0 ? (
+                                      <>
+                                        <div className="option-group">
+                                          {answersArray
+                                            .slice(0, 2)
+                                            .map((answer, index) => (
+                                              <h5
+                                                key={index}
+                                                className="text-dark"
+                                                style={{
+                                                  background: showCorrectAnswer.includes(
+                                                    index
+                                                  )
+                                                    ? "#6AB04C" // Highlight correct answer
+                                                    : "transparent",
+                                                  color: showCorrectAnswer.includes(
+                                                    index
+                                                  )
+                                                    ? "#fff"
+                                                    : "#000",
+                                                  padding: "5px",
+                                                  borderRadius: "5px",
+                                                  marginTop: "-1rem",
+                                                }}
+                                              >
+                                                {String.fromCharCode(
+                                                  97 + index
+                                                )}
+                                                . {answer}
+                                              </h5>
+                                            ))}
+                                        </div>
+                                        <div className="option-group ">
+                                          {answersArray
+                                            .slice(2, 4)
+                                            .map((answer, index) => (
+                                              <h5
+                                                key={index + 2}
+                                                className="text-dark me-4"
+                                                style={{
+                                                  background: showCorrectAnswer.includes(
+                                                    index + 2
+                                                  )
+                                                    ? "#6AB04C"
+                                                    : "transparent",
+                                                  color: showCorrectAnswer.includes(
+                                                    index + 2
+                                                  )
+                                                    ? "#fff"
+                                                    : "#000",
+                                                  padding: "5px",
+                                                  borderRadius: "5px",
+                                                  marginTop: "-1rem",
+                                                }}
+                                              >
+                                                {String.fromCharCode(
+                                                  99 + index
+                                                )}
+                                                . {answer}
+                                              </h5>
+                                            ))}
+                                        </div>
+                                      </>
+                                    ) : null;
+                                  })()}
+                              </div>
+                            </div>
+                            <div className=" show_ans_multi d-flex justify-content-center mt-0">
+                              <button
+                                className="px-3 py-2"
+                                style={{
+                                  background: "#6AB04C",
+                                  borderRadius: "10px",
+                                  color: "#fff",
+                                  border: "none",
+                                  marginTop: "-1rem",
+                                }}
+                                onClick={() =>
+                                  handleShowAnswer(item.correct_option)
+                                }
+                              >
+                                Show Answer
+                              </button>
                             </div>
                           </div>
                         ))
@@ -2068,13 +2408,17 @@ useEffect(() => {
                         </div>
                       )}
                     </div>
-                    <div className="d-flex align-items-center justify-content-center mt-3">
+                    <div
+                      style={{ marginTop: "-1rem" }}
+                      className="d-flex align-items-center justify-content-center "
+                    >
                       {/* Prev Button */}
                       <button
                         className="btn btn-light mx-2 position-absolute"
                         type="button"
                         data-bs-target="#languageSlider2"
                         data-bs-slide="prev"
+                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
                         style={{
                           right: "44rem",
                           border: "none",
@@ -2093,6 +2437,251 @@ useEffect(() => {
                         className="btn btn-light mx-2 position-absolute"
                         type="button"
                         data-bs-target="#languageSlider2"
+                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
+                        data-bs-slide="next"
+                        style={{
+                          left: "44rem",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={next_arrow}
+                          alt="Next"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : activeSections === "language" && selectedQuestionType == 3 ? (
+                // Show this section when selectedQuestionType is multiple image with single  question
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      border: "5px solid #1C2244",
+                      borderRadius: "30px",
+                      width: "44rem",
+                      height: "44rem",
+                    }}
+                    id="languageSlider2"
+                    className="carousel bg-light p-4 ms-5"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <div className="d-flex flex-column gap-2">
+                              <div className=" d-flex flex-wrap gap-0 justify-content-between">
+                                <div>
+                                  <img
+                                    src={item.image_url}
+                                    className="d-block  img-fluid"
+                                    alt={`Slide ${index + 1}`}
+                                    style={{
+                                      height: "16rem",
+                                      width: "16rem",
+                                    }}
+                                  />{" "}
+                                  <img
+                                    src={item.image_url}
+                                    className="d-block  img-fluid"
+                                    alt={`Slide ${index + 1}`}
+                                    style={{
+                                      height: "16rem",
+                                      width: "16rem",
+                                    }}
+                                  />
+                                </div>
+                               <div>
+                               <img
+                                  src={item.image_url}
+                                  className="d-block  img-fluid"
+                                  alt={`Slide ${index + 1}`}
+                                  style={{
+                                    height: "16rem",
+                                    width: "16rem",
+                                  }}
+                                />{" "}
+                                <img
+                                  src={item.image_url}
+                                  className="d-block  img-fluid"
+                                  alt={`Slide ${index + 1}`}
+                                  style={{
+                                    height: "16rem",
+                                    width: "16rem",
+                                  }}
+                                />
+                               </div>
+                              </div>
+
+                              <h4
+                                style={{ marginTop: "1rem" }}
+                                className="text-black fw-bold text-dark w-100  pe-5 "
+                              >
+                                {item.questions}
+                              </h4>
+                              <div
+                                style={{ marginTop: "0rem" }}
+                                className="options_section ms-0 d-flex flex-column justify-content-start gap-1  align-items-start "
+                              >
+                                {item.answers &&
+                                  typeof item.answers === "string" &&
+                                  (() => {
+                                    let answersArray;
+                                    try {
+                                      answersArray = JSON.parse(item.answers); // Convert string to array
+                                    } catch (error) {
+                                      console.error(
+                                        "Error parsing answers:",
+                                        error
+                                      );
+                                      answersArray = []; // Fallback in case of an error
+                                    }
+
+                                    return answersArray.length > 0 ? (
+                                      <>
+                                        <div className="option-group">
+                                          {answersArray
+                                            .slice(0, 2)
+                                            .map((answer, index) => (
+                                              <h5
+                                                key={index}
+                                                className="text-dark"
+                                                style={{
+                                                  background: showCorrectAnswer.includes(
+                                                    index
+                                                  )
+                                                    ? "#6AB04C" // Highlight correct answer
+                                                    : "transparent",
+                                                  color: showCorrectAnswer.includes(
+                                                    index
+                                                  )
+                                                    ? "#fff"
+                                                    : "#000",
+                                                  padding: "5px",
+                                                  borderRadius: "5px",
+                                                  marginTop: "-1rem",
+                                                }}
+                                              >
+                                                {String.fromCharCode(
+                                                  97 + index
+                                                )}
+                                                . {answer}
+                                              </h5>
+                                            ))}
+                                        </div>
+                                        <div className="option-group ">
+                                          {answersArray
+                                            .slice(2, 4)
+                                            .map((answer, index) => (
+                                              <h5
+                                                key={index + 2}
+                                                className="text-dark me-4"
+                                                style={{
+                                                  background: showCorrectAnswer.includes(
+                                                    index + 2
+                                                  )
+                                                    ? "#6AB04C"
+                                                    : "transparent",
+                                                  color: showCorrectAnswer.includes(
+                                                    index + 2
+                                                  )
+                                                    ? "#fff"
+                                                    : "#000",
+                                                  padding: "5px",
+                                                  borderRadius: "5px",
+                                                  marginTop: "-1rem",
+                                                }}
+                                              >
+                                                {String.fromCharCode(
+                                                  99 + index
+                                                )}
+                                                . {answer}
+                                              </h5>
+                                            ))}
+                                        </div>
+                                      </>
+                                    ) : null;
+                                  })()}
+                              </div>
+                            </div>
+                            <div className=" show_ans_multi d-flex justify-content-center mt-0">
+                              <button
+                                className="px-3 py-2"
+                                style={{
+                                  background: "#6AB04C",
+                                  borderRadius: "10px",
+                                  color: "#fff",
+                                  border: "none",
+                                  marginTop: "-1rem",
+                                }}
+                                onClick={() =>
+                                  handleShowAnswer(item.correct_option)
+                                }
+                              >
+                                Show Answer
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "600px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      style={{ marginTop: "-1rem" }}
+                      className="d-flex align-items-center justify-content-center "
+                    >
+                      {/* Prev Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider2"
+                        data-bs-slide="prev"
+                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
+                        style={{
+                          right: "44rem",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={back_to_card}
+                          alt="Previous"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+
+                      {/* Next Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider2"
+                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
                         data-bs-slide="next"
                         style={{
                           left: "44rem",
@@ -2152,9 +2741,11 @@ useEffect(() => {
                               style={{ top: "31.75rem" }}
                               className="carousel-caption d-block"
                             >
-                              <h3 className="text-black fw-bold  text-dark">
-                                {item.picture_descrs}
-                              </h3>
+                              {selectedSubCategory !== 8 && (
+                                <h3 className="text-black fw-bold text-dark mt-3">
+                                  {item.questions}
+                                </h3>
+                              )}
                             </div>
 
                             {/* show answer section */}
@@ -2166,24 +2757,61 @@ useEffect(() => {
                               }}
                               className="show_ans mt-4 d-flex gap-2 justify-content-center align-items-center"
                             >
-                              <input
-                                value={inputValue}
-                                style={{ borderRadius: "8px", textAlign:"center" }}
-                                className="py-2"
-                                type="text"
-                               
-                              />
-                              <button onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
-                                className="px-3 py-2"
-                                style={{
-                                  background: "#6AB04C",
-                                  borderRadius: "10px",
-                                  color: "#fff",
-                                  border: "none",
-                                }}
-                              >
-                                Show Answer
-                              </button>
+                              {/* Chat Popup */}
+                              {isPopupVisible && (
+                                <div
+                                  className="chat-popup "
+                                  style={{
+                                    width: "19rem",
+                                    color: "#fff",
+                                    position: "absolute",
+                                    left: "50%", // Center horizontally
+                                    transform:
+                                      "translateX(-0%) translateY(-100%)", // Adjust position to center and move above
+                                    background: "#6AB04C", // Background color for the chat bubble
+                                    color: "white", // Text color
+                                    padding: "10px 15px",
+                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                    border: "5px solid #fff", // Border color
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    zIndex: 1000,
+
+                                    opacity: 1,
+                                    marginBottom: "10px", // Space between popup and content
+                                  }}
+                                >
+                                  <h6 className="text-light">{popupMessage}</h6>
+                                  <div
+                                    className="chat-arrow d-none"
+                                    style={{
+                                      position: "absolute",
+                                      top: "100%", // Position the arrow below the popup
+                                      left: "6%", // Center the arrow
+                                      transform: "translateX(-50%)", // Center the arrow
+                                      width: "0",
+                                      height: "0",
+                                      borderLeft: "10px solid transparent",
+                                      borderRight: "10px solid transparent",
+                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                    }}
+                                  />
+                                </div>
+                              )}
+
+                              {isShowanswer && selectedSubCategory !== 8 && (
+                                <button
+                                  onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
+                                  className="px-3 py-2"
+                                  style={{
+                                    background: "#6AB04C",
+                                    borderRadius: "10px",
+                                    color: "#fff",
+                                    border: "none",
+                                  }}
+                                >
+                                  Show Answer
+                                </button>
+                              )}
                             </div>
                           </div>
                         ))
@@ -2210,7 +2838,7 @@ useEffect(() => {
                       >
                         {/* Prev Button */}
                         <button
-                        onClick={handlePrevSinglequestion}
+                          onClick={handlePrevSinglequestion}
                           className="btn btn-light mx-2 position-absolute"
                           type="button"
                           data-bs-target={`#${
@@ -2236,7 +2864,7 @@ useEffect(() => {
 
                         {/* Next Button */}
                         <button
-                         onClick={handleNextSinglequestion}
+                          onClick={handleNextSinglequestion}
                           className="btn btn-light mx-2 position-absolute"
                           type="button"
                           data-bs-target={`#${

@@ -177,6 +177,30 @@
   font-weight: bold;
   background-color: #ffffff99!important;
 }
+.options_section {
+  margin: 10px; /* Adjust as needed */
+  text-align: left;
+}
+
+.option-group {
+  margin-right: 20px; /* Space between option groups */
+ 
+
+}
+
+
+
+.chat-arrow {
+  position: absolute;
+  top: 100%; /* Position the arrow below the popup */
+  left: 2%; /* Adjust this value to position the arrow */
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #6AB04C; /* Same color as the popup background */
+}
+
 
 .carousel-caption {
   position: absolute;
