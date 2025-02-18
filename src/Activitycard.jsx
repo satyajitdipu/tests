@@ -82,6 +82,19 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
 
+
+  
+
+  const handleShowAnswerMcq = (answers) => {
+    console.log(answers);
+    setPopupContent(answers);
+    setIsPopupVisible((prev) => !prev);
+    // Hide the popup after 4 seconds
+  setTimeout(() => {
+    setIsPopupVisible(false);
+  }, 3000);
+  };
+
   const handleDisplayAnswer = (answers) => {
     console.log(answers);
     setPopupContent(answers);
@@ -658,7 +671,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
         (formattedSelections && formattedSelections.filters?.length > 0)
       ) {
         setSelectedArticulations([]);
-        alert("Selections have been cleared.");
+       
       }
       setIsNewModalOpen(true);
     } catch (error) {
@@ -744,8 +757,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
   useEffect(() => {
     axios
-      .get("https://virtualtxai.com/api/articulations") // Replace with actual endpoint
-      .then((response) => {
+    .get("https://virtualtxai.com/api/articulations") // Replace with actual endpoint
+    .then((response) => {
         console.log("Articulations:", response.data.data);
         setArticulations(response.data.data); // Assuming response.data.data is an array
       })
@@ -755,8 +768,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, []);
   useEffect(() => {
     axios
-      .get("https://virtualtxai.com/api/lang-categories") // Replace with actual endpoint
-      .then((response) => {
+    .get("https://virtualtxai.com/api/lang-categories") // Replace with actual endpoint
+    .then((response) => {
         console.log("Language catagory", response.data.data);
         setLanguage(response.data.data); // Assuming response.data.data is an array
       })
@@ -766,8 +779,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, []);
   useEffect(() => {
     axios
-      .get("https://virtualtxai.com/api/fluency-levels") // Replace with actual endpoint
-      .then((response) => {
+    .get("https://virtualtxai.com/api/fluency-levels") // Replace with actual endpoint
+    .then((response) => {
         console.log("fluency-levels:", response.data.data);
         setFluency(response.data.data); // Assuming response.data.data is an array
       })
@@ -1310,7 +1323,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 {Language.map((item, index) => (
                   <div key={item.id} className=" position-relative">
                     <button
-                      className={`px-5 py-4 rounded fw-bold h-100  ${
+                      className={` px-3 py-5 rounded fw-bold  ${
                         activeSection === item.id ||
                         completedSections.includes(item.id)
                           ? "language_btn_bg text-white"
@@ -1320,6 +1333,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         border: "none",
+                        width: "13rem",
+                        height: "11rem",
                         color:
                           activeSection === item.id ||
                           completedSections.includes(item.id)
@@ -1904,6 +1919,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     border: "5px solid #1C2244",
                     borderRadius: "30px",
                     width: "44rem",
+                    height:"44rem"
                   }}
                   id="articulationSlider"
                   className="carousel bg-light p-4"
@@ -1972,7 +1988,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                   </div>
 
                   {/* Slider Controls - Placed Below */}
-                  <div className="d-flex align-items-center justify-content-center mt-3">
+                  <div style={{marginTop:"39rem"}} className="d-flex align-items-center justify-content-center ">
                     {/* Prev Button */}
                     <button
                       className="btn btn-light mx-2 position-absolute"
@@ -2290,7 +2306,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               </h4>
                               <div
                                 style={{ marginTop: "0rem" }}
-                                className="options_section ms-0 d-flex flex-column justify-content-start gap-1  align-items-start "
+                                className="options_section ms-0 d-flex flex-column justify-content-center gap-1  align-items-center "
                               >
                                 {item.answers &&
                                   typeof item.answers === "string" &&
@@ -2337,9 +2353,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                                 . {answer}
                                               </h5>
                                             ))}
-                                        </div>
-                                        <div className="option-group ">
-                                          {answersArray
+                                                                            {answersArray
                                             .slice(2, 4)
                                             .map((answer, index) => (
                                               <h5
@@ -2368,6 +2382,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                               </h5>
                                             ))}
                                         </div>
+                                        
                                       </>
                                     ) : null;
                                   })()}
@@ -2483,141 +2498,74 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             }`}
                           >
                             <div className="d-flex flex-column gap-2">
-                              <div className=" d-flex flex-wrap gap-0 justify-content-between">
-                                <div>
-                                  <img
-                                    src={item.image_url}
-                                    className="d-block  img-fluid"
-                                    alt={`Slide ${index + 1}`}
-                                    style={{
-                                      height: "16rem",
-                                      width: "16rem",
-                                    }}
-                                  />{" "}
-                                  <img
-                                    src={item.image_url}
-                                    className="d-block  img-fluid"
-                                    alt={`Slide ${index + 1}`}
-                                    style={{
-                                      height: "16rem",
-                                      width: "16rem",
-                                    }}
-                                  />
-                                </div>
-                               <div>
-                               <img
-                                  src={item.image_url}
-                                  className="d-block  img-fluid"
-                                  alt={`Slide ${index + 1}`}
-                                  style={{
-                                    height: "16rem",
-                                    width: "16rem",
-                                  }}
-                                />{" "}
-                                <img
-                                  src={item.image_url}
-                                  className="d-block  img-fluid"
-                                  alt={`Slide ${index + 1}`}
-                                  style={{
-                                    height: "16rem",
-                                    width: "16rem",
-                                  }}
-                                />
-                               </div>
+                              <div className="d-flex flex-wrap gap-0 justify-content-between">
+                                {JSON.parse(item.image).map(
+                                  (imgName, imgIndex) => (
+                                    <img
+                                      key={imgIndex}
+                                      src={`https://virtualtxai.com/backend/assets/language_image/${imgName}`}
+                                      className="d-block img-fluid"
+                                      alt={`Slide ${index +
+                                        1} - Image ${imgIndex + 1}`}
+                                      style={{
+                                        height: "16rem",
+                                        width: "16rem",
+                                      }}
+                                    />
+                                  )
+                                )}
                               </div>
-
+                            </div>
+                            <div>
                               <h4
                                 style={{ marginTop: "1rem" }}
                                 className="text-black fw-bold text-dark w-100  pe-5 "
                               >
                                 {item.questions}
                               </h4>
-                              <div
-                                style={{ marginTop: "0rem" }}
-                                className="options_section ms-0 d-flex flex-column justify-content-start gap-1  align-items-start "
-                              >
-                                {item.answers &&
-                                  typeof item.answers === "string" &&
-                                  (() => {
-                                    let answersArray;
-                                    try {
-                                      answersArray = JSON.parse(item.answers); // Convert string to array
-                                    } catch (error) {
-                                      console.error(
-                                        "Error parsing answers:",
-                                        error
-                                      );
-                                      answersArray = []; // Fallback in case of an error
-                                    }
-
-                                    return answersArray.length > 0 ? (
-                                      <>
-                                        <div className="option-group">
-                                          {answersArray
-                                            .slice(0, 2)
-                                            .map((answer, index) => (
-                                              <h5
-                                                key={index}
-                                                className="text-dark"
-                                                style={{
-                                                  background: showCorrectAnswer.includes(
-                                                    index
-                                                  )
-                                                    ? "#6AB04C" // Highlight correct answer
-                                                    : "transparent",
-                                                  color: showCorrectAnswer.includes(
-                                                    index
-                                                  )
-                                                    ? "#fff"
-                                                    : "#000",
-                                                  padding: "5px",
-                                                  borderRadius: "5px",
-                                                  marginTop: "-1rem",
-                                                }}
-                                              >
-                                                {String.fromCharCode(
-                                                  97 + index
-                                                )}
-                                                . {answer}
-                                              </h5>
-                                            ))}
-                                        </div>
-                                        <div className="option-group ">
-                                          {answersArray
-                                            .slice(2, 4)
-                                            .map((answer, index) => (
-                                              <h5
-                                                key={index + 2}
-                                                className="text-dark me-4"
-                                                style={{
-                                                  background: showCorrectAnswer.includes(
-                                                    index + 2
-                                                  )
-                                                    ? "#6AB04C"
-                                                    : "transparent",
-                                                  color: showCorrectAnswer.includes(
-                                                    index + 2
-                                                  )
-                                                    ? "#fff"
-                                                    : "#000",
-                                                  padding: "5px",
-                                                  borderRadius: "5px",
-                                                  marginTop: "-1rem",
-                                                }}
-                                              >
-                                                {String.fromCharCode(
-                                                  99 + index
-                                                )}
-                                                . {answer}
-                                              </h5>
-                                            ))}
-                                        </div>
-                                      </>
-                                    ) : null;
-                                  })()}
-                              </div>
+                         
                             </div>
-                            <div className=" show_ans_multi d-flex justify-content-center mt-0">
+                            <div className=" show_ans_multi  mt-4">
+
+                            {isPopupVisible && (
+                                <div
+                                  className="chat-popup "
+                                  style={{
+                                    width: "19rem",
+                                    color: "#fff",
+                                    position: "absolute",
+                                    left: "62%", // Center horizontally
+                                    transform:
+                                      "translateX(-0%) translateY(3%)", // Adjust position to center and move above
+                                    background: "#6AB04C", // Background color for the chat bubble
+                                    color: "white", // Text color
+                                    padding: "10px 15px",
+                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                    border: "5px solid #fff", // Border color
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    zIndex: 1000,
+
+                                    opacity: 1,
+                                    marginBottom: "10px", // Space between popup and content
+                                  }}
+                                >
+                                  <h6 className="text-light">{popupContent}</h6>
+                                  <div
+                                    className="chat-arrow d-none"
+                                    style={{
+                                      position: "absolute",
+                                      top: "100%", // Position the arrow below the popup
+                                      left: "6%", // Center the arrow
+                                      transform: "translateX(-50%)", // Center the arrow
+                                      width: "0",
+                                      height: "0",
+                                      borderLeft: "10px solid transparent",
+                                      borderRight: "10px solid transparent",
+                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                    }}
+                                  />
+                                </div>
+                              )}
                               <button
                                 className="px-3 py-2"
                                 style={{
@@ -2625,10 +2573,10 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                   borderRadius: "10px",
                                   color: "#fff",
                                   border: "none",
-                                  marginTop: "-1rem",
+                                  marginTop: "2rem",
                                 }}
                                 onClick={() =>
-                                  handleShowAnswer(item.correct_option)
+                                  handleShowAnswerMcq(item.answers)
                                 }
                               >
                                 Show Answer
