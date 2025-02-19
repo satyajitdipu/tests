@@ -2517,7 +2517,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                   (imgName, imgIndex) => (
                                     <img
                                       key={imgIndex}
-                                      src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
+                                      src={`https://virtualtxai.com/backend/assets/language_image/${imgName}`}
                                       className="d-block img-fluid"
                                       alt={`Slide ${index +
                                         1} - Image ${imgIndex + 1}`}
