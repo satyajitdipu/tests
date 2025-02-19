@@ -116,15 +116,29 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   };
 
   const ShowAns = (answers) => {
-    setInputValue(answers);
-    setPopupMessage(answers); // Set the message for the popup
+    let parsedAnswers = [];
+  
+    try {
+      parsedAnswers = JSON.parse(answers); // Convert string to array
+    } catch (error) {
+      console.error("Error parsing answers:", error);
+    }
+  
+    // Extract the first item from the parsed array
+    const displayAnswer = parsedAnswers.length > 0 ? parsedAnswers[0] : "No Answer";
+  
+    setInputValue(displayAnswer);
+    setPopupMessage(displayAnswer); // Set the message for the popup
     setIsPopupVisible(true); // Show the popup
-
+  
+    console.log(displayAnswer);
+  
     // Hide the popup after 4 seconds
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 4000);
   };
+  
 
   const handleNextSinglequestion = () => {
     setInputValue(""); // Clear input on next
@@ -757,8 +771,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
   useEffect(() => {
     axios
-    .get("https://virtualtxai.com/api/articulations") // Replace with actual endpoint
-    .then((response) => {
+      .get("https://virtualtxai.com/api/articulations") // Replace with actual endpoint
+      .then((response) => {
         console.log("Articulations:", response.data.data);
         setArticulations(response.data.data); // Assuming response.data.data is an array
       })
@@ -768,8 +782,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, []);
   useEffect(() => {
     axios
-    .get("https://virtualtxai.com/api/lang-categories") // Replace with actual endpoint
-    .then((response) => {
+      .get("https://virtualtxai.com/api/lang-categories") // Replace with actual endpoint
+      .then((response) => {
         console.log("Language catagory", response.data.data);
         setLanguage(response.data.data); // Assuming response.data.data is an array
       })
@@ -779,8 +793,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, []);
   useEffect(() => {
     axios
-    .get("https://virtualtxai.com/api/fluency-levels") // Replace with actual endpoint
-    .then((response) => {
+      .get("https://virtualtxai.com/api/fluency-levels") // Replace with actual endpoint
+      .then((response) => {
         console.log("fluency-levels:", response.data.data);
         setFluency(response.data.data); // Assuming response.data.data is an array
       })
@@ -1988,7 +2002,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                   </div>
 
                   {/* Slider Controls - Placed Below */}
-                  <div style={{marginTop:"39rem"}} className="d-flex align-items-center justify-content-center ">
+                  <div style={{marginTop:"3rem"}} className="d-flex align-items-center justify-content-center ">
                     {/* Prev Button */}
                     <button
                       className="btn btn-light mx-2 position-absolute"
@@ -2503,7 +2517,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                   (imgName, imgIndex) => (
                                     <img
                                       key={imgIndex}
-                                      src={`https://virtualtxai.com/backend/assets/language_image/${imgName}`}
+                                      src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
                                       className="d-block img-fluid"
                                       alt={`Slide ${index +
                                         1} - Image ${imgIndex + 1}`}
