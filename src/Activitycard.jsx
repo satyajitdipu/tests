@@ -1921,7 +1921,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 <div
                   style={{
                     borderRadius: "30px",
-                    width: "44rem",
+                    width: "90%",
                     height: "94vh",
                   }}
                   id="articulationSlider"
@@ -1996,7 +1996,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       data-bs-target="#articulationSlider"
                       data-bs-slide="prev"
                       style={{
-                        right: "44rem",
+                        left: "-15%",
                         border: "none",
                         background: "transparent",
                       }}
@@ -2015,7 +2015,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       data-bs-target="#articulationSlider"
                       data-bs-slide="next"
                       style={{
-                        left: "44rem",
+                        right: "-15%",
                         border: "none",
                         background: "transparent",
                       }}
