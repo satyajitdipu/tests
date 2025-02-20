@@ -82,23 +82,23 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
 
-
-  
-
   const handleShowAnswerMcq = (answers) => {
     console.log(answers);
     setPopupContent(answers);
     setIsPopupVisible((prev) => !prev);
     // Hide the popup after 4 seconds
-  setTimeout(() => {
-    setIsPopupVisible(false);
-  }, 3000);
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 3000);
   };
 
   const handleDisplayAnswer = (answers) => {
     console.log(answers);
     setPopupContent(answers);
     setIsPopupVisible(true);
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 4000);
   };
   useEffect(() => {
     setIsPopupVisible(false); // Set popup visibility to false on reload
@@ -238,6 +238,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     }
   }, [Filtercat]); // Runs when Filtercat changes
   useEffect(() => {
+    console.log(selectedSubCategory);
     setIsPopupVisible(false);
     let filtered = LanguageData;
     console.log(selectedQuestionType);
@@ -685,7 +686,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
         (formattedSelections && formattedSelections.filters?.length > 0)
       ) {
         setSelectedArticulations([]);
-       
       }
       setIsNewModalOpen(true);
     } catch (error) {
@@ -1143,17 +1143,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
           onClick={handleCloseModal}
         >
           <div
-            className="modal-content"
-            style={{
-              position: "relative",
-              margin: "10% auto",
-              padding: "20px",
-              top: "-114px",
-              backgroundColor: "transparent",
-              borderRadius: "10px",
-              maxWidth: "50rem",
-              overflow: "hidden", // Ensures no scrolling inside the modal
-            }}
+            className="modal-content w-100"
+           
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <h3>{selectedArticulation?.sound_name}</h3>
@@ -1161,7 +1152,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
               {selectedArticulation?.description || "No description available."}
             </p>
 
-            <div>
+            <div >
               <h2 className="text-light">Select a sub category and position</h2>
               <div className="words_section">
                 {/* Categories */}
@@ -1239,7 +1230,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
-            style={{ background: "transparent", top: "-4rem" }}
+            style={{ background: "transparent" }}
           >
             <span className="close-button" onClick={closeModal}>
               &times;
@@ -1261,10 +1252,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     marginTop: "0px",
                     padding: "10px 20px",
                     color: "grey",
-                    background: "#ddd",
+                    background: "#fff",
                     border: "none",
                     borderRadius: "5px",
-                    cursor: "not-allowed",
                   }}
                 >
                   Articulation
@@ -1930,10 +1920,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
               >
                 <div
                   style={{
-                    border: "5px solid #1C2244",
                     borderRadius: "30px",
                     width: "44rem",
-                    height:"44rem"
+                    height: "94vh",
                   }}
                   id="articulationSlider"
                   className="carousel bg-light p-4"
@@ -1963,10 +1952,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     src={child.image}
                                     className="d-block w-100 img-fluid"
                                     alt={`Slide ${childIndex + 1}`}
-                                    style={{
-                                      height: "600px",
-                                      objectFit: "contain",
-                                    }}
+                                    style={{ height: "76vh", width: "91%" }}
                                   />
 
                                   {item.words && (
@@ -1995,7 +1981,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                           src="default-image-url"
                           className="d-block w-100 img-fluid"
                           alt="Default Slide"
-                          style={{ height: "600px", objectFit: "contain" }}
+                          style={{ height: "76vh", width: "91%" }}
                         />
                       </div>
                     )}
@@ -2051,10 +2037,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 >
                   <div
                     style={{
-                      border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
-                      height: "43rem",
+                      height: "94vh",
                     }}
                     id="languageSlider5"
                     className="carousel bg-light p-4 ms-5"
@@ -2076,73 +2061,74 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                 src={item.image_url}
                                 className="d-block  img-fluid"
                                 alt={`Slide ${index + 1}`}
-                                style={{ height: "32rem", width: "32rem" }}
+                                style={{ height: "76vh", width: "91%" }}
                               />
                             </div>
-                            <div
-                              style={{ bottom: "3rem" }}
-                              className="carousel-caption d-block "
-                            >
-                              <h4 className="text-dark fw-bold ">
-                                {item.questions}
-                              </h4>
-                            </div>
-                            <div className="show_ans_feelintheblank">
-                              {isPopupVisible && (
-                                <div
-                                  className="chat-popup "
-                                  style={{
-                                    width: "19rem",
-                                    color: "#fff",
-                                    position: "absolute",
-                                    left: "50%", // Center horizontally
-                                    transform:
-                                      "translateX(-0%) translateY(58%)", // Adjust position to center and move above
-                                    background: "#6AB04C", // Background color for the chat bubble
-                                    color: "white", // Text color
-                                    padding: "10px 15px",
-                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
-                                    border: "5px solid #fff", // Border color
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                    zIndex: 1000,
+                       
+                              <div  className="carousel-caption d-block " style={{bottom:"-22%"}}>
+                                <h4 className="text-dark fw-bold ">
+                                  {item.questions}
+                                </h4>
+                                {isPopupVisible && (
+                                  <div
+                                    className="chat-popup "
+                                    style={{
+                                      width: "19rem",
+                                      color: "#fff",
+                                      position: "absolute",
+                                      left: "60%", // Center horizontally
+                                      transform:
+                                        "translateX(-0%) translateY(-12%)", // Adjust position to center and move above
+                                      background: "#6AB04C", // Background color for the chat bubble
+                                      color: "white", // Text color
+                                      padding: "10px 15px",
+                                      borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                      border: "5px solid #fff", // Border color
+                                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                      zIndex: 1000,
 
-                                    opacity: 1,
-                                    marginBottom: "10px", // Space between popup and content
+                                      opacity: 1,
+                                      marginBottom: "10px", // Space between popup and content
+                                    }}
+                                  >
+                                    <h6 className="text-light">
+                                      {popupContent}
+                                    </h6>
+                                    <div
+                                      className="chat-arrow d-none"
+                                      style={{
+                                        position: "absolute",
+                                        top: "100%", // Position the arrow below the popup
+                                        left: "6%", // Center the arrow
+                                        transform: "translateX(-50%)", // Center the arrow
+                                        width: "0",
+                                        height: "0",
+                                        borderLeft: "10px solid transparent",
+                                        borderRight: "10px solid transparent",
+                                        borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                                {selectedSubCategory !== 8 && (
+                                <button
+                                  onClick={() =>
+                                    handleDisplayAnswer(item.answers)
+                                  }
+                                  className="px-3 py-2"
+                                  style={{
+                                    background: "#6AB04C",
+                                    borderRadius: "10px",
+                                    color: "#fff",
+                                    border: "none",
+                                   
                                   }}
                                 >
-                                  <h6 className="text-light">{popupContent}</h6>
-                                  <div
-                                    className="chat-arrow d-none"
-                                    style={{
-                                      position: "absolute",
-                                      top: "100%", // Position the arrow below the popup
-                                      left: "6%", // Center the arrow
-                                      transform: "translateX(-50%)", // Center the arrow
-                                      width: "0",
-                                      height: "0",
-                                      borderLeft: "10px solid transparent",
-                                      borderRight: "10px solid transparent",
-                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
-                                    }}
-                                  />
-                                </div>
-                              )}
-                              <button
-                                onClick={() =>
-                                  handleDisplayAnswer(item.answers)
-                                }
-                                className="px-3 py-2"
-                                style={{
-                                  background: "#6AB04C",
-                                  borderRadius: "10px",
-                                  color: "#fff",
-                                  border: "none",
-                                  marginTop: "6rem",
-                                }}
-                              >
-                                Show Answer
-                              </button>
-                            </div>
+                                  Show Answer
+                                </button>
+                                )}
+                              </div>
+                         
                           </div>
                         ))
                       ) : (
@@ -2171,10 +2157,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 >
                   <div
                     style={{
-                      border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
-                      height: "43rem",
+                      height: "94vh",
                     }}
                     id="languageSlider5"
                     className="carousel bg-light p-4 ms-5"
@@ -2195,15 +2180,15 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               src={item.image_url}
                               className="d-block w-100 img-fluid"
                               alt={`Slide ${index + 1}`}
-                              style={{ height: "32rem", width: "32rem" }}
+                              style={{ height: "76vh", width: "91%" }}
                             />
                             <div className="carousel-caption d-block">
-                              <h3 className="text-dark fw-bold">
+                              <h4 className="text-dark fw-bold">
                                 {item.questions}
-                              </h3>
+                              </h4>
                             </div>
 
-                            <div className="yes_or_no_ans position-absolute w-100 mt-4 pt-5 d-flex justify-content-center align-items-center gap-4">
+                            <div className="yes_or_no_ans position-absolute w-100 mt-0 pt-5 d-flex justify-content-center align-items-center gap-4">
                               <div className="d-flex gap-3">
                                 <div
                                   style={{
@@ -2238,6 +2223,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                   No
                                 </div>
                               </div>
+                              {selectedSubCategory !== 8 && (
                               <button
                                 className="px-3 py-2"
                                 style={{
@@ -2250,6 +2236,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               >
                                 Show Answer
                               </button>
+                              )}
                             </div>
                           </div>
                         ))
@@ -2279,10 +2266,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 >
                   <div
                     style={{
-                      border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
-                      height: "44rem",
                     }}
                     id="languageSlider2"
                     className="carousel bg-light p-4 ms-5"
@@ -2300,26 +2285,24 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             }`}
                           >
                             <div className="d-flex flex-column gap-2">
-                              <div className=" d-flex  justify-content-center ">
+                              <div className=" d-flex flex-column gap-2  justify-content-center ">
                                 <img
                                   src={item.image_url}
                                   className="d-block  img-fluid"
                                   alt={`Slide ${index + 1}`}
                                   style={{
-                                    height: "28rem",
-                                    width: "28rem",
+                                    height: "62vh", // Set a maximum height
+
+                                    minWidth: "300px", // Set a minimum width to prevent shrinking too much
                                   }}
                                 />
+                                <h4 className="text-black fw-bold text-dark w-100  pe-5 ">
+                                  {item.questions}
+                                </h4>
                               </div>
 
-                              <h4
-                                style={{ marginTop: "1rem" }}
-                                className="text-black fw-bold text-dark w-100  pe-5 "
-                              >
-                                {item.questions}
-                              </h4>
                               <div
-                                style={{ marginTop: "0rem" }}
+                                style={{ marginTop: "0" }}
                                 className="options_section ms-0 d-flex flex-column justify-content-center gap-1  align-items-center "
                               >
                                 {item.answers &&
@@ -2367,7 +2350,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                                 . {answer}
                                               </h5>
                                             ))}
-                                                                            {answersArray
+                                          {answersArray
                                             .slice(2, 4)
                                             .map((answer, index) => (
                                               <h5
@@ -2396,13 +2379,13 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                               </h5>
                                             ))}
                                         </div>
-                                        
                                       </>
                                     ) : null;
                                   })()}
                               </div>
                             </div>
                             <div className=" show_ans_multi d-flex justify-content-center mt-0">
+                            {selectedSubCategory !== 8 && (
                               <button
                                 className="px-3 py-2"
                                 style={{
@@ -2418,6 +2401,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               >
                                 Show Answer
                               </button>
+                            )}
                             </div>
                           </div>
                         ))
@@ -2491,10 +2475,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 >
                   <div
                     style={{
-                      border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
-                      height: "44rem",
+                      height: "94vh",
                     }}
                     id="languageSlider2"
                     className="carousel bg-light p-4 ms-5"
@@ -2512,18 +2495,18 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             }`}
                           >
                             <div className="d-flex flex-column gap-2">
-                              <div className="d-flex flex-wrap gap-0 justify-content-between">
+                              <div className="d-flex flex-wrap gap-2 justify-content-between">
                                 {JSON.parse(item.image).map(
                                   (imgName, imgIndex) => (
                                     <img
                                       key={imgIndex}
-                                      src={`https://virtualtxai.com/backend/assets/language_image/${imgName}`}
+                                      src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
                                       className="d-block img-fluid"
                                       alt={`Slide ${index +
                                         1} - Image ${imgIndex + 1}`}
                                       style={{
-                                        height: "16rem",
-                                        width: "16rem",
+                                        height: "33vh",
+                                        width: "35%",
                                       }}
                                     />
                                   )
@@ -2537,64 +2520,66 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               >
                                 {item.questions}
                               </h4>
-                         
-                            </div>
-                            <div className=" show_ans_multi  mt-4">
-
-                            {isPopupVisible && (
-                                <div
-                                  className="chat-popup "
-                                  style={{
-                                    width: "19rem",
-                                    color: "#fff",
-                                    position: "absolute",
-                                    left: "62%", // Center horizontally
-                                    transform:
-                                      "translateX(-0%) translateY(3%)", // Adjust position to center and move above
-                                    background: "#6AB04C", // Background color for the chat bubble
-                                    color: "white", // Text color
-                                    padding: "10px 15px",
-                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
-                                    border: "5px solid #fff", // Border color
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                    zIndex: 1000,
-
-                                    opacity: 1,
-                                    marginBottom: "10px", // Space between popup and content
-                                  }}
-                                >
-                                  <h6 className="text-light">{popupContent}</h6>
+                              <div className=" show_ans_multi  mt-0">
+                                {isPopupVisible && (
                                   <div
-                                    className="chat-arrow d-none"
+                                    className="chat-popup "
                                     style={{
+                                      width: "19rem",
+                                      color: "#fff",
                                       position: "absolute",
-                                      top: "100%", // Position the arrow below the popup
-                                      left: "6%", // Center the arrow
-                                      transform: "translateX(-50%)", // Center the arrow
-                                      width: "0",
-                                      height: "0",
-                                      borderLeft: "10px solid transparent",
-                                      borderRight: "10px solid transparent",
-                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                      left: "62%", // Center horizontally
+                                      transform:
+                                        "translateX(-0%) translateY(3%)", // Adjust position to center and move above
+                                      background: "#6AB04C", // Background color for the chat bubble
+                                      color: "white", // Text color
+                                      padding: "10px 15px",
+                                      borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                      border: "5px solid #fff", // Border color
+                                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                      zIndex: 1000,
+
+                                      opacity: 1,
+                                      marginBottom: "10px", // Space between popup and content
                                     }}
-                                  />
-                                </div>
-                              )}
-                              <button
-                                className="px-3 py-2"
-                                style={{
-                                  background: "#6AB04C",
-                                  borderRadius: "10px",
-                                  color: "#fff",
-                                  border: "none",
-                                  marginTop: "2rem",
-                                }}
-                                onClick={() =>
-                                  handleShowAnswerMcq(item.answers)
-                                }
-                              >
-                                Show Answer
-                              </button>
+                                  >
+                                    <h6 className="text-light">
+                                      {popupContent}
+                                    </h6>
+                                    <div
+                                      className="chat-arrow d-none"
+                                      style={{
+                                        position: "absolute",
+                                        top: "100%", // Position the arrow below the popup
+                                        left: "6%", // Center the arrow
+                                        transform: "translateX(-50%)", // Center the arrow
+                                        width: "0",
+                                        height: "0",
+                                        borderLeft: "10px solid transparent",
+                                        borderRight: "10px solid transparent",
+                                        borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                            {selectedSubCategory !== 8 && (
+                                <button
+                                  className="px-3 py-2"
+                                  style={{
+                                    background: "#6AB04C",
+                                    borderRadius: "10px",
+                                    color: "#fff",
+                                    border: "none",
+                                    marginTop: "2rem",
+                                  }}
+                                  onClick={() =>
+                                    handleShowAnswerMcq(item.answers)
+                                  }
+                                >
+                                  Show Answer
+                                </button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         ))
@@ -2668,10 +2653,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 >
                   <div
                     style={{
-                      border: "5px solid #1C2244",
                       borderRadius: "30px",
                       width: "44rem",
-                      height: "43rem",
+                      height: "94vh",
                     }}
                     id="languageSliderDefault"
                     className="carousel bg-light p-4"
@@ -2688,25 +2672,19 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               index === 0 ? "active" : ""
                             }`}
                           >
-                            <div
-                              className="d-flex justify-content-center"
-                              style={{ height: "30rem" }}
-                            >
+                            <div className="d-flex justify-content-center">
                               <img
                                 src={item.image_url}
                                 className="d-block  img-fluid"
                                 alt={`Slide ${index + 1}`}
-                                style={{ height: "32rem", width: "32rem" }}
+                                style={{ height: "76vh", width: "91%" }}
                               />
                             </div>
-                            <div
-                              style={{ top: "31.75rem" }}
-                              className="carousel-caption d-block"
-                            >
+                            <div className="carousel-caption d-block">
                               {selectedSubCategory !== 8 && (
-                                <h3 className="text-black fw-bold text-dark mt-3">
+                                <h4 className="text-black fw-bold text-dark mt-4">
                                   {item.questions}
-                                </h3>
+                                </h4>
                               )}
                             </div>
 
@@ -2714,10 +2692,10 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             <div
                               style={{
                                 position: "absolute",
-                                bottom: "-10rem",
+                                marginTop: "2.5rem",
                                 width: "100%",
                               }}
-                              className="show_ans mt-4 d-flex gap-2 justify-content-center align-items-center"
+                              className="show_ans  d-flex gap-2 justify-content-center align-items-center"
                             >
                               {/* Chat Popup */}
                               {isPopupVisible && (
@@ -2727,9 +2705,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     width: "19rem",
                                     color: "#fff",
                                     position: "absolute",
-                                    left: "50%", // Center horizontally
-                                    transform:
-                                      "translateX(-0%) translateY(-100%)", // Adjust position to center and move above
+                                    left: "62%", // Center horizontally
+                                    transform: "translateX(-0%) translateY(3%)", // Adjust position to center and move above
                                     background: "#6AB04C", // Background color for the chat bubble
                                     color: "white", // Text color
                                     padding: "10px 15px",
@@ -2813,6 +2790,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                           data-bs-slide="prev"
                           style={{
                             right: "43.5rem",
+                            bottom: "0",
                             border: "none",
                             background: "transparent",
                           }}
@@ -2839,6 +2817,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                           data-bs-slide="next"
                           style={{
                             left: "43.5rem",
+                            bottom: "0",
                             border: "none",
                             background: "transparent",
                           }}
