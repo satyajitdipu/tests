@@ -81,6 +81,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [popupMessage, setPopupMessage] = useState("");
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
+  const [wordsentenses, setWordsentenses] = useState("");
+
 
   const handleShowAnswerMcq = (answers) => {
     console.log(answers);
@@ -223,7 +225,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       acc[key] = ArticulationData[key].filter((item) => {
         const mappedPosition = positionMapping[selectedPosition] || null;
         const matchesPosition =
-          !selectedPosition || item.position_mapped == mappedPosition;
+          !selectedPosition || item.position == mappedPosition;
         const matchesSentence =
           !selectedSentence || item.sentence === selectedSentence;
         return matchesPosition && matchesSentence;
@@ -601,6 +603,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
         );
         if (response.data.success) {
           setArticulationData(response.data.data);
+          setWordsentenses(response.data.word);
+          console.log(response.data);
           localHasData.articulation = true; // Articulation data is available
         } else {
           console.error("Image API Error:", response.data.message);
