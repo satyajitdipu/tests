@@ -82,7 +82,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
   const [Wordsentenses, setWordsentenses] = useState("");
-  const [wordFilteredData, setwordFilteredData] = useState([]);
 
   const handleShowAnswerMcq = (answers) => {
     console.log(answers);
@@ -234,7 +233,7 @@ const ArfilteredData = Object.keys(ArticulationData)
 }, {});
 
 // Handle 'Words' case separately
-useEffect(() => {
+
 const mappedPosition = positionMapping[selectedPosition] || null;
 
 const wordFilteredData =
@@ -244,7 +243,6 @@ const wordFilteredData =
         (word) => !selectedPosition || word.position == mappedPosition
       )
     : null;
-    });
   //language filter
   useEffect(() => {
     if (Filtercat.length > 0) {
