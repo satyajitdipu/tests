@@ -81,8 +81,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [popupMessage, setPopupMessage] = useState("");
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
-  const [wordsentenses, setWordsentenses] = useState("");
-
+  const [Wordsentenses, setWordsentenses] = useState("");
+  const [wordFilteredData, setwordFilteredData] = useState([]);
 
   const handleShowAnswerMcq = (answers) => {
     console.log(answers);
@@ -218,21 +218,33 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       setSelectedSentence(storedSelections[selectedSound]?.[1]?.[0] || ""); // First sentence type
     }
   }, [selectedSound, storedSelections]); // Added storedSelections as dependency
+console.log(selectedSentence);
+const ArfilteredData = Object.keys(ArticulationData)
+.filter((key) => !selectedSound || key === selectedSound) // Filter by sound
+.reduce((acc, key) => {
+  acc[key] = ArticulationData[key].filter((item) => {
+    const mappedPosition = positionMapping[selectedPosition] || null;
+    const matchesPosition =
+      !selectedPosition || item.position == mappedPosition;
+    const matchesSentence =
+      !selectedSentence || item.sentence === selectedSentence;
+    return matchesPosition && matchesSentence;
+  });
+  return acc;
+}, {});
 
-  const ArfilteredData = Object.keys(ArticulationData)
-    .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
-    .reduce((acc, key) => {
-      acc[key] = ArticulationData[key].filter((item) => {
-        const mappedPosition = positionMapping[selectedPosition] || null;
-        const matchesPosition =
-          !selectedPosition || item.position == mappedPosition;
-        const matchesSentence =
-          !selectedSentence || item.sentence === selectedSentence;
-        return matchesPosition && matchesSentence;
-      });
-      return acc;
-    }, {});
+// Handle 'Words' case separately
+useEffect(() => {
+const mappedPosition = positionMapping[selectedPosition] || null;
 
+const wordFilteredData =
+  selectedSentence === "Words" &&
+  Wordsentenses[selectedSound]
+    ? Wordsentenses[selectedSound].filter(
+        (word) => !selectedPosition || word.position == mappedPosition
+      )
+    : null;
+    });
   //language filter
   useEffect(() => {
     if (Filtercat.length > 0) {
@@ -594,7 +606,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
         fluency: false,
         language: false,
       };
-
+      console.log(storedSelections,'sssss');
       // Fetch articulation images if selections exist
       if (storedSelections && Object.keys(storedSelections).length > 0) {
         response = await axios.post(
@@ -1946,50 +1958,73 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                 >
                   {/* Carousel Inner */}
                   <div className="carousel-inner">
-                    {Object.keys(ArfilteredData).length > 0 ? (
-                      Object.keys(ArfilteredData).map((key, index) => {
-                        return ArfilteredData[key].map((item, itemIndex) => {
-                          return (item?.images || []).map(
-                            (child, childIndex) => {
-                              return (
-                                <div
-                                  className={`carousel-item ${
-                                    index === 0 &&
-                                    itemIndex === 0 &&
-                                    childIndex === 0
-                                      ? "active"
-                                      : ""
-                                  }`}
-                                  key={child.id}
-                                >
-                                  <img
-                                    src={child.image}
-                                    className="d-block w-100 img-fluid"
-                                    alt={`Slide ${childIndex + 1}`}
-                                    style={{ height: "76vh", width: "91%" }}
-                                  />
-
-                                  {item.words && (
-                                    <div className="carousel-caption d-none d-md-block">
-                                      <h3
-                                        className="mx-4 text-center"
-                                        style={{
-                                          minWidth: "200px",
-                                          color: "black",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                                        {item.words}
-                                      </h3>
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            }
-                          );
-                        });
-                      })
-                    ) : (
+                  {selectedSentence === "Words" && wordFilteredData ? (
+    wordFilteredData.map((item, index) => (
+      <div
+        className={`carousel-item ${index === 0 ? "active" : ""}`}
+        key={index}
+      >
+        <img
+          src={item.image}
+          className="d-block w-100 img-fluid"
+          alt={`Word Slide ${index + 1}`}
+          style={{ height: "76vh", width: "91%" }}
+        />
+        {item.sound_word && (
+          <div className="carousel-caption d-none d-md-block">
+            <h3
+              className="mx-4 text-center"
+              style={{
+                minWidth: "200px",
+                color: "black",
+                fontWeight: "bold",
+              }}
+            >
+              {item.sound_word}
+            </h3>
+          </div>
+        )}
+      </div>
+    ))
+  ) :Object.keys(ArfilteredData).length > 0 ? (
+    Object.keys(ArfilteredData).map((key, index) => {
+      return ArfilteredData[key].map((item, itemIndex) => {
+        return (item?.images || []).map((child, childIndex) => {
+          return (
+            <div
+              className={`carousel-item ${
+                index === 0 && itemIndex === 0 && childIndex === 0
+                  ? "active"
+                  : ""
+              }`}
+              key={child.id}
+            >
+              <img
+                src={child.image}
+                className="d-block w-100 img-fluid"
+                alt={`Slide ${childIndex + 1}`}
+                style={{ height: "76vh", width: "91%" }}
+              />
+              {item.words && (
+                <div className="carousel-caption d-none d-md-block">
+                  <h3
+                    className="mx-4 text-center"
+                    style={{
+                      minWidth: "200px",
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {item.words}
+                  </h3>
+                </div>
+              )}
+            </div>
+          );
+        });
+      });
+    })
+  ) : (
                       <div className="carousel-item active">
                         <img
                           src="default-image-url"
