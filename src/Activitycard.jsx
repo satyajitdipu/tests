@@ -83,9 +83,39 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [popupContent, setPopupContent] = useState("");
   const [Wordsentenses, setWordsentenses] = useState("");
 
-  const handleShowAnswerMcq = (answers) => {
+  const handleShowAnswerMcq = (answers,option) => {
+    let formattedAnswer = "";
+    let formattedOption = "";
+
+  
+    try {
+      // Parse JSON if it's a string
+      const parsedAnswers = typeof answers === "string" ? JSON.parse(answers) : answers;
+  
+      // Ensure it's an array and format correctly
+      if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
+        formattedAnswer = parsedAnswers.join(", "); // Convert array to string
+      }
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      formattedAnswer = "Invalid format"; // Fallback in case of an error
+    }
+    try {
+      // Parse JSON if it's a string
+      const parsedAnswers = typeof option === "string" ? JSON.parse(option) : option;
+  
+      // Ensure it's an array and format correctly
+      if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
+        formattedOption = parsedAnswers.join(", "); // Convert array to string
+      }
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      formattedOption = "Invalid format"; // Fallback in case of an error
+    }
     console.log(answers);
-    setPopupContent(answers);
+    console.log(formattedOption);
+
+    setPopupContent(formattedAnswer);
     setIsPopupVisible((prev) => !prev);
     // Hide the popup after 4 seconds
     setTimeout(() => {
@@ -94,13 +124,31 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   };
 
   const handleDisplayAnswer = (answers) => {
-    console.log(answers);
-    setPopupContent(answers);
+    console.log("Raw Answer:", answers);
+  
+    let formattedAnswer = "";
+  
+    try {
+      // Parse JSON if it's a string
+      const parsedAnswers = typeof answers === "string" ? JSON.parse(answers) : answers;
+  
+      // Ensure it's an array and format correctly
+      if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
+        formattedAnswer = parsedAnswers.join(", "); // Convert array to string
+      }
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      formattedAnswer = "Invalid format"; // Fallback in case of an error
+    }
+  
+    setPopupContent(formattedAnswer);
     setIsPopupVisible(true);
+  
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 4000);
   };
+  
   useEffect(() => {
     setIsPopupVisible(false); // Set popup visibility to false on reload
   }, []);
@@ -2178,9 +2226,13 @@ const wordFilteredData =
                                 >
                                   Show Answer
                                 </button>
+                                
                               )}
+                              
                             </div>
+                            
                           </div>
+                          
                         ))
                       ) : (
                         <div className="carousel-item active">
@@ -2198,7 +2250,53 @@ const wordFilteredData =
                         </div>
                       )}
                     </div>
+                     <div
+                      style={{ marginTop: "-1rem" }}
+                      className="d-flex align-items-center justify-content-center "
+                    >
+                     {/* Prev Button */}
+<button
+  className="btn btn-light mx-2 position-absolute"
+  type="button"
+  data-bs-target="#languageSlider5"  // Fixed target ID
+  data-bs-slide="prev"
+  onClick={() => handleDisplayAnswer([])} // Clears correct answers
+  style={{
+    left: "-15%",
+    border: "none",
+    background: "transparent",
+  }}
+>
+  <img
+    src={back_to_card}
+    alt="Previous"
+    style={{ width: "3rem" }}
+  />
+</button>
+
+{/* Next Button */}
+<button
+  className="btn btn-light mx-2 position-absolute"
+  type="button"
+  data-bs-target="#languageSlider5" // Fixed target ID
+  onClick={() => handleDisplayAnswer([])} // Clears correct answers
+  data-bs-slide="next"
+  style={{
+    right: "-15%",
+    border: "none",
+    background: "transparent",
+  }}
+>
+  <img
+    src={next_arrow}
+    alt="Next"
+    style={{ width: "3rem" }}
+  />
+</button>
+
+                    </div>
                   </div>
+                  
                 </div>
               ) : activeSections == "language" && selectedQuestionType == 4 ? (
                 // Show this section when yes or no is 1
@@ -2626,7 +2724,7 @@ const wordFilteredData =
                                       marginTop: "2rem",
                                     }}
                                     onClick={() =>
-                                      handleShowAnswerMcq(item.answers)
+                                      handleShowAnswerMcq(item.answers,item.correct_option)
                                     }
                                   >
                                     Show Answer
