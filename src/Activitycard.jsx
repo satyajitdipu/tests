@@ -2078,7 +2078,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                           fontWeight: "bold",
                                         }}
                                       >
-                                        {item.words}ggg
+                                        {item.words}
                                       </h3>
                                     </div>
                                   )}
