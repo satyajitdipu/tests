@@ -252,7 +252,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   //articulation filter
   const positionMapping = {
     Initial: 1,
-    Middle: 2,
+    medial: 2,
     Final: 3,
   };
 
