@@ -17,8 +17,10 @@ import language_img_clicked from "../src/assets/language_img_clicked.png";
 import fluenc_img_clicked from "../src/assets/fluenc_img_clicked.png";
 import language_btn from "../src/assets/language_btn.png";
 import fluency_img from "../src/assets/fluency_img.png";
+import icon_tick from "../src/assets/icon_tick.png";
 
 import hoverSound from "../src/assets/sound-effect.wav"; // Import the audio file
+import { button, div } from "framer-motion/client";
 
 const Activitycard = ({ isOpen, images, descriptions }) => {
   const [isMainModalOpen, setIsMainModalOpen] = useState(false);
@@ -81,17 +83,22 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   const [popupMessage, setPopupMessage] = useState("");
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
+  const [showAnswer, setShowAnswers] = useState(false);
+  const correctOptions = ["1", "0", "2", "3"]; // Define the correct options
   const [Wordsentenses, setWordsentenses] = useState("");
+  const [highlightedIndexes, setHighlightedIndexes] = useState([]);
 
-  const handleShowAnswerMcq = (answers,option) => {
+  const handleShowAnswerMcq = (answers, option) => {
     let formattedAnswer = "";
     let formattedOption = "";
 
-  
+    setShowAnswers(true);
+
     try {
       // Parse JSON if it's a string
-      const parsedAnswers = typeof answers === "string" ? JSON.parse(answers) : answers;
-  
+      const parsedAnswers =
+        typeof answers === "string" ? JSON.parse(answers) : answers;
+
       // Ensure it's an array and format correctly
       if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
         formattedAnswer = parsedAnswers.join(", "); // Convert array to string
@@ -102,8 +109,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     }
     try {
       // Parse JSON if it's a string
-      const parsedAnswers = typeof option === "string" ? JSON.parse(option) : option;
-  
+      const parsedAnswers =
+        typeof option === "string" ? JSON.parse(option) : option;
+
       // Ensure it's an array and format correctly
       if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
         formattedOption = parsedAnswers.join(", "); // Convert array to string
@@ -116,22 +124,24 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     console.log(formattedOption);
 
     setPopupContent(formattedAnswer);
+    setHighlightedIndexes(formattedOption);
     setIsPopupVisible((prev) => !prev);
     // Hide the popup after 4 seconds
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 3000);
   };
-
   const handleDisplayAnswer = (answers) => {
     console.log("Raw Answer:", answers);
-  
+    setShowAnswers(true);
+
     let formattedAnswer = "";
-  
+
     try {
       // Parse JSON if it's a string
-      const parsedAnswers = typeof answers === "string" ? JSON.parse(answers) : answers;
-  
+      const parsedAnswers =
+        typeof answers === "string" ? JSON.parse(answers) : answers;
+
       // Ensure it's an array and format correctly
       if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
         formattedAnswer = parsedAnswers.join(", "); // Convert array to string
@@ -140,15 +150,15 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       console.error("Error parsing JSON:", error);
       formattedAnswer = "Invalid format"; // Fallback in case of an error
     }
-  
+    console.log(formattedAnswer);
     setPopupContent(formattedAnswer);
     setIsPopupVisible(true);
-  
+
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 4000);
   };
-  
+
   useEffect(() => {
     setIsPopupVisible(false); // Set popup visibility to false on reload
   }, []);
@@ -165,6 +175,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   };
 
   const ShowAns = (answers) => {
+    setShowAnswers(true);
+
     let parsedAnswers = [];
 
     try {
@@ -176,28 +188,25 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     // Extract the first item from the parsed array
     const displayAnswer =
       parsedAnswers.length > 0 ? parsedAnswers[0] : "No Answer";
-
+    setPopupContent(displayAnswer);
     setInputValue(displayAnswer);
     setPopupMessage(displayAnswer); // Set the message for the popup
     setIsPopupVisible(true); // Show the popup
 
     console.log(displayAnswer);
-
-    // Hide the popup after 4 seconds
-    setTimeout(() => {
-      setIsPopupVisible(false);
-    }, 4000);
   };
 
   const handleNextSinglequestion = () => {
     setInputValue(""); // Clear input on next
     setIsPopupVisible(false);
     setHighlightedAnswer(null);
+    setShowAnswers(false);
   };
 
   const handlePrevSinglequestion = () => {
     setInputValue(""); // Clear input on prev
     setIsPopupVisible(false);
+    setShowAnswers(false);
     setHighlightedAnswer(null);
   };
 
@@ -265,40 +274,40 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       setSelectedSentence(storedSelections[selectedSound]?.[1]?.[0] || ""); // First sentence type
     }
   }, [selectedSound, storedSelections]); // Added storedSelections as dependency
-console.log(selectedSentence);
-const ArfilteredData = Object.keys(ArticulationData)
-.filter((key) => !selectedSound || key === selectedSound) // Filter by sound
-.reduce((acc, key) => {
-  acc[key] = ArticulationData[key].filter((item) => {
-    const mappedPosition = positionMapping[selectedPosition] || null;
-    const matchesPosition =
-      !selectedPosition || item.position == mappedPosition;
-    const matchesSentence =
-      !selectedSentence || item.sentence === selectedSentence;
-    return matchesPosition && matchesSentence;
-  });
-  return acc;
-}, {});
+  console.log(selectedSentence);
+  const ArfilteredData = Object.keys(ArticulationData)
+    .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
+    .reduce((acc, key) => {
+      acc[key] = ArticulationData[key].filter((item) => {
+        const mappedPosition = positionMapping[selectedPosition] || null;
+        const matchesPosition =
+          !selectedPosition || item.position == mappedPosition;
+        const matchesSentence =
+          !selectedSentence || item.sentence === selectedSentence;
+        return matchesPosition && matchesSentence;
+      });
+      return acc;
+    }, {});
 
-// Handle 'Words' case separately
+  // Handle 'Words' case separately
+  const mappedPosition = positionMapping[selectedPosition] || null;
 
-const mappedPosition = positionMapping[selectedPosition] || null;
-
-const wordFilteredData =
-  selectedSentence === "Words" &&
-  Wordsentenses[selectedSound]
-    ? Wordsentenses[selectedSound].filter(
-        (word) => !selectedPosition || word.position == mappedPosition
-      )
-    : null;
+  const wordFilteredData =
+    selectedSentence === "Words" && Wordsentenses[selectedSound]
+      ? Wordsentenses[selectedSound].filter(
+          (word) => !selectedPosition || word.position == mappedPosition
+        )
+      : null;
   //language filter
   useEffect(() => {
+    setHighlightedIndexes([]);
     if (Filtercat.length > 0) {
       setSelectedLanguageType(Filtercat[0].id); // Set first value on render
     }
   }, [Filtercat]); // Runs when Filtercat changes
   useEffect(() => {
-    console.log(selectedSubCategory);
+    setHighlightedIndexes([]);
+    console.log(selectedSubCategory, "subcat");
     setIsPopupVisible(false);
     let filtered = LanguageData;
     console.log(selectedQuestionType);
@@ -306,18 +315,21 @@ const wordFilteredData =
       filtered = filtered.filter(
         (item) => item.language_type_id == selectedLanguageType
       );
+      setShowAnswers(false);
     }
     if (selectedSubCategory) {
       filtered = filtered.filter(
         (item) => item.sub_category_id == selectedSubCategory
       );
       setInputValue(""); // Clear input on next
+      setShowAnswers(false);
     }
     if (selectedQuestionType) {
       filtered = filtered.filter(
         (item) => item.question_type_id == selectedQuestionType
       );
       setInputValue(""); // Clear input on next
+      setShowAnswers(false);
     }
     console.log(filtered);
     setFilteredData(filtered);
@@ -652,7 +664,7 @@ const wordFilteredData =
         fluency: false,
         language: false,
       };
-      console.log(storedSelections,'sssss');
+      console.log(storedSelections, "sssss");
       // Fetch articulation images if selections exist
       if (storedSelections && Object.keys(storedSelections).length > 0) {
         response = await axios.post(
@@ -2004,73 +2016,79 @@ const wordFilteredData =
                 >
                   {/* Carousel Inner */}
                   <div className="carousel-inner">
-                  {selectedSentence === "Words" && wordFilteredData ? (
-    wordFilteredData.map((item, index) => (
-      <div
-        className={`carousel-item ${index === 0 ? "active" : ""}`}
-        key={index}
-      >
-        <img
-          src={item.image}
-          className="d-block w-100 img-fluid"
-          alt={`Word Slide ${index + 1}`}
-          style={{ height: "76vh", width: "91%" }}
-        />
-        {item.sound_word && (
-          <div className="carousel-caption d-none d-md-block">
-            <h3
-              className="mx-4 text-center"
-              style={{
-                minWidth: "200px",
-                color: "black",
-                fontWeight: "bold",
-              }}
-            >
-              {item.sound_word}
-            </h3>
-          </div>
-        )}
-      </div>
-    ))
-  ) :Object.keys(ArfilteredData).length > 0 ? (
-    Object.keys(ArfilteredData).map((key, index) => {
-      return ArfilteredData[key].map((item, itemIndex) => {
-        return (item?.images || []).map((child, childIndex) => {
-          return (
-            <div
-              className={`carousel-item ${
-                index === 0 && itemIndex === 0 && childIndex === 0
-                  ? "active"
-                  : ""
-              }`}
-              key={child.id}
-            >
-              <img
-                src={child.image}
-                className="d-block w-100 img-fluid"
-                alt={`Slide ${childIndex + 1}`}
-                style={{ height: "76vh", width: "91%" }}
-              />
-              {item.words && (
-                <div className="carousel-caption d-none d-md-block">
-                  <h3
-                    className="mx-4 text-center"
-                    style={{
-                      minWidth: "200px",
-                      color: "black",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {item.words}
-                  </h3>
-                </div>
-              )}
-            </div>
-          );
-        });
-      });
-    })
-  ) : (
+                    {selectedSentence === "Words" && wordFilteredData ? (
+                      wordFilteredData.map((item, index) => (
+                        <div
+                          className={`carousel-item ${
+                            index === 0 ? "active" : ""
+                          }`}
+                          key={index}
+                        >
+                          <img
+                            src={item.image}
+                            className="d-block w-100 img-fluid"
+                            alt={`Word Slide ${index + 1}`}
+                            style={{ height: "76vh", width: "91%" }}
+                          />
+                          {item.sound_word && (
+                            <div className="carousel-caption d-none d-md-block">
+                              <h3
+                                className="mx-4 text-center"
+                                style={{
+                                  minWidth: "200px",
+                                  color: "black",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {item.sound_word}
+                              </h3>
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    ) : Object.keys(ArfilteredData).length > 0 ? (
+                      Object.keys(ArfilteredData).map((key, index) => {
+                        return ArfilteredData[key].map((item, itemIndex) => {
+                          return (item?.images || []).map(
+                            (child, childIndex) => {
+                              return (
+                                <div
+                                  className={`carousel-item ${
+                                    index === 0 &&
+                                    itemIndex === 0 &&
+                                    childIndex === 0
+                                      ? "active"
+                                      : ""
+                                  }`}
+                                  key={child.id}
+                                >
+                                  <img
+                                    src={child.image}
+                                    className="d-block w-100 img-fluid"
+                                    alt={`Slide ${childIndex + 1}`}
+                                    style={{ height: "76vh", width: "91%" }}
+                                  />
+                                  {item.words && (
+                                    <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
+                                      <h3
+                                        className="mx-4 text-center"
+                                        style={{
+                                          minWidth: "200px",
+                                          color: "black",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        {item.words}ggg
+                                      </h3>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            }
+                          );
+                        });
+                      })
+                    ) : (
                       <div className="carousel-item active">
                         <img
                           src="default-image-url"
@@ -2172,67 +2190,38 @@ const wordFilteredData =
                               <h4 className="text-dark fw-bold ">
                                 {item.questions}
                               </h4>
-                              {isPopupVisible && (
-                                <div
-                                  className="chat-popup "
-                                  style={{
-                                    width: "19rem",
-                                    color: "#fff",
-                                    position: "absolute",
-                                    left: "60%", // Center horizontally
-                                    transform:
-                                      "translateX(-0%) translateY(-12%)", // Adjust position to center and move above
-                                    background: "#6AB04C", // Background color for the chat bubble
-                                    color: "white", // Text color
-                                    padding: "10px 15px",
-                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
-                                    border: "5px solid #fff", // Border color
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                    zIndex: 1000,
 
-                                    opacity: 1,
-                                    marginBottom: "10px", // Space between popup and content
-                                  }}
-                                >
-                                  <h6 className="text-light">{popupContent}</h6>
-                                  <div
-                                    className="chat-arrow d-none"
-                                    style={{
-                                      position: "absolute",
-                                      top: "100%", // Position the arrow below the popup
-                                      left: "6%", // Center the arrow
-                                      transform: "translateX(-50%)", // Center the arrow
-                                      width: "0",
-                                      height: "0",
-                                      borderLeft: "10px solid transparent",
-                                      borderRight: "10px solid transparent",
-                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
-                                    }}
-                                  />
+                              {selectedSubCategory !== 8 && (
+                                <div>
+                                  {!showAnswer && (
+                                    <button
+                                      onClick={() =>
+                                        handleDisplayAnswer(item.answers)
+                                      }
+                                      className="px-3 py-2"
+                                      style={{
+                                        background: "#6AB04C",
+                                        borderRadius: "10px",
+                                        color: "#fff",
+                                        border: "none",
+                                      }}
+                                    >
+                                      Show Answer
+                                    </button>
+                                  )}
+
+                                  {showAnswer && (
+                                    <h4
+                                      className=" fw-bold  mt-2 showans_sec"
+                                      style={{ color: "#6AB04C" }}
+                                    >
+                                      {popupContent}
+                                    </h4>
+                                  )}
                                 </div>
                               )}
-                              {selectedSubCategory !== 8 && (
-                                <button
-                                  onClick={() =>
-                                    handleDisplayAnswer(item.answers)
-                                  }
-                                  className="px-3 py-2"
-                                  style={{
-                                    background: "#6AB04C",
-                                    borderRadius: "10px",
-                                    color: "#fff",
-                                    border: "none",
-                                  }}
-                                >
-                                  Show Answer
-                                </button>
-                                
-                              )}
-                              
                             </div>
-                            
                           </div>
-                          
                         ))
                       ) : (
                         <div className="carousel-item active">
@@ -2250,53 +2239,55 @@ const wordFilteredData =
                         </div>
                       )}
                     </div>
-                     <div
+                    <div
                       style={{ marginTop: "-1rem" }}
                       className="d-flex align-items-center justify-content-center "
                     >
-                     {/* Prev Button */}
-<button
-  className="btn btn-light mx-2 position-absolute"
-  type="button"
-  data-bs-target="#languageSlider5"  // Fixed target ID
-  data-bs-slide="prev"
-  onClick={() => handleDisplayAnswer([])} // Clears correct answers
-  style={{
-    left: "-15%",
-    border: "none",
-    background: "transparent",
-  }}
->
-  <img
-    src={back_to_card}
-    alt="Previous"
-    style={{ width: "3rem" }}
-  />
-</button>
+                      {/* Prev Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider5" // Fixed target ID
+                        data-bs-slide="prev"
+                        onClick={() => handleDisplayAnswer([])} // Clears correct answers
+                        style={{
+                          left: "-15%",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={back_to_card}
+                          alt="Previous"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
 
-{/* Next Button */}
-<button
-  className="btn btn-light mx-2 position-absolute"
-  type="button"
-  data-bs-target="#languageSlider5" // Fixed target ID
-  onClick={() => handleDisplayAnswer([])} // Clears correct answers
-  data-bs-slide="next"
-  style={{
-    right: "-15%",
-    border: "none",
-    background: "transparent",
-  }}
->
-  <img
-    src={next_arrow}
-    alt="Next"
-    style={{ width: "3rem" }}
-  />
-</button>
-
+                      {/* Next Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider5" // Fixed target ID
+                        onClick={() => {
+                          handleDisplayAnswer([]);
+                          setShowAnswers(false);
+                        }}
+                        // Clears correct answers
+                        data-bs-slide="next"
+                        style={{
+                          right: "-15%",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={next_arrow}
+                          alt="Next"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
                     </div>
                   </div>
-                  
                 </div>
               ) : activeSections == "language" && selectedQuestionType == 4 ? (
                 // Show this section when yes or no is 1
@@ -2618,8 +2609,10 @@ const wordFilteredData =
                     </div>
                   </div>
                 </div>
-              ) : activeSections === "language" && selectedQuestionType == 3 ? (
-                // Show this section when selectedQuestionType is multiple image with single  question
+              ) : activeSections === "language" &&
+                selectedSubCategory == 29 &&
+                selectedQuestionType == 3 ? (
+                // preposition
                 <div
                   className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
                   style={{ borderRadius: "10px", background: "transparent" }}
@@ -2646,89 +2639,115 @@ const wordFilteredData =
                             }`}
                           >
                             <div className="d-flex flex-column gap-2">
-                              <div className="d-flex flex-wrap gap-2 justify-content-between">
+                              <div className="d-flex flex-wrap gap-3 justify-content-around">
                                 {JSON.parse(item.image).map(
-                                  (imgName, imgIndex) => (
-                                    <img
-                                      key={imgIndex}
-                                      src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
-                                      className="d-block img-fluid"
-                                      alt={`Slide ${index +
-                                        1} - Image ${imgIndex + 1}`}
-                                      style={{
-                                        height: "33vh",
-                                        width: "35%",
-                                      }}
-                                    />
-                                  )
+                                  (imgName, imgIndex) => {
+                                    const shouldHighlight = highlightedIndexes.includes(
+                                      imgIndex
+                                    );
+
+                                    // Parse correct_option safely
+                                    let correctoption = [];
+                                    if (
+                                      typeof item.correct_option === "string"
+                                    ) {
+                                      try {
+                                        correctoption = JSON.parse(
+                                          item.correct_option
+                                        ).map(Number); // Convert to numbers
+                                      } catch (error) {
+                                        console.error(
+                                          "Error parsing correct_option:",
+                                          error
+                                        );
+                                      }
+                                    } else if (
+                                      Array.isArray(item.correct_option)
+                                    ) {
+                                      correctoption = item.correct_option.map(
+                                        Number
+                                      ); // Convert to numbers
+                                    }
+
+                                    console.log(
+                                      "Correct Option (Parsed):",
+                                      correctoption
+                                    );
+
+                                    // Check if the current index should be highlighted
+                                    const isCorrect = correctoption.includes(
+                                      imgIndex
+                                    );
+
+                                    return (
+                                      <div className="position-relative"
+                                        key={imgIndex}
+                                        style={{
+                                          height: "33vh",
+                                          width: "35%",
+                                          boxShadow: isCorrect
+                                            ? " 0px 0px 4px 1px #6AB04C"
+                                            : "none", // Highlight the correct option
+                                        }}
+                                      >
+                                        <img src={icon_tick} style={{right:"0", display:isCorrect?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
+                                        <img
+                                          src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
+                                          className="d-block img-fluid h-100"
+                                          alt={`Slide ${index +
+                                            1} - Image ${imgIndex + 1}`}
+                                        />
+                                      </div>
+                                    );
+                                  }
                                 )}
                               </div>
                             </div>
-                            <div>
+                            <div className="d-flex flex-column justify-content-center mt-5">
                               <h4
-                                style={{ marginTop: "1rem" }}
+                               
                                 className="text-black fw-bold text-dark w-100  pe-5 "
                               >
                                 {item.questions}
                               </h4>
                               <div className=" show_ans_multi  mt-0">
-                                {isPopupVisible && (
-                                  <div
-                                    className="chat-popup "
-                                    style={{
-                                      width: "19rem",
-                                      color: "#fff",
-                                      position: "absolute",
-                                      left: "62%", // Center horizontally
-                                      transform:
-                                        "translateX(-0%) translateY(3%)", // Adjust position to center and move above
-                                      background: "#6AB04C", // Background color for the chat bubble
-                                      color: "white", // Text color
-                                      padding: "10px 15px",
-                                      borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
-                                      border: "5px solid #fff", // Border color
-                                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                      zIndex: 1000,
-
-                                      opacity: 1,
-                                      marginBottom: "10px", // Space between popup and content
-                                    }}
-                                  >
-                                    <h6 className="text-light">
-                                      {popupContent}
-                                    </h6>
-                                    <div
-                                      className="chat-arrow d-none"
-                                      style={{
-                                        position: "absolute",
-                                        top: "100%", // Position the arrow below the popup
-                                        left: "6%", // Center the arrow
-                                        transform: "translateX(-50%)", // Center the arrow
-                                        width: "0",
-                                        height: "0",
-                                        borderLeft: "10px solid transparent",
-                                        borderRight: "10px solid transparent",
-                                        borderTop: "10px solid #6AB04C", // Same color as the popup background
-                                      }}
-                                    />
-                                  </div>
-                                )}
                                 {selectedSubCategory !== 8 && (
-                                  <button
-                                    className="px-3 py-2"
-                                    style={{
-                                      background: "#6AB04C",
-                                      borderRadius: "10px",
-                                      color: "#fff",
-                                      border: "none",
-                                      marginTop: "2rem",
-                                    }}
-                                    onClick={() =>
-                                      handleShowAnswerMcq(item.answers,item.correct_option)
-                                    }
-                                  >
-                                    Show Answer
-                                  </button>
+                                  <div>
+                                    {!showAnswer && (
+                                      <button
+                                        className="px-3 py-2"
+                                        style={{
+                                          background: "#6AB04C",
+                                          borderRadius: "10px",
+                                          color: "#fff",
+                                          border: "none",
+                                          fontSize:"1.2rem",
+                                         
+                                        }}
+                                        onClick={() =>
+                                          handleShowAnswerMcq(
+                                            item.answers,
+                                            item.correct_option
+                                          )
+                                        } // Pass both answers and correct optio
+                                      >
+                                        Show Answer
+                                      </button>
+                                    )}
+
+                                    {showAnswer && (
+                                     <button  className="px-3 py-2"
+                                     style={{
+                                       background: "transparent",
+                                       borderRadius: "10px",
+                                       color: "#6AB04C",
+                                       border: "none",
+                                       fontSize:"1.2rem",
+                                       fontWeight:"bold",
+                                      
+                                     }}>  {popupContent}</button>
+                                    )}
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -2760,7 +2779,12 @@ const wordFilteredData =
                         type="button"
                         data-bs-target="#languageSlider2"
                         data-bs-slide="prev"
-                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
+                        onClick={() => {
+                          setHighlightedIndexes([]);
+                          setShowCorrectAnswer([]);
+                          setShowAnswers(false);
+                        }}
+                        // Clears correct answers
                         style={{
                           left: "-15%",
                           border: "none",
@@ -2779,7 +2803,193 @@ const wordFilteredData =
                         className="btn btn-light mx-2 position-absolute"
                         type="button"
                         data-bs-target="#languageSlider2"
-                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
+                        onClick={() => {
+                          setShowCorrectAnswer([]);
+                          setHighlightedIndexes([]);
+
+                          setShowAnswers(false);
+                        }} // Clears correct answers
+                        data-bs-slide="next"
+                        style={{
+                          right: "-15%",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={next_arrow}
+                          alt="Next"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : activeSections === "language" && selectedQuestionType == 3 ? (
+                // sight words
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      borderRadius: "30px",
+                      width: "80%",
+                      height: "94vh",
+                    }}
+                    id="languageSlider2"
+                    className="carousel bg-light p-4 ms-5"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <div className="d-flex flex-column gap-2">
+                              <div className="d-flex  gap-1 justify-content-between">
+                                {JSON.parse(item.image).map(
+                                  (imgName, imgIndex) => {
+                                    const shouldHighlight = highlightedIndexes.includes(
+                                      imgIndex
+                                    );
+
+                                    return (
+                                      <div className="position-relative"
+                                        key={imgIndex}
+                                        style={{
+                                          height: "55vh",
+                                          width: "50%",
+                                          boxShadow: shouldHighlight
+                                          ? " 0px 0px 4px 1px #6AB04C"
+                                          : "none", // Highlight the correct option
+                                        }}
+                                      >
+                                        <img src={icon_tick} style={{right:"0", display:shouldHighlight?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
+                                        <img
+                                          src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
+                                          className="d-block img-fluid h-100"
+                                          alt={`Slide ${index +
+                                            1} - Image ${imgIndex + 1}`}
+                                        />
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            </div>
+                            <div style={{marginTop:"10rem"}} className="d-flex flex-column justify-content-center ">
+                              <h4
+                            
+                                className="text-black fw-bold text-dark w-100  pe-5 "
+                              >
+                                {item.questions}
+                              </h4>
+                              <div className=" show_ans_multi  mt-0">
+                                {selectedSubCategory !== 8 && (
+                                  <div>
+                                    {!showAnswer && (
+                                      <button
+                                        className="px-3 py-2"
+                                        style={{
+                                          background: "#6AB04C",
+                                          borderRadius: "10px",
+                                          color: "#fff",
+                                          border: "none",
+                                          fontSize:"1.2rem",
+                                        
+                                        }}
+                                        onClick={() =>
+                                          handleShowAnswerMcq(
+                                            item.answers,
+                                            item.correct_option
+                                          )
+                                        } // Pass both answers and correct optio
+                                      >
+                                        Show Answer
+                                      </button>
+                                    )}
+
+                                    {showAnswer && (
+                                     <button  className="px-3 py-2"
+                                     style={{
+                                       background: "transparent",
+                                       borderRadius: "10px",
+                                       color: "#6AB04C",
+                                       border: "none",
+                                       fontSize:"1.2rem",
+                                       fontWeight:"bold",
+                                      
+                                     }}>  {popupContent}</button>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "600px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      style={{ marginTop: "-1rem" }}
+                      className="d-flex align-items-center justify-content-center "
+                    >
+                      {/* Prev Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider2"
+                        data-bs-slide="prev"
+                        onClick={() => {
+                          setHighlightedIndexes([]);
+                          setShowCorrectAnswer([]);
+                          setShowAnswers(false);
+                        }}
+                        // Clears correct answers
+                        style={{
+                          left: "-15%",
+                          border: "none",
+                          background: "transparent",
+                        }}
+                      >
+                        <img
+                          src={back_to_card}
+                          alt="Previous"
+                          style={{ width: "3rem" }}
+                        />
+                      </button>
+
+                      {/* Next Button */}
+                      <button
+                        className="btn btn-light mx-2 position-absolute"
+                        type="button"
+                        data-bs-target="#languageSlider2"
+                        onClick={() => {
+                          setShowCorrectAnswer([]);
+                          setHighlightedIndexes([]);
+
+                          setShowAnswers(false);
+                        }} // Clears correct answers
                         data-bs-slide="next"
                         style={{
                           right: "-15%",
@@ -2836,23 +3046,49 @@ const wordFilteredData =
                               style={{ bottom: "-20%" }}
                             >
                               {selectedSubCategory !== 8 && (
-                                <h4 className="text-black fw-bold text-dark mt-4">
-                                  {item.questions}
-                                </h4>
+                                <div className="d-flex justify-content-center gap-5">
+                                  <h4 className="text-black fw-bold text-dark mt-4">
+                                    {item.questions}
+                                  </h4>
+
+                                  {/* Popup and other components */}
+                                </div>
                               )}
                               {isShowanswer && selectedSubCategory !== 8 && (
-                                <button
-                                  onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
-                                  className="px-3 py-2"
-                                  style={{
-                                    background: "#6AB04C",
-                                    borderRadius: "10px",
-                                    color: "#fff",
-                                    border: "none",
-                                  }}
-                                >
-                                  Show Answer
-                                </button>
+                                <div className="d-flex justify-content-center">
+                                  {!showAnswer && (
+                                    <button
+                                      onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
+                                      className="px-3 py-2"
+                                      style={{
+                                        background: "#6AB04C",
+                                        borderRadius: "10px",
+                                        color: "#fff",
+                                        border: "none",
+                                        fontSize: "1.2rem",
+                                      }}
+                                    >
+                                      Show Answer
+                                    </button>
+                                  )}
+
+                                  {showAnswer && (
+                                    <button
+                                      className="px-3 py-2"
+                                      style={{
+                                        background: "transparent",
+                                        borderRadius: "10px",
+                                        color: "#6AB04C",
+                                        border: "none",
+                                        fontSize: "1.2rem",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {" "}
+                                      {popupContent}
+                                    </button>
+                                  )}
+                                </div>
                               )}
                             </div>
 
@@ -2864,47 +3100,7 @@ const wordFilteredData =
                                 width: "100%",
                               }}
                               className="show_ans  d-flex gap-2 justify-content-center align-items-center"
-                            >
-                              {/* Chat Popup */}
-                              {isPopupVisible && (
-                                <div
-                                  className="chat-popup "
-                                  style={{
-                                    width: "19rem",
-                                    color: "#fff",
-                                    position: "absolute",
-                                    left: "62%", // Center horizontally
-                                    transform: "translateX(-0%) translateY(3%)", // Adjust position to center and move above
-                                    background: "#6AB04C", // Background color for the chat bubble
-                                    color: "white", // Text color
-                                    padding: "10px 15px",
-                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
-                                    border: "5px solid #fff", // Border color
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                    zIndex: 1000,
-
-                                    opacity: 1,
-                                    marginBottom: "10px", // Space between popup and content
-                                  }}
-                                >
-                                  <h6 className="text-light">{popupMessage}</h6>
-                                  <div
-                                    className="chat-arrow d-none"
-                                    style={{
-                                      position: "absolute",
-                                      top: "100%", // Position the arrow below the popup
-                                      left: "6%", // Center the arrow
-                                      transform: "translateX(-50%)", // Center the arrow
-                                      width: "0",
-                                      height: "0",
-                                      borderLeft: "10px solid transparent",
-                                      borderRight: "10px solid transparent",
-                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </div>
+                            ></div>
                           </div>
                         ))
                       ) : (
@@ -3065,7 +3261,7 @@ const wordFilteredData =
               <div className="button_section d-flex w-25 flex-column  justify-content-center">
                 <div className="d-flex flex-column gap-5 align-items-center">
                   <button
-                    className="px-5 py-2 mt-0"
+                    className="px-5 py-xl-2 py-lg-0 py-1 mt-0"
                     style={{
                       borderRadius: "10px",
                       border: "2px solid #0F2D45",
