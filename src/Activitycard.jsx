@@ -300,12 +300,14 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       : null;
   //language filter
   useEffect(() => {
+    ShowAnsYesno([]);
     setHighlightedIndexes([]);
     if (Filtercat.length > 0) {
       setSelectedLanguageType(Filtercat[0].id); // Set first value on render
     }
   }, [Filtercat]); // Runs when Filtercat changes
   useEffect(() => {
+    ShowAnsYesno([])
     setHighlightedIndexes([]);
     console.log(selectedSubCategory, "subcat");
     setIsPopupVisible(false);
@@ -324,7 +326,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       setInputValue(""); // Clear input on next
       setShowAnswers(false);
     }
-    if (selectedQuestionType) {
+     if (selectedQuestionType) {
       filtered = filtered.filter(
         (item) => item.question_type_id == selectedQuestionType
       );
@@ -2032,7 +2034,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                           />
                           {item.sound_word && (
                             <div className="carousel-caption d-none d-md-block">
-                              <h3
+                              <h5
                                 className="mx-4 text-center"
                                 style={{
                                   minWidth: "200px",
@@ -2041,7 +2043,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                 }}
                               >
                                 {item.sound_word}
-                              </h3>
+                              </h5>
                             </div>
                           )}
                         </div>
@@ -2070,7 +2072,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                   />
                                   {item.words && (
                                     <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
-                                      <h3
+                                      <h5
                                         className="mx-4 text-center"
                                         style={{
                                           minWidth: "200px",
@@ -2079,7 +2081,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                         }}
                                       >
                                         {item.words}
-                                      </h3>
+                                      </h5>
                                     </div>
                                   )}
                                 </div>
@@ -2289,6 +2291,131 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     </div>
                   </div>
                 </div>
+              ) : activeSections == "language" && selectedSubCategory == 8 ? (
+                // Show this section when yes or no is 1
+                <div
+                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
+                  style={{ borderRadius: "10px", background: "transparent" }}
+                >
+                  <div
+                    style={{
+                      borderRadius: "30px",
+                      width: "90%",
+                      height: "94vh",
+                      position: "relative",
+                    }}
+                    id="languageSlider5"
+                    className="carousel bg-light p-4 ms-5"
+                    data-bs-ride="false"
+                    data-bs-interval="false"
+                    data-bs-pause="true"
+                  >
+                    <div className="carousel-inner position-relative">
+                      {filteredData.length > 0 ? (
+                        filteredData.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`carousel-item ${
+                              index === 0 ? "active" : ""
+                            }`}
+                          >
+                            <div
+                              className="carousel-caption d-block  text-dark"
+                              style={{
+                                position: "absolute",
+                                top: "50%",
+                              }}
+                            >
+                               <img
+                              src={item.image_url}
+                              className="d-block w-100 img-fluid"
+                              alt={`Slide ${index + 1}`}
+                              style={{ height: "76vh", width: "91%" }}
+                            />
+                              <h4 className="text-dark fw-bold">
+                              {item.questions}
+                            </h4>
+                              
+                              {/* {JSON.parse(item.answers).map((answer, i) => {
+                                const match = answer.match(/^(.*?):\s*(.*)$/); // Split heading and content
+                                return match ? (
+                                  <p key={i}>
+                                    <strong>{match[1]}</strong> <br />{" "}
+                                    {match[2]}
+                                  </p>
+                                ) : (
+                                  <p key={i}>{answer}</p> // If no colon, display normally
+                                );
+                              })} */}
+                              
+                            </div>
+                           
+                              
+                              </div>
+                            
+                    
+                          
+                        ))
+                      ) : (
+                        <div className="carousel-item active">
+                          <img
+                            src="default-image-url"
+                            className="d-block w-100 img-fluid"
+                            alt="Default Slide"
+                            style={{ height: "560px", objectFit: "cover" }}
+                          />
+                          <div className="carousel-caption d-block">
+                            <h3 className="text-black fw-bold">
+                              No Data Available
+                            </h3>
+                          </div>
+                          
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Corrected Next & Prev Buttons */}
+                    <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target="#languageSlider5"
+                      data-bs-slide="prev"
+                      onClick={() => setShowCorrectAnswer([])}
+                      style={{
+                        left: "-15%",
+                        bottom: "0",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src={back_to_card}
+                        alt="Previous"
+                        style={{ width: "3rem" }}
+                      />
+                    </button>
+
+                    <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target="#languageSlider5"
+                      data-bs-slide="next"
+                      onClick={() => setShowCorrectAnswer([])}
+                      style={{
+                        right: "-15%",
+                        bottom: "0",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src={next_arrow}
+                        alt="Next"
+                        style={{ width: "3rem" }}
+                      />
+                    </button>
+                  </div>
+                </div>
               ) : activeSections == "language" && selectedQuestionType == 4 ? (
                 // Show this section when yes or no is 1
                 <div
@@ -2378,8 +2505,53 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                 )}
                               </div>
                             </div>
+ {/* Corrected Next & Prev Buttons */}
+ <div
+                      style={{ marginTop: "-1rem" }}
+                      className="d-flex align-items-center justify-content-center "
+                    >
+ <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target="#languageSlider5"
+                      data-bs-slide="prev"
+                      onClick={() => setShowCorrectAnswer([])}
+                      style={{
+                        left: "-15%",
+                        bottom: "0",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src={back_to_card}
+                        alt="Previous"
+                        style={{ width: "3rem" }}
+                      />
+                    </button>
 
+                    <button
+                      className="btn btn-light mx-2 position-absolute"
+                      type="button"
+                      data-bs-target="#languageSlider5"
+                      data-bs-slide="next"
+                      onClick={() => ShowAnsYesno([])}
+                      style={{
+                        right: "-15%",
+                        bottom: "0",
+                        border: "none",
+                        background: "transparent",
+                      }}
+                    >
+                      <img
+                        src={next_arrow}
+                        alt="Next"
+                        style={{ width: "3rem" }}
+                      />
+                    </button>
+                    </div>
                             <div className="yes_or_no_ans position-absolute w-100 mt-0 pt-5 d-flex justify-content-center align-items-center gap-4"></div>
+                            
                           </div>
                         ))
                       ) : (
@@ -2399,6 +2571,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       )}
                     </div>
                   </div>
+                  
                 </div>
               ) : activeSections === "language" && selectedQuestionType == 2 ? (
                 // Show this section when selectedQuestionType is multiple choice questions
