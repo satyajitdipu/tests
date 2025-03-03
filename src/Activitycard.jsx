@@ -1885,7 +1885,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     onChange={(e) => setSelectedLanguageType(e.target.value)}
                     value={selectedLanguageType}
                   >
-                    <option value="">Select Language Type</option>
                     {Filtercat.map((lang) => (
                       <option key={lang.id} value={lang.id}>
                         {lang.category_name}
@@ -1900,7 +1899,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       onChange={(e) => setSelectedSubCategory(e.target.value)}
                       value={selectedSubCategory}
                     >
-                      <option value="">Select Subcategory</option>
                       {filteredSubCategories.map((sub) => (
                         <option key={sub.id} value={sub.id}>
                           {sub.category_name}
@@ -1916,7 +1914,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       onChange={(e) => setSelectedQuestionType(e.target.value)}
                       value={selectedQuestionType}
                     >
-                      <option value="">Select Question Type</option>
                       {filteredQuestions.map((question, index) => (
                         <option key={index} value={question.question_type_id}>
                           {question.question_type_name}
@@ -2033,16 +2030,19 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             style={{ height: "76vh", width: "91%" }}
                           />
                           {item.sound_word && (
-                            <div className="carousel-caption d-none d-md-block">
-                              <h5
-                                className="mx-4 text-center"
-                                style={{
-                                  minWidth: "200px",
-                                  color: "black",
-                                  fontWeight: "bold",
-                                }}
-                              >
-                                {item.sound_word}
+                             <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
+                               <h5
+                                        className="mx-4 text-center"
+                                        style={{
+                                          minWidth: "200px",
+                                          color: "black",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                              {item.sound_word
+                                .split(" ") // Split words into an array
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+                                .join(" ")} {/* Join words back into a sentence */}
                               </h5>
                             </div>
                           )}
@@ -2080,7 +2080,25 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                           fontWeight: "bold",
                                         }}
                                       >
-                                        {item.words}
+                                       
+                                       {(() => {
+  if (item.sentence === "Phrases") {
+    return item.words
+      .split(" ") // Split words into an array
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+      .join(" "); // Join words back into a sentence
+  } else {
+    return item.words
+      .split(" ") // Split words into an array
+      .map((word, index) =>
+        index < 1 // Capitalize only the first two words
+          ? word.charAt(0).toUpperCase() + word.slice(1)
+          : word
+      )
+      .join(" ")} {/* Join words back into a sentence */}
+  
+})()}
+
                                       </h5>
                                     </div>
                                   )}
@@ -2333,7 +2351,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               style={{ height: "76vh", width: "91%" }}
                             />
                               <h4 className="text-dark fw-bold">
-                              {item.questions}
+                              Q. {item.questions}
                             </h4>
                               
                               {/* {JSON.parse(item.answers).map((answer, i) => {
@@ -2818,7 +2836,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     const shouldHighlight = highlightedIndexes.includes(
                                       imgIndex
                                     );
-
+                                    const serialLetter = String.fromCharCode(97 + imgIndex); // 65 is ASCII for 'A'
                                     // Parse correct_option safely
                                     let correctoption = [];
                                     if (
@@ -2864,6 +2882,20 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                         }}
                                       >
                                         <img src={icon_tick} style={{right:"0", display:isCorrect?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
+                                        <span
+            className="fw-bold position-absolute"
+            style={{
+              top: "5px",
+              left: "5px",
+              background: "rgba(0, 0, 0, 0.6)",
+              color: "#fff",
+              padding: "5px 10px",
+              borderRadius: "5px",
+            }}
+          >
+            {serialLetter}
+          </span>
+
                                         <img
                                           src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
                                           className="d-block img-fluid h-100"
@@ -3032,7 +3064,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     const shouldHighlight = highlightedIndexes.includes(
                                       imgIndex
                                     );
-
+                                    const serialLetter = String.fromCharCode(97 + imgIndex); // 65 is ASCII for 'A'
                                     return (
                                       <div className="position-relative"
                                         key={imgIndex}
@@ -3045,6 +3077,19 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                         }}
                                       >
                                         <img src={icon_tick} style={{right:"0", display:shouldHighlight?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
+                                        <span
+            className="fw-bold position-absolute"
+            style={{
+              top: "5px",
+              left: "5px",
+              background: "rgba(0, 0, 0, 0.6)",
+              color: "#fff",
+              padding: "5px 10px",
+              borderRadius: "5px",
+            }}
+          >
+            {serialLetter}
+          </span>
                                         <img
                                           src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
                                           className="d-block img-fluid h-100"
