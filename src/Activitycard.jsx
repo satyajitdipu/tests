@@ -276,30 +276,28 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   }, [selectedSound, storedSelections]); // Added storedSelections as dependency
   console.log(selectedSentence);
   const ArfilteredData = Object.keys(ArticulationData)
-  .filter((key) => !selectedSound || key.toLowerCase() === selectedSound.toLowerCase()) // Case-insensitive comparison
-  .reduce((acc, key) => {
-    acc[key] = ArticulationData[key].filter((item) => {
-      const mappedPosition = positionMapping[selectedPosition] || null;
-      const matchesPosition =
-        !selectedPosition || item.position == mappedPosition;
-      const matchesSentence =
-        !selectedSentence || item.sentence === selectedSentence;
-      return matchesPosition && matchesSentence;
-    });
-    return acc;
-  }, {});
+    .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
+    .reduce((acc, key) => {
+      acc[key] = ArticulationData[key].filter((item) => {
+        const mappedPosition = positionMapping[selectedPosition] || null;
+        const matchesPosition =
+          !selectedPosition || item.position == mappedPosition;
+        const matchesSentence =
+          !selectedSentence || item.sentence === selectedSentence;
+        return matchesPosition && matchesSentence;
+      });
+      return acc;
+    }, {});
 
   // Handle 'Words' case separately
   const mappedPosition = positionMapping[selectedPosition] || null;
 
   const wordFilteredData =
-  selectedSentence === "Words" &&
-  Wordsentenses[selectedSound?.toLowerCase()] // Ensure case-insensitive access
-    ? Wordsentenses[selectedSound.toLowerCase()].filter(
-        (word) => !selectedPosition || word.position == mappedPosition
-      )
-    : null;
-
+    selectedSentence === "Words" && Wordsentenses[selectedSound]
+      ? Wordsentenses[selectedSound].filter(
+          (word) => !selectedPosition || word.position == mappedPosition
+        )
+      : null;
   //language filter
   useEffect(() => {
     ShowAnsYesno([]);
