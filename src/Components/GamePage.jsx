@@ -296,11 +296,13 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   const mappedPosition = positionMapping[selectedPosition] || null;
 
   const wordFilteredData =
-    selectedSentence === "Words" && Wordsentenses[selectedSound]
-      ? Wordsentenses[selectedSound].filter(
-          (word) => !selectedPosition || word.position == mappedPosition
-        )
-      : null;
+  selectedSentence === "Words" &&
+  Wordsentenses[selectedSound?.toLowerCase()] // Ensure case-insensitive access
+    ? Wordsentenses[selectedSound.toLowerCase()].filter(
+        (word) => !selectedPosition || word.position == mappedPosition
+      )
+    : null;
+
   //language filter
   useEffect(() => {
     ShowAnsYesno([]);
