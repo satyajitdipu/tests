@@ -13,6 +13,7 @@ import star from "../assets/star.png";
 import star_yellow from "../assets/yellow_star.png";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Gamedescription = () => {
   const gamevidref = useRef();
@@ -52,7 +53,7 @@ const Gamedescription = () => {
           },
         });
         setGameDatas(response.data);
-        console.log(response.data);
+        console.log(response.data.un_zip_filename);
         fetchRatingsReviews(response.data.id);
       } catch (error) {
         console.error("Error fetching game data:", error.response?.data || error.message);
@@ -180,6 +181,10 @@ const Gamedescription = () => {
                         <p className="mb-0 text-light">{totalReviews} reviews</p>
                       </div>
                       <button className="yellow_btn p-2">Subscribe Now To Play</button>
+                      <Link to={`/game/${gameDatas.un_zip_filename}`}>
+  <button className="yellow_btn p-2">Play</button>
+</Link>
+
                     </div>
                   </div>
                 </div>

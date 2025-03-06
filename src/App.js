@@ -23,6 +23,7 @@ import Login from "./Components/Login";
 import Notification from "./Components/Notification";
 import Myprofile from "./Components/Myprofile";
 import Forgotpassword from "./Components/Forgotpassword";
+import GamePage from "./Components/GamePage";
 import AutoLogin from "./Components/AutoLogin";
 import Activitycard from "./Activitycard";
 import NotFound from "./Components/NotFound"; // Add this component
@@ -54,6 +55,7 @@ function App() {
         <Route path="/therapycard" element={<Activitycard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/notification" element={<Notification />} />
+        <Route path="/game/:game_name" element={<GamePage />} />
         <Route path="/myprofile" element={<Myprofile />} />
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 pages */}
       </Routes>
