@@ -278,18 +278,19 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   }, [selectedSound, storedSelections]); // Added storedSelections as dependency
   console.log(selectedSentence);
   const ArfilteredData = Object.keys(ArticulationData)
-    .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
-    .reduce((acc, key) => {
-      acc[key] = ArticulationData[key].filter((item) => {
-        const mappedPosition = positionMapping[selectedPosition] || null;
-        const matchesPosition =
-          !selectedPosition || item.position == mappedPosition;
-        const matchesSentence =
-          !selectedSentence || item.sentence === selectedSentence;
-        return matchesPosition && matchesSentence;
-      });
-      return acc;
-    }, {});
+  .filter((key) => !selectedSound || key.toLowerCase() === selectedSound.toLowerCase()) // Case-insensitive comparison
+  .reduce((acc, key) => {
+    acc[key] = ArticulationData[key].filter((item) => {
+      const mappedPosition = positionMapping[selectedPosition] || null;
+      const matchesPosition =
+        !selectedPosition || item.position == mappedPosition;
+      const matchesSentence =
+        !selectedSentence || item.sentence === selectedSentence;
+      return matchesPosition && matchesSentence;
+    });
+    return acc;
+  }, {});
+
 
   // Handle 'Words' case separately
   const mappedPosition = positionMapping[selectedPosition] || null;
