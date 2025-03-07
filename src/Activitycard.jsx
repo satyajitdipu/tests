@@ -1799,7 +1799,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
 
                 {/* 🔹 1st Dropdown: Select Sound */}
                 <select
-                  className="w-100 sound_name"
+                  className="w-100 sound_name sound_position"
                   onChange={(e) => setSelectedSound(e.target.value)}
                   value={selectedSound}
                 >
@@ -1859,8 +1859,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2 w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                      background: "#F0F0F0",
+                     
                       fontWeight: "500",
+                      backgroundColor:"#6AB04C !important"
                     }}
                     onClick={() => {
                       setIsArticulationModalOpen(true);
@@ -1945,8 +1946,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2  w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                      background: "#F0F0F0",
+                    
                       fontWeight: "500",
+                        background:"#6AB04C !important"
                     }}
                   >
                     {" "}
@@ -1985,8 +1987,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2  w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                      background: "#F0F0F0",
+                   
                       fontWeight: "500",
+                      background:"#6AB04C !important"
                     }}
                   >
                     {" "}
@@ -2260,7 +2263,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       )}
                     </div>
                     <div
-                      style={{ marginTop: "-1rem" }}
+                      style={{ marginTop: "4rem" }}
                       className="d-flex align-items-center justify-content-center "
                     >
                       {/* Prev Button */}
@@ -2269,7 +2272,11 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                         type="button"
                         data-bs-target="#languageSlider5" // Fixed target ID
                         data-bs-slide="prev"
-                        onClick={() => handleDisplayAnswer([])} // Clears correct answers
+                        onClick={() => {
+                          handleDisplayAnswer([]);
+                          setShowAnswers(false);
+                        
+                      }} // Clears correct answers
                         style={{
                           left: "-15%",
                           border: "none",
@@ -2469,7 +2476,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             />
                             <div
                               className="carousel-caption d-block d-flex flex-column gap-2 justify-content-center align-items-center"
-                              style={{ bottom: "-20%" }}
+                              style={{ bottom: "-22%" }}
                             >
                               <h4 className="text-dark fw-bold">
                                 {item.questions}
@@ -2629,7 +2636,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     minWidth: "300px", // Set a minimum width to prevent shrinking too much
                                   }}
                                 />
-                                <h4 className="text-black fw-bold text-dark w-100  pe-5 ">
+                                <h4 className="text-black fw-bold text-dark w-100  pe-0 ">
                                   {item.questions}
                                 </h4>
                               </div>
@@ -2660,7 +2667,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                             .map((answer, index) => (
                                               <h5
                                                 key={index}
-                                                className="text-dark"
+                                                className=""
                                                 style={{
                                                   background: showCorrectAnswer.includes(
                                                     index
@@ -2688,7 +2695,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                             .map((answer, index) => (
                                               <h5
                                                 key={index + 2}
-                                                className="text-dark me-4"
+                                                className=" me-0"
                                                 style={{
                                                   background: showCorrectAnswer.includes(
                                                     index + 2
@@ -2876,12 +2883,10 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                         style={{
                                           height: "33vh",
                                           width: "35%",
-                                          boxShadow: isCorrect
-                                            ? " 0px 0px 4px 1px #6AB04C"
-                                            : "none", // Highlight the correct option
+                                         boxShadow:isCorrect?"1px -1px 5px 4px #6AB04C":""
                                         }}
                                       >
-                                        <img src={icon_tick} style={{right:"0", display:isCorrect?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
+                                        
                                         <span
             className="fw-bold position-absolute"
             style={{
@@ -3144,7 +3149,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                        fontSize:"1.2rem",
                                        fontWeight:"bold",
                                       
-                                     }}>  {popupContent}</button>
+                                     }}> </button>
                                     )}
                                   </div>
                                 )}
@@ -3261,7 +3266,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             </div>
                             <div
                               className="carousel-caption d-block"
-                              style={{ bottom: "-20%" }}
+                              style={{ bottom: "-22%" }}
                             >
                               {selectedSubCategory !== 8 && (
                                 <div className="d-flex justify-content-center gap-5">
@@ -3478,14 +3483,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
               {/* Right Section */}
               <div className="button_section d-flex w-25 flex-column  justify-content-center">
                 <div className="d-flex flex-column gap-5 align-items-center">
-                  <button
-                    className="px-5 py-xl-2 py-lg-0 py-1 mt-0"
-                    style={{
-                      borderRadius: "10px",
-                      border: "2px solid #0F2D45",
-                      color: "#0F2D45",
-                      fontWeight: "bold",
-                    }}
+                  <div className="rtg"
+                   
+                   
                     onClick={() => {
                       setIsNewModalOpen(false);
                       setIsSubLanguageModalOpen(false);
@@ -3495,8 +3495,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       setIsLanguageModalOpen(false);
                     }}
                   >
-                    Return to Game
-                  </button>
+                  
+                  </div>
 
                   {hasData.articulation && (
                     <div className="d-flex flex-column align-items-center gap-2 text-light">
