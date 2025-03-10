@@ -307,7 +307,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     }
   }, [Filtercat]); // Runs when Filtercat changes
   useEffect(() => {
-    ShowAnsYesno([])
+    ShowAnsYesno([]);
     setHighlightedIndexes([]);
     console.log(selectedSubCategory, "subcat");
     setIsPopupVisible(false);
@@ -326,7 +326,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
       setInputValue(""); // Clear input on next
       setShowAnswers(false);
     }
-     if (selectedQuestionType) {
+    if (selectedQuestionType) {
       filtered = filtered.filter(
         (item) => item.question_type_id == selectedQuestionType
       );
@@ -1859,9 +1859,10 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2 w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                     
+                      color:"#fff",
                       fontWeight: "500",
-                      backgroundColor:"#6AB04C !important"
+                      backgroundColor: "#6AB04C !important",
+                      border:"2px solid #fff"
                     }}
                     onClick={() => {
                       setIsArticulationModalOpen(true);
@@ -1946,9 +1947,11 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2  w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                    
+                      backgroundColor:"#6AB04C",
+                      color:"#fff",
                       fontWeight: "500",
-                        background:"#6AB04C !important"
+                       border:"2px solid #fff"
+                     
                     }}
                   >
                     {" "}
@@ -1987,9 +1990,10 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2  w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                   
+                      color:"#fff",
                       fontWeight: "500",
-                      background:"#6AB04C !important"
+                      backgroundColor: "#6AB04C !important",
+                       border:"2px solid #fff"
                     }}
                   >
                     {" "}
@@ -2033,19 +2037,27 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             style={{ height: "76vh", width: "91%" }}
                           />
                           {item.sound_word && (
-                             <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
-                               <h5
-                                        className="mx-4 text-center"
-                                        style={{
-                                          minWidth: "200px",
-                                          color: "black",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                              {item.sound_word
-                                .split(" ") // Split words into an array
-                                .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-                                .join(" ")} {/* Join words back into a sentence */}
+                            <div
+                              style={{ bottom: "-7rem" }}
+                              className="carousel-caption d-none d-md-block"
+                            >
+                              <h5
+                                className="mx-4 text-center"
+                                style={{
+                                  minWidth: "200px",
+                                  color: "black",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {item.sound_word
+                                  .split(" ") // Split words into an array
+                                  .map(
+                                    (word) =>
+                                      word.charAt(0).toUpperCase() +
+                                      word.slice(1)
+                                  ) // Capitalize each word
+                                  .join(" ")}{" "}
+                                {/* Join words back into a sentence */}
                               </h5>
                             </div>
                           )}
@@ -2074,7 +2086,10 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     style={{ height: "76vh", width: "91%" }}
                                   />
                                   {item.words && (
-                                    <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
+                                    <div
+                                      style={{ bottom: "-7rem" }}
+                                      className="carousel-caption d-none d-md-block"
+                                    >
                                       <h5
                                         className="mx-4 text-center"
                                         style={{
@@ -2083,25 +2098,33 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                           fontWeight: "bold",
                                         }}
                                       >
-                                       
-                                       {(() => {
-  if (item.sentence === "Phrases") {
-    return item.words
-      .split(" ") // Split words into an array
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-      .join(" "); // Join words back into a sentence
-  } else {
-    return item.words
-      .split(" ") // Split words into an array
-      .map((word, index) =>
-        index < 1 // Capitalize only the first two words
-          ? word.charAt(0).toUpperCase() + word.slice(1)
-          : word
-      )
-      .join(" ")} {/* Join words back into a sentence */}
-  
-})()}
-
+                                        {(() => {
+                                          if (item.sentence === "Phrases") {
+                                            return item.words
+                                              .split(" ") // Split words into an array
+                                              .map(
+                                                (word) =>
+                                                  word.charAt(0).toUpperCase() +
+                                                  word.slice(1)
+                                              ) // Capitalize each word
+                                              .join(" "); // Join words back into a sentence
+                                          } else {
+                                            return item.words
+                                              .split(" ") // Split words into an array
+                                              .map((word, index) =>
+                                                index < 1 // Capitalize only the first two words
+                                                  ? word
+                                                      .charAt(0)
+                                                      .toUpperCase() +
+                                                    word.slice(1)
+                                                  : word
+                                              )
+                                              .join(" ");
+                                          }
+                                          {
+                                            /* Join words back into a sentence */
+                                          }
+                                        })()}
                                       </h5>
                                     </div>
                                   )}
@@ -2275,8 +2298,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                         onClick={() => {
                           handleDisplayAnswer([]);
                           setShowAnswers(false);
-                        
-                      }} // Clears correct answers
+                        }} // Clears correct answers
                         style={{
                           left: "-15%",
                           border: "none",
@@ -2351,16 +2373,16 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                 top: "50%",
                               }}
                             >
-                               <img
-                              src={item.image_url}
-                              className="d-block w-100 img-fluid"
-                              alt={`Slide ${index + 1}`}
-                              style={{ height: "76vh", width: "91%" }}
-                            />
+                              <img
+                                src={item.image_url}
+                                className="d-block w-100 img-fluid"
+                                alt={`Slide ${index + 1}`}
+                                style={{ height: "76vh", width: "91%" }}
+                              />
                               <h4 className="text-dark fw-bold">
-                              Q. {item.questions}
-                            </h4>
-                              
+                                Q. {item.questions}
+                              </h4>
+
                               {/* {JSON.parse(item.answers).map((answer, i) => {
                                 const match = answer.match(/^(.*?):\s*(.*)$/); // Split heading and content
                                 return match ? (
@@ -2372,14 +2394,8 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                   <p key={i}>{answer}</p> // If no colon, display normally
                                 );
                               })} */}
-                              
                             </div>
-                           
-                              
-                              </div>
-                            
-                    
-                          
+                          </div>
                         ))
                       ) : (
                         <div className="carousel-item active">
@@ -2394,7 +2410,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               No Data Available
                             </h3>
                           </div>
-                          
                         </div>
                       )}
                     </div>
@@ -2476,7 +2491,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                             />
                             <div
                               className="carousel-caption d-block d-flex flex-column gap-2 justify-content-center align-items-center"
-                              style={{ bottom: "-22%" }}
+                              style={{ bottom: "-2%" }}
                             >
                               <h4 className="text-dark fw-bold">
                                 {item.questions}
@@ -2530,53 +2545,52 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                 )}
                               </div>
                             </div>
- {/* Corrected Next & Prev Buttons */}
- <div
-                      style={{ marginTop: "-1rem" }}
-                      className="d-flex align-items-center justify-content-center "
-                    >
- <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target="#languageSlider5"
-                      data-bs-slide="prev"
-                      onClick={() => setShowCorrectAnswer([])}
-                      style={{
-                        left: "-15%",
-                        bottom: "0",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src={back_to_card}
-                        alt="Previous"
-                        style={{ width: "3rem" }}
-                      />
-                    </button>
+                            {/* Corrected Next & Prev Buttons */}
+                            <div
+                              style={{ marginTop: "6rem" }}
+                              className="d-flex align-items-center justify-content-center "
+                            >
+                              <button
+                                className="btn btn-light mx-2 position-absolute"
+                                type="button"
+                                data-bs-target="#languageSlider5"
+                                data-bs-slide="prev"
+                                onClick={() => setShowCorrectAnswer([])}
+                                style={{
+                                  left: "-15%",
+                                  bottom: "0",
+                                  border: "none",
+                                  background: "transparent",
+                                }}
+                              >
+                                <img
+                                  src={back_to_card}
+                                  alt="Previous"
+                                  style={{ width: "3rem" }}
+                                />
+                              </button>
 
-                    <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target="#languageSlider5"
-                      data-bs-slide="next"
-                      onClick={() => ShowAnsYesno([])}
-                      style={{
-                        right: "-15%",
-                        bottom: "0",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src={next_arrow}
-                        alt="Next"
-                        style={{ width: "3rem" }}
-                      />
-                    </button>
-                    </div>
+                              <button
+                                className="btn btn-light mx-2 position-absolute"
+                                type="button"
+                                data-bs-target="#languageSlider5"
+                                data-bs-slide="next"
+                                onClick={() => ShowAnsYesno([])}
+                                style={{
+                                  right: "-15%",
+                                  bottom: "0",
+                                  border: "none",
+                                  background: "transparent",
+                                }}
+                              >
+                                <img
+                                  src={next_arrow}
+                                  alt="Next"
+                                  style={{ width: "3rem" }}
+                                />
+                              </button>
+                            </div>
                             <div className="yes_or_no_ans position-absolute w-100 mt-0 pt-5 d-flex justify-content-center align-items-center gap-4"></div>
-                            
                           </div>
                         ))
                       ) : (
@@ -2596,7 +2610,6 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       )}
                     </div>
                   </div>
-                  
                 </div>
               ) : activeSections === "language" && selectedQuestionType == 2 ? (
                 // Show this section when selectedQuestionType is multiple choice questions
@@ -2843,7 +2856,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     const shouldHighlight = highlightedIndexes.includes(
                                       imgIndex
                                     );
-                                    const serialLetter = String.fromCharCode(97 + imgIndex); // 65 is ASCII for 'A'
+                                    const serialLetter = String.fromCharCode(
+                                      97 + imgIndex
+                                    ); // 65 is ASCII for 'A'
                                     // Parse correct_option safely
                                     let correctoption = [];
                                     if (
@@ -2878,28 +2893,30 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     );
 
                                     return (
-                                      <div className="position-relative"
+                                      <div
+                                        className="position-relative"
                                         key={imgIndex}
                                         style={{
                                           height: "33vh",
                                           width: "35%",
-                                         boxShadow:isCorrect?"1px -1px 5px 4px #6AB04C":""
+                                          boxShadow: isCorrect
+                                            ? "1px -1px 5px 4px #6AB04C"
+                                            : "",
                                         }}
                                       >
-                                        
                                         <span
-            className="fw-bold position-absolute"
-            style={{
-              top: "5px",
-              left: "5px",
-              background: "rgba(0, 0, 0, 0.6)",
-              color: "#fff",
-              padding: "5px 10px",
-              borderRadius: "5px",
-            }}
-          >
-            {serialLetter}
-          </span>
+                                          className="fw-bold position-absolute"
+                                          style={{
+                                            top: "5px",
+                                            left: "5px",
+                                            background: "rgba(0, 0, 0, 0.6)",
+                                            color: "#fff",
+                                            padding: "5px 10px",
+                                            borderRadius: "5px",
+                                          }}
+                                        >
+                                          {serialLetter}
+                                        </span>
 
                                         <img
                                           src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
@@ -2914,10 +2931,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                               </div>
                             </div>
                             <div className="d-flex flex-column justify-content-center mt-5">
-                              <h4
-                               
-                                className="text-black fw-bold text-dark w-100  pe-5 "
-                              >
+                              <h4 className="text-black fw-bold text-dark w-100  pe-5 ">
                                 {item.questions}
                               </h4>
                               <div className=" show_ans_multi  mt-0">
@@ -2931,8 +2945,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                           borderRadius: "10px",
                                           color: "#fff",
                                           border: "none",
-                                          fontSize:"1.2rem",
-                                         
+                                          fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
                                           handleShowAnswerMcq(
@@ -2946,16 +2959,20 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     )}
 
                                     {showAnswer && (
-                                     <button  className="px-3 py-2"
-                                     style={{
-                                       background: "transparent",
-                                       borderRadius: "10px",
-                                       color: "#6AB04C",
-                                       border: "none",
-                                       fontSize:"1.2rem",
-                                       fontWeight:"bold",
-                                      
-                                     }}>  {popupContent}</button>
+                                      <button
+                                        className="px-3 py-2"
+                                        style={{
+                                          background: "transparent",
+                                          borderRadius: "10px",
+                                          color: "#6AB04C",
+                                          border: "none",
+                                          fontSize: "1.2rem",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        {" "}
+                                        {popupContent}
+                                      </button>
                                     )}
                                   </div>
                                 )}
@@ -3069,32 +3086,45 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     const shouldHighlight = highlightedIndexes.includes(
                                       imgIndex
                                     );
-                                    const serialLetter = String.fromCharCode(97 + imgIndex); // 65 is ASCII for 'A'
+                                    const serialLetter = String.fromCharCode(
+                                      97 + imgIndex
+                                    ); // 65 is ASCII for 'A'
                                     return (
-                                      <div className="position-relative"
+                                      <div
+                                        className="position-relative"
                                         key={imgIndex}
                                         style={{
                                           height: "55vh",
                                           width: "50%",
                                           boxShadow: shouldHighlight
-                                          ? " 0px 0px 4px 1px #6AB04C"
-                                          : "none", // Highlight the correct option
+                                            ? " 0px 0px 4px 1px #6AB04C"
+                                            : "none", // Highlight the correct option
                                         }}
                                       >
-                                        <img src={icon_tick} style={{right:"0", display:shouldHighlight?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
+                                        <img
+                                          src={icon_tick}
+                                          style={{
+                                            right: "0",
+                                            display: shouldHighlight
+                                              ? "block"
+                                              : "none",
+                                          }}
+                                          alt=""
+                                          className="img-fluid position-absolute w-25"
+                                        />
                                         <span
-            className="fw-bold position-absolute"
-            style={{
-              top: "5px",
-              left: "5px",
-              background: "rgba(0, 0, 0, 0.6)",
-              color: "#fff",
-              padding: "5px 10px",
-              borderRadius: "5px",
-            }}
-          >
-            {serialLetter}
-          </span>
+                                          className="fw-bold position-absolute"
+                                          style={{
+                                            top: "5px",
+                                            left: "5px",
+                                            background: "rgba(0, 0, 0, 0.6)",
+                                            color: "#fff",
+                                            padding: "5px 10px",
+                                            borderRadius: "5px",
+                                          }}
+                                        >
+                                          {serialLetter}
+                                        </span>
                                         <img
                                           src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
                                           className="d-block img-fluid h-100"
@@ -3107,11 +3137,11 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                 )}
                               </div>
                             </div>
-                            <div style={{marginTop:"10rem"}} className="d-flex flex-column justify-content-center ">
-                              <h4
-                            
-                                className="text-black fw-bold text-dark w-100  pe-5 "
-                              >
+                            <div
+                              style={{ marginTop: "10rem" }}
+                              className="d-flex flex-column justify-content-center "
+                            >
+                              <h4 className="text-black fw-bold text-dark w-100  pe-5 ">
                                 {item.questions}
                               </h4>
                               <div className=" show_ans_multi  mt-0">
@@ -3125,8 +3155,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                           borderRadius: "10px",
                                           color: "#fff",
                                           border: "none",
-                                          fontSize:"1.2rem",
-                                        
+                                          fontSize: "1.2rem",
                                         }}
                                         onClick={() =>
                                           handleShowAnswerMcq(
@@ -3140,16 +3169,19 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                                     )}
 
                                     {showAnswer && (
-                                     <button  className="px-3 py-2"
-                                     style={{
-                                       background: "transparent",
-                                       borderRadius: "10px",
-                                       color: "#6AB04C",
-                                       border: "none",
-                                       fontSize:"1.2rem",
-                                       fontWeight:"bold",
-                                      
-                                     }}> </button>
+                                      <button
+                                        className="px-3 py-2"
+                                        style={{
+                                          background: "transparent",
+                                          borderRadius: "10px",
+                                          color: "#6AB04C",
+                                          border: "none",
+                                          fontSize: "1.2rem",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        {" "}
+                                      </button>
                                     )}
                                   </div>
                                 )}
@@ -3483,9 +3515,9 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
               {/* Right Section */}
               <div className="button_section d-flex w-25 flex-column  justify-content-center">
                 <div className="d-flex flex-column gap-5 align-items-center">
-                  <div className="rtg"
-                   
-                   
+                  <button  
+                  style={{borderRadius:"10px", background:"#6AB04C", border:"3px solid #fff"}}
+                    className="rtg px-5 py-2 text-light"
                     onClick={() => {
                       setIsNewModalOpen(false);
                       setIsSubLanguageModalOpen(false);
@@ -3494,9 +3526,7 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
                       setIsArticulationModalOpen(false);
                       setIsLanguageModalOpen(false);
                     }}
-                  >
-                  
-                  </div>
+                  >Back to game</button>
 
                   {hasData.articulation && (
                     <div className="d-flex flex-column align-items-center gap-2 text-light">
