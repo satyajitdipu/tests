@@ -92,6 +92,7 @@
   background-repeat: no-repeat;
   z-index: 1050; /* Adjust to overlay properly */
 }
+
 .close_button_new_modal {
   bottom: 141px;
   left: -3px;
@@ -172,9 +173,10 @@
 .sound_name{
   text-align-last:center;
   border-radius: 10px;
-  font-size: 2rem;
-  padding: 1rem;
-  font-weight: bold;
+  font-size: 1.2rem;
+  
+  white-space: nowrap;
+  text-overflow: ellipsis;
   background-color: #ffffff99!important;
 }
 .options_section {
@@ -183,10 +185,12 @@
 }
 
 .option-group {
-  margin-right: 20px; /* Space between option groups */
+  margin-right: 0px; /* Space between option groups */
  
 
 }
+
+
 
 
 
@@ -216,17 +220,34 @@
     background-color: transparent;
     border-radius: 10px;
 }
-.sound_position{
-  text-align-last:center;
+.sound_position {
+  text-align: center;
   border-radius: 10px;
-  font-size: 1.5rem;
-  background-color: #ffffff99!important;
+  font-size: 1.2rem;
+  background-color: #6AB04C !important;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: 600;
+  border: 3px solid #fff;
+  color: #fff;
+  text-overflow: ellipsis;
 }
+
+/* Target the dropdown options specifically */
+.sound_position option {
+  background-color: #fff !important ;
+  color: black !important; /* Ensure readability */
+}
+
 .carousel-inner {
   position: relative;
   width: 100%;
   overflow: visible;
 }
+.highlight {
+  border: 2px solid green; /* Change this to your desired highlight style */
+}
+
 
 
 
