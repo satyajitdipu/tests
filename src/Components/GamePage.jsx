@@ -970,7 +970,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   return (
     <div className="video-container">
      <iframe
-  src={`https://vtxgames.com/public/backend/assets/game_unzip_file/${game_name}/vtx/`} 
+  src={`https://virtualtxai.com/public/backend/assets/game_unzip_file/${game_name}/vtx/`} 
   title="Game Frame"
   frameBorder="0"
   allow=" fullscreen; gamepad; accelerometer; encrypted-media"
@@ -2905,7 +2905,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
           </span>
 
                                         <img
-                                          src={`https://virtualtxai.com/backend/assets/language_image/${imgName}`}
+                                          src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
                                           className="d-block img-fluid h-100"
                                           alt={`Slide ${index +
                                             1} - Image ${imgIndex + 1}`}
