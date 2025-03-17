@@ -2905,7 +2905,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
           </span>
 
                                         <img
-                                          src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
+                                          src={`https://virtualtxai.com/backend/assets/language_image/${imgName}`}
                                           className="d-block img-fluid h-100"
                                           alt={`Slide ${index +
                                             1} - Image ${imgIndex + 1}`}
