@@ -4,6 +4,7 @@ import "./Footer.css";
 import facebook from "../assets/facebook.png";
 import insta from "../assets/instgram.png";
 import linkedin from "../assets/linkedin.png";
+import yt from "../assets/yt.png";
 
 const Footer = () => {
   return (
@@ -17,28 +18,16 @@ const Footer = () => {
                 Do you want to become a VTX Games Insider? Share your email for
                 all the latest info about new games and updates
               </p>
-              <p>
-                Address <br />
-               
-              3515 W. Moreland Road, Willow Grove, PA 19090 , USA
-              </p>
+            
             </div>
-            <div className="col-12 col-xl-2 col-lg-2 col-md-2">
-              <h6 className="fw-bold">Categories</h6>
-              <ul className="p-0">
-                <li>All Games</li>
-                <li>Endless Runner</li>
-                <li>Board Games</li>
-                <li>Object Finding</li>
-              </ul>
-            </div>
+           
             <div className="col-12 col-xl-2 col-lg-2 col-md-2">
               <h6 className="fw-bold">Company</h6>
               <ul className="p-0">
-                <li>Home</li>
+               <NavLink to={"/"}>Home</NavLink>
                 <li>About us</li>
-                <li>Pricing</li>
-                <li>Games</li>
+              <NavLink to={"pricing"}>Pricing</NavLink>
+              <NavLink to={"exploregames"}>All games</NavLink>
                 <li>Privacy</li>
                 <li>Terms and conditions</li>
                 <li>FAQs</li>
@@ -74,6 +63,15 @@ const Footer = () => {
                   <a href="">
                   <img
                     src={linkedin}
+                    className="img-fluid w-75"
+                    alt="slider_img5"
+                  />
+                  </a>
+                </div>
+                <div className="col-3 p-0 text-center">
+                  <a href="">
+                  <img
+                    src={yt}
                     className="img-fluid w-75"
                     alt="slider_img5"
                   />

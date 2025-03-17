@@ -28,6 +28,8 @@ import AutoLogin from "./Components/AutoLogin";
 import Activitycard from "./Activitycard";
 import NotFound from "./Components/NotFound"; // Add this component
 
+
+
 function App() {
   return (
     <>

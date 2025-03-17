@@ -162,6 +162,14 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
   useEffect(() => {
     setIsPopupVisible(false); // Set popup visibility to false on reload
   }, []);
+  useEffect(() => {
+    // Initialize Bootstrap tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new window.bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }, []);
+
 
   // show answer function
 
@@ -945,12 +953,16 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
     setIsFluencyModalOpen(false);
   };
 
-  const handleOverlayButtonClick = () => {
+  const handleOverlayButtonClick = (event) => {
     if (isProceedClicked) {
       setIsNewModalOpen(true);
       // Handle the different modal logic here
     } else {
       setIsMainModalOpen(true); // Open the main modal
+    }
+    const tooltip = window.bootstrap.Tooltip.getInstance(event.currentTarget);
+    if (tooltip) {
+      tooltip.hide();
     }
   };
   const buttonImages = {
@@ -975,18 +987,26 @@ const Activitycard = ({ isOpen, images, descriptions }) => {
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
       ></iframe>
-      <button className="overlay-button" onClick={handleOverlayButtonClick}>
+    
+     <button className="overlay-button"  data-toggle="tooltip"
+        title="Click to open TherapyCard" onClick={handleOverlayButtonClick}>
         <img
           src={activity_button}
           alt="Articulation"
           className="img-fluid w-25"
         />
       </button>
+   
 
       {isMainModalOpen && (
         <div className="modal-container" onClick={closeModal}>
+
           <div className="modal-content " onClick={(e) => e.stopPropagation()}>
+             
             <div className="d-flex justify-content-center flex-column gap-4 ">
+             <div className="d-flex justify-content-end">
+             <button onClick={closeModal} className="w-25 py-2" style={{border:"none", }}>Back to game</button>
+             </div>
               <div className="d-flex justify-content-center gap-4 position-relative">
                 {["Articulation", "Language", "Fluency"].map((buttonLabel) => (
                   <button

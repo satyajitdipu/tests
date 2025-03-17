@@ -1,30 +1,26 @@
 import React, { useState, useEffect, createContext, useRef } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
-import "../Activity.css";
-import slider1 from "../assets/slider1.png";
-import slider2 from "../assets/slider2.png";
-import slider3 from "../assets/slider3.png";
-import back_to_card from "../assets/back_arrow.png";
-import next_arrow from "../assets/next_arrow.png";
-import annotator_img from "../assets/annotator.png";
-import activity_button from "../assets/activity_button.png";
-import articulation_img from "../assets/Articulationp.png";
-import language_img from "../assets/languagep.png";
-import fluenc_img from "../assets/Fluencyp.png";
-import articulation_img_clicked from "../assets/articulation_img_clicked.png";
-import language_img_clicked from "../assets/language_img_clicked.png";
-import fluenc_img_clicked from "../assets/fluenc_img_clicked.png";
-import language_btn from "../assets/language_btn.png";
-import fluency_img from "../assets/fluency_img.png";
-import icon_tick from "../assets/icon_tick.png";
-import { useParams } from "react-router-dom";
-import hoverSound from "../assets/sound-effect.wav"; // Import the audio file
-import { button, div } from "framer-motion/client";
+import "./Activity.css";
+import slider1 from "../src/assets/slider1.png";
+import slider2 from "../src/assets/slider2.png";
+import slider3 from "../src/assets/slider3.png";
+import back_to_card from "../src/assets/back_arrow.png";
+import next_arrow from "../src/assets/next_arrow.png";
+import annotator_img from "../src/assets/annotator.png";
+import activity_button from "../src/assets/activity_button.png";
+import articulation_img from "../src/assets/Articulationp.png";
+import language_img from "../src/assets/languagep.png";
+import fluenc_img from "../src/assets/Fluencyp.png";
+import articulation_img_clicked from "../src/assets/articulation_img_clicked.png";
+import language_img_clicked from "../src/assets/language_img_clicked.png";
+import fluenc_img_clicked from "../src/assets/fluenc_img_clicked.png";
+import language_btn from "../src/assets/language_btn.png";
+import fluency_img from "../src/assets/fluency_img.png";
 
-const GamePage = ({ isOpen, images, descriptions }) => {
-    const { game_name } = useParams();
-    console.log(game_name);
+import hoverSound from "../src/assets/sound-effect.wav"; // Import the audio file
+
+const Activitycardnew = ({ isOpen, images, descriptions }) => {
   const [isMainModalOpen, setIsMainModalOpen] = useState(false);
   const [isArticulationModalOpen, setIsArticulationModalOpen] = useState(false);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
@@ -85,82 +81,25 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   const [popupMessage, setPopupMessage] = useState("");
   const [isShowanswer, setShowanswer] = useState(true);
   const [popupContent, setPopupContent] = useState("");
-  const [showAnswer, setShowAnswers] = useState(false);
-  const correctOptions = ["1", "0", "2", "3"]; // Define the correct options
-  const [Wordsentenses, setWordsentenses] = useState("");
-  const [highlightedIndexes, setHighlightedIndexes] = useState([]);
 
-  const handleShowAnswerMcq = (answers, option) => {
-    let formattedAnswer = "";
-    let formattedOption = "";
-
-    setShowAnswers(true);
-
-    try {
-      // Parse JSON if it's a string
-      const parsedAnswers =
-        typeof answers === "string" ? JSON.parse(answers) : answers;
-
-      // Ensure it's an array and format correctly
-      if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
-        formattedAnswer = parsedAnswers.join(", "); // Convert array to string
-      }
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      formattedAnswer = "Invalid format"; // Fallback in case of an error
-    }
-    try {
-      // Parse JSON if it's a string
-      const parsedAnswers =
-        typeof option === "string" ? JSON.parse(option) : option;
-
-      // Ensure it's an array and format correctly
-      if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
-        formattedOption = parsedAnswers.join(", "); // Convert array to string
-      }
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      formattedOption = "Invalid format"; // Fallback in case of an error
-    }
+  const handleShowAnswerMcq = (answers) => {
     console.log(answers);
-    console.log(formattedOption);
-
-    setPopupContent(formattedAnswer);
-    setHighlightedIndexes(formattedOption);
+    setPopupContent(answers);
     setIsPopupVisible((prev) => !prev);
     // Hide the popup after 4 seconds
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 3000);
   };
+
   const handleDisplayAnswer = (answers) => {
-    console.log("Raw Answer:", answers);
-    setShowAnswers(true);
-
-    let formattedAnswer = "";
-
-    try {
-      // Parse JSON if it's a string
-      const parsedAnswers =
-        typeof answers === "string" ? JSON.parse(answers) : answers;
-
-      // Ensure it's an array and format correctly
-      if (Array.isArray(parsedAnswers) && parsedAnswers.length > 0) {
-        formattedAnswer = parsedAnswers.join(", "); // Convert array to string
-      }
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      formattedAnswer = "Invalid format"; // Fallback in case of an error
-    }
-    console.log(formattedAnswer);
-    setPopupContent(formattedAnswer);
+    console.log(answers);
+    setPopupContent(answers);
     setIsPopupVisible(true);
-
     setTimeout(() => {
       setIsPopupVisible(false);
     }, 4000);
   };
-
   useEffect(() => {
     setIsPopupVisible(false); // Set popup visibility to false on reload
   }, []);
@@ -177,8 +116,6 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   };
 
   const ShowAns = (answers) => {
-    setShowAnswers(true);
-
     let parsedAnswers = [];
 
     try {
@@ -190,25 +127,28 @@ const GamePage = ({ isOpen, images, descriptions }) => {
     // Extract the first item from the parsed array
     const displayAnswer =
       parsedAnswers.length > 0 ? parsedAnswers[0] : "No Answer";
-    setPopupContent(displayAnswer);
+
     setInputValue(displayAnswer);
     setPopupMessage(displayAnswer); // Set the message for the popup
     setIsPopupVisible(true); // Show the popup
 
     console.log(displayAnswer);
+
+    // Hide the popup after 4 seconds
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 4000);
   };
 
   const handleNextSinglequestion = () => {
     setInputValue(""); // Clear input on next
     setIsPopupVisible(false);
     setHighlightedAnswer(null);
-    setShowAnswers(false);
   };
 
   const handlePrevSinglequestion = () => {
     setInputValue(""); // Clear input on prev
     setIsPopupVisible(false);
-    setShowAnswers(false);
     setHighlightedAnswer(null);
   };
 
@@ -254,7 +194,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   //articulation filter
   const positionMapping = {
     Initial: 1,
-    medial: 2,
+    Middle: 2,
     Final: 3,
   };
 
@@ -276,14 +216,14 @@ const GamePage = ({ isOpen, images, descriptions }) => {
       setSelectedSentence(storedSelections[selectedSound]?.[1]?.[0] || ""); // First sentence type
     }
   }, [selectedSound, storedSelections]); // Added storedSelections as dependency
-  console.log(selectedSentence);
+
   const ArfilteredData = Object.keys(ArticulationData)
     .filter((key) => !selectedSound || key === selectedSound) // Filter by sound
     .reduce((acc, key) => {
       acc[key] = ArticulationData[key].filter((item) => {
         const mappedPosition = positionMapping[selectedPosition] || null;
         const matchesPosition =
-          !selectedPosition || item.position == mappedPosition;
+          !selectedPosition || item.position_mapped == mappedPosition;
         const matchesSentence =
           !selectedSentence || item.sentence === selectedSentence;
         return matchesPosition && matchesSentence;
@@ -291,27 +231,14 @@ const GamePage = ({ isOpen, images, descriptions }) => {
       return acc;
     }, {});
 
-  // Handle 'Words' case separately
-  const mappedPosition = positionMapping[selectedPosition] || null;
-
-  const wordFilteredData =
-    selectedSentence === "Words" && Wordsentenses[selectedSound]
-      ? Wordsentenses[selectedSound].filter(
-          (word) => !selectedPosition || word.position == mappedPosition
-        )
-      : null;
   //language filter
   useEffect(() => {
-    ShowAnsYesno([]);
-    setHighlightedIndexes([]);
     if (Filtercat.length > 0) {
       setSelectedLanguageType(Filtercat[0].id); // Set first value on render
     }
   }, [Filtercat]); // Runs when Filtercat changes
   useEffect(() => {
-    ShowAnsYesno([])
-    setHighlightedIndexes([]);
-    console.log(selectedSubCategory, "subcat");
+    console.log(selectedSubCategory);
     setIsPopupVisible(false);
     let filtered = LanguageData;
     console.log(selectedQuestionType);
@@ -319,21 +246,18 @@ const GamePage = ({ isOpen, images, descriptions }) => {
       filtered = filtered.filter(
         (item) => item.language_type_id == selectedLanguageType
       );
-      setShowAnswers(false);
     }
     if (selectedSubCategory) {
       filtered = filtered.filter(
         (item) => item.sub_category_id == selectedSubCategory
       );
       setInputValue(""); // Clear input on next
-      setShowAnswers(false);
     }
-     if (selectedQuestionType) {
+    if (selectedQuestionType) {
       filtered = filtered.filter(
         (item) => item.question_type_id == selectedQuestionType
       );
       setInputValue(""); // Clear input on next
-      setShowAnswers(false);
     }
     console.log(filtered);
     setFilteredData(filtered);
@@ -668,7 +592,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
         fluency: false,
         language: false,
       };
-      console.log(storedSelections, "sssss");
+
       // Fetch articulation images if selections exist
       if (storedSelections && Object.keys(storedSelections).length > 0) {
         response = await axios.post(
@@ -677,8 +601,6 @@ const GamePage = ({ isOpen, images, descriptions }) => {
         );
         if (response.data.success) {
           setArticulationData(response.data.data);
-          setWordsentenses(response.data.word);
-          console.log(response.data);
           localHasData.articulation = true; // Articulation data is available
         } else {
           console.error("Image API Error:", response.data.message);
@@ -969,15 +891,14 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   };
   return (
     <div className="video-container">
-     <iframe
-  src={`https://vtxgames.com/public/backend/assets/game_unzip_file/${game_name}/vtx/`} 
-  title="Game Frame"
-  frameBorder="0"
-  allow=" fullscreen; gamepad; accelerometer; encrypted-media"
-  referrerPolicy="strict-origin-when-cross-origin"
-  allowFullScreen
-></iframe>
-
+      <iframe
+        src="https://vtxgames.com/public/backend/assets/game_unzip_file/1811708053661215/vtx/"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      ></iframe>
       <button className="overlay-button" onClick={handleOverlayButtonClick}>
         <img
           src={activity_button}
@@ -1310,6 +1231,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
             onClick={(e) => e.stopPropagation()}
             style={{ background: "transparent" }}
           >
+           
             <div className="d-flex justify-content-between gap-2 mb-5">
               <div
                 style={{
@@ -1645,6 +1567,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
               padding: "20px",
             }}
           >
+          
             <div className="d-flex justify-content-between gap-2">
               <div
                 style={{
@@ -1802,7 +1725,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
 
                 {/* 🔹 1st Dropdown: Select Sound */}
                 <select
-                  className="w-100 sound_name sound_position"
+                  className="w-100 sound_name"
                   onChange={(e) => setSelectedSound(e.target.value)}
                   value={selectedSound}
                 >
@@ -1862,9 +1785,8 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                     className="px-4 py-2 w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                     
+                      background: "#F0F0F0",
                       fontWeight: "500",
-                      backgroundColor:"#6AB04C !important"
                     }}
                     onClick={() => {
                       setIsArticulationModalOpen(true);
@@ -1889,6 +1811,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                     onChange={(e) => setSelectedLanguageType(e.target.value)}
                     value={selectedLanguageType}
                   >
+                    <option value="">Select Language Type</option>
                     {Filtercat.map((lang) => (
                       <option key={lang.id} value={lang.id}>
                         {lang.category_name}
@@ -1903,6 +1826,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                       onChange={(e) => setSelectedSubCategory(e.target.value)}
                       value={selectedSubCategory}
                     >
+                      <option value="">Select Subcategory</option>
                       {filteredSubCategories.map((sub) => (
                         <option key={sub.id} value={sub.id}>
                           {sub.category_name}
@@ -1918,6 +1842,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                       onChange={(e) => setSelectedQuestionType(e.target.value)}
                       value={selectedQuestionType}
                     >
+                      <option value="">Select Question Type</option>
                       {filteredQuestions.map((question, index) => (
                         <option key={index} value={question.question_type_id}>
                           {question.question_type_name}
@@ -1938,20 +1863,19 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                   />
                   Annotator
                 </div>
-                <div className="back_to_main_menu mt-5">
+                <div  className="back_to_main_menu mt-5">
                   <button
-                    onClick={() => {
-                      setIsArticulationModalOpen(false);
-                      setIsLanguageModalOpen(true);
-                      setIsFluencyModalOpen(false);
-                      closeNewModal(); // Call this if you still want to close the modal
-                    }}
+                   onClick={() => {
+                    setIsArticulationModalOpen(false);
+                    setIsLanguageModalOpen(true);
+                    setIsFluencyModalOpen(false);
+                    closeNewModal(); // Call this if you still want to close the modal
+                  }}
                     className="px-4 py-2  w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                    
+                      background: "#F0F0F0",
                       fontWeight: "500",
-                        background:"#6AB04C !important"
                     }}
                   >
                     {" "}
@@ -1980,19 +1904,18 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                 </select>
 
                 <div onClick={closeNewModal} className="back_to_main_menu mt-5">
-                  <button
-                    onClick={() => {
-                      setIsArticulationModalOpen(false);
-                      setIsLanguageModalOpen(false);
-                      setIsFluencyModalOpen(true);
-                      closeNewModal(); // Call this if you still want to close the modal
-                    }}
+                  <button  
+                  onClick={() => {
+                    setIsArticulationModalOpen(false);
+                    setIsLanguageModalOpen(false);
+                    setIsFluencyModalOpen(true);
+                    closeNewModal(); // Call this if you still want to close the modal
+                  }}
                     className="px-4 py-2  w-100 mt-5"
                     style={{
                       borderRadius: "9px",
-                   
+                      background: "#F0F0F0",
                       fontWeight: "500",
-                      background:"#6AB04C !important"
                     }}
                   >
                     {" "}
@@ -2021,40 +1944,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                 >
                   {/* Carousel Inner */}
                   <div className="carousel-inner">
-                    {selectedSentence === "Words" && wordFilteredData ? (
-                      wordFilteredData.map((item, index) => (
-                        <div
-                          className={`carousel-item ${
-                            index === 0 ? "active" : ""
-                          }`}
-                          key={index}
-                        >
-                          <img
-                            src={item.image}
-                            className="d-block w-100 img-fluid"
-                            alt={`Word Slide ${index + 1}`}
-                            style={{ height: "76vh", width: "91%" }}
-                          />
-                          {item.sound_word && (
-                             <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
-                               <h5
-                                        className="mx-4 text-center"
-                                        style={{
-                                          minWidth: "200px",
-                                          color: "black",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                              {item.sound_word
-                                .split(" ") // Split words into an array
-                                .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-                                .join(" ")} {/* Join words back into a sentence */}
-                              </h5>
-                            </div>
-                          )}
-                        </div>
-                      ))
-                    ) : Object.keys(ArfilteredData).length > 0 ? (
+                    {Object.keys(ArfilteredData).length > 0 ? (
                       Object.keys(ArfilteredData).map((key, index) => {
                         return ArfilteredData[key].map((item, itemIndex) => {
                           return (item?.images || []).map(
@@ -2076,9 +1966,10 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                     alt={`Slide ${childIndex + 1}`}
                                     style={{ height: "76vh", width: "91%" }}
                                   />
+
                                   {item.words && (
-                                    <div style={{bottom:"-7rem"}} className="carousel-caption d-none d-md-block">
-                                      <h5
+                                    <div className="carousel-caption d-none d-md-block">
+                                      <h3
                                         className="mx-4 text-center"
                                         style={{
                                           minWidth: "200px",
@@ -2086,26 +1977,8 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                           fontWeight: "bold",
                                         }}
                                       >
-                                       
-                                       {(() => {
-  if (item.sentence === "Phrases") {
-    return item.words
-      .split(" ") // Split words into an array
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-      .join(" "); // Join words back into a sentence
-  } else {
-    return item.words
-      .split(" ") // Split words into an array
-      .map((word, index) =>
-        index < 1 // Capitalize only the first two words
-          ? word.charAt(0).toUpperCase() + word.slice(1)
-          : word
-      )
-      .join(" ")} {/* Join words back into a sentence */}
-  
-})()}
-
-                                      </h5>
+                                        {item.words}
+                                      </h3>
                                     </div>
                                   )}
                                 </div>
@@ -2139,7 +2012,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                       data-bs-slide="prev"
                       style={{
                         left: "-15%",
-                        bottom: "0",
+                        bottom:"0",
                         border: "none",
                         background: "transparent",
                       }}
@@ -2159,7 +2032,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                       data-bs-slide="next"
                       style={{
                         right: "-15%",
-                        bottom: "0",
+                        bottom:"0",
                         border: "none",
                         background: "transparent",
                       }}
@@ -2182,7 +2055,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                   <div
                     style={{
                       borderRadius: "30px",
-                      width: "90%",
+                      width: "44rem",
                       height: "94vh",
                     }}
                     id="languageSlider5"
@@ -2216,35 +2089,60 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                               <h4 className="text-dark fw-bold ">
                                 {item.questions}
                               </h4>
+                              {isPopupVisible && (
+                                <div
+                                  className="chat-popup "
+                                  style={{
+                                    width: "19rem",
+                                    color: "#fff",
+                                    position: "absolute",
+                                    left: "60%", // Center horizontally
+                                    transform:
+                                      "translateX(-0%) translateY(-12%)", // Adjust position to center and move above
+                                    background: "#6AB04C", // Background color for the chat bubble
+                                    color: "white", // Text color
+                                    padding: "10px 15px",
+                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                    border: "5px solid #fff", // Border color
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    zIndex: 1000,
 
-                              {selectedSubCategory !== 8 && (
-                                <div>
-                                  {!showAnswer && (
-                                    <button
-                                      onClick={() =>
-                                        handleDisplayAnswer(item.answers)
-                                      }
-                                      className="px-3 py-2"
-                                      style={{
-                                        background: "#6AB04C",
-                                        borderRadius: "10px",
-                                        color: "#fff",
-                                        border: "none",
-                                      }}
-                                    >
-                                      Show Answer
-                                    </button>
-                                  )}
-
-                                  {showAnswer && (
-                                    <h4
-                                      className=" fw-bold  mt-2 showans_sec"
-                                      style={{ color: "#6AB04C" }}
-                                    >
-                                      {popupContent}
-                                    </h4>
-                                  )}
+                                    opacity: 1,
+                                    marginBottom: "10px", // Space between popup and content
+                                  }}
+                                >
+                                  <h6 className="text-light">{popupContent}</h6>
+                                  <div
+                                    className="chat-arrow d-none"
+                                    style={{
+                                      position: "absolute",
+                                      top: "100%", // Position the arrow below the popup
+                                      left: "6%", // Center the arrow
+                                      transform: "translateX(-50%)", // Center the arrow
+                                      width: "0",
+                                      height: "0",
+                                      borderLeft: "10px solid transparent",
+                                      borderRight: "10px solid transparent",
+                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                    }}
+                                  />
                                 </div>
+                              )}
+                              {selectedSubCategory !== 8 && (
+                                <button
+                                  onClick={() =>
+                                    handleDisplayAnswer(item.answers)
+                                  }
+                                  className="px-3 py-2"
+                                  style={{
+                                    background: "#6AB04C",
+                                    borderRadius: "10px",
+                                    color: "#fff",
+                                    border: "none",
+                                  }}
+                                >
+                                  Show Answer
+                                </button>
                               )}
                             </div>
                           </div>
@@ -2265,183 +2163,6 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                         </div>
                       )}
                     </div>
-                    <div
-                      style={{ marginTop: "4rem" }}
-                      className="d-flex align-items-center justify-content-center "
-                    >
-                      {/* Prev Button */}
-                      <button
-                        className="btn btn-light mx-2 position-absolute"
-                        type="button"
-                        data-bs-target="#languageSlider5" // Fixed target ID
-                        data-bs-slide="prev"
-                        onClick={() => {
-                          handleDisplayAnswer([]);
-                          setShowAnswers(false);
-                        
-                      }} // Clears correct answers
-                        style={{
-                          left: "-15%",
-                          border: "none",
-                          background: "transparent",
-                        }}
-                      >
-                        <img
-                          src={back_to_card}
-                          alt="Previous"
-                          style={{ width: "3rem" }}
-                        />
-                      </button>
-
-                      {/* Next Button */}
-                      <button
-                        className="btn btn-light mx-2 position-absolute"
-                        type="button"
-                        data-bs-target="#languageSlider5" // Fixed target ID
-                        onClick={() => {
-                          handleDisplayAnswer([]);
-                          setShowAnswers(false);
-                        }}
-                        // Clears correct answers
-                        data-bs-slide="next"
-                        style={{
-                          right: "-15%",
-                          border: "none",
-                          background: "transparent",
-                        }}
-                      >
-                        <img
-                          src={next_arrow}
-                          alt="Next"
-                          style={{ width: "3rem" }}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : activeSections == "language" && selectedSubCategory == 8 ? (
-                // Show this section when yes or no is 1
-                <div
-                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
-                  style={{ borderRadius: "10px", background: "transparent" }}
-                >
-                  <div
-                    style={{
-                      borderRadius: "30px",
-                      width: "90%",
-                      height: "94vh",
-                      position: "relative",
-                    }}
-                    id="languageSlider5"
-                    className="carousel bg-light p-4 ms-5"
-                    data-bs-ride="false"
-                    data-bs-interval="false"
-                    data-bs-pause="true"
-                  >
-                    <div className="carousel-inner position-relative">
-                      {filteredData.length > 0 ? (
-                        filteredData.map((item, index) => (
-                          <div
-                            key={item.id}
-                            className={`carousel-item ${
-                              index === 0 ? "active" : ""
-                            }`}
-                          >
-                            <div
-                              className="carousel-caption d-block  text-dark"
-                              style={{
-                                position: "absolute",
-                                top: "50%",
-                              }}
-                            >
-                               <img
-                              src={item.image_url}
-                              className="d-block w-100 img-fluid"
-                              alt={`Slide ${index + 1}`}
-                              style={{ height: "76vh", width: "91%" }}
-                            />
-                              <h4 className="text-dark fw-bold">
-                              Q. {item.questions}
-                            </h4>
-                              
-                              {/* {JSON.parse(item.answers).map((answer, i) => {
-                                const match = answer.match(/^(.*?):\s*(.*)$/); // Split heading and content
-                                return match ? (
-                                  <p key={i}>
-                                    <strong>{match[1]}</strong> <br />{" "}
-                                    {match[2]}
-                                  </p>
-                                ) : (
-                                  <p key={i}>{answer}</p> // If no colon, display normally
-                                );
-                              })} */}
-                              
-                            </div>
-                           
-                              
-                              </div>
-                            
-                    
-                          
-                        ))
-                      ) : (
-                        <div className="carousel-item active">
-                          <img
-                            src="default-image-url"
-                            className="d-block w-100 img-fluid"
-                            alt="Default Slide"
-                            style={{ height: "560px", objectFit: "cover" }}
-                          />
-                          <div className="carousel-caption d-block">
-                            <h3 className="text-black fw-bold">
-                              No Data Available
-                            </h3>
-                          </div>
-                          
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Corrected Next & Prev Buttons */}
-                    <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target="#languageSlider5"
-                      data-bs-slide="prev"
-                      onClick={() => setShowCorrectAnswer([])}
-                      style={{
-                        left: "-15%",
-                        bottom: "0",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src={back_to_card}
-                        alt="Previous"
-                        style={{ width: "3rem" }}
-                      />
-                    </button>
-
-                    <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target="#languageSlider5"
-                      data-bs-slide="next"
-                      onClick={() => setShowCorrectAnswer([])}
-                      style={{
-                        right: "-15%",
-                        bottom: "0",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src={next_arrow}
-                        alt="Next"
-                        style={{ width: "3rem" }}
-                      />
-                    </button>
                   </div>
                 </div>
               ) : activeSections == "language" && selectedQuestionType == 4 ? (
@@ -2453,7 +2174,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                   <div
                     style={{
                       borderRadius: "30px",
-                      width: "90%",
+                      width: "44rem",
                       height: "94vh",
                     }}
                     id="languageSlider5"
@@ -2477,10 +2198,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                               alt={`Slide ${index + 1}`}
                               style={{ height: "76vh", width: "91%" }}
                             />
-                            <div
-                              className="carousel-caption d-block d-flex flex-column gap-2 justify-content-center align-items-center"
-                              style={{ bottom: "-22%" }}
-                            >
+                            <div className="carousel-caption d-block d-flex flex-column gap-2 justify-content-center align-items-center" style={{bottom:"-20%"}}>
                               <h4 className="text-dark fw-bold">
                                 {item.questions}
                               </h4>
@@ -2518,68 +2236,26 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                   No
                                 </div>
                                 {selectedSubCategory !== 8 && (
-                                  <button
-                                    className="px-3 py-2"
-                                    style={{
-                                      background: "#6AB04C",
-                                      borderRadius: "10px",
-                                      color: "#fff",
-                                      border: "none",
-                                    }}
-                                    onClick={() => ShowAnsYesno(item.answers)}
-                                  >
-                                    Show Answer
-                                  </button>
-                                )}
+                                <button
+                                  className="px-3 py-2"
+                                  style={{
+                                    background: "#6AB04C",
+                                    borderRadius: "10px",
+                                    color: "#fff",
+                                    border: "none",
+                                  }}
+                                  onClick={() => ShowAnsYesno(item.answers)}
+                                >
+                                  Show Answer
+                                </button>
+                              )}
                               </div>
+                             
                             </div>
- {/* Corrected Next & Prev Buttons */}
- <div
-                      style={{ marginTop: "-1rem" }}
-                      className="d-flex align-items-center justify-content-center "
-                    >
- <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target="#languageSlider5"
-                      data-bs-slide="prev"
-                      onClick={() => setShowCorrectAnswer([])}
-                      style={{
-                        left: "-15%",
-                        bottom: "0",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src={back_to_card}
-                        alt="Previous"
-                        style={{ width: "3rem" }}
-                      />
-                    </button>
 
-                    <button
-                      className="btn btn-light mx-2 position-absolute"
-                      type="button"
-                      data-bs-target="#languageSlider5"
-                      data-bs-slide="next"
-                      onClick={() => ShowAnsYesno([])}
-                      style={{
-                        right: "-15%",
-                        bottom: "0",
-                        border: "none",
-                        background: "transparent",
-                      }}
-                    >
-                      <img
-                        src={next_arrow}
-                        alt="Next"
-                        style={{ width: "3rem" }}
-                      />
-                    </button>
-                    </div>
-                            <div className="yes_or_no_ans position-absolute w-100 mt-0 pt-5 d-flex justify-content-center align-items-center gap-4"></div>
+                            <div className="yes_or_no_ans position-absolute w-100 mt-0 pt-5 d-flex justify-content-center align-items-center gap-4">
                             
+                            </div>
                           </div>
                         ))
                       ) : (
@@ -2599,7 +2275,6 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                       )}
                     </div>
                   </div>
-                  
                 </div>
               ) : activeSections === "language" && selectedQuestionType == 2 ? (
                 // Show this section when selectedQuestionType is multiple choice questions
@@ -2639,7 +2314,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                     minWidth: "300px", // Set a minimum width to prevent shrinking too much
                                   }}
                                 />
-                                <h4 className="text-black fw-bold text-dark w-100  pe-0 ">
+                                <h4 className="text-black fw-bold text-dark w-100  pe-5 ">
                                   {item.questions}
                                 </h4>
                               </div>
@@ -2670,7 +2345,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                             .map((answer, index) => (
                                               <h5
                                                 key={index}
-                                                className=""
+                                                className="text-dark"
                                                 style={{
                                                   background: showCorrectAnswer.includes(
                                                     index
@@ -2698,7 +2373,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                             .map((answer, index) => (
                                               <h5
                                                 key={index + 2}
-                                                className=" me-0"
+                                                className="text-dark me-4"
                                                 style={{
                                                   background: showCorrectAnswer.includes(
                                                     index + 2
@@ -2810,236 +2485,8 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                     </div>
                   </div>
                 </div>
-              ) : activeSections === "language" &&
-                selectedSubCategory == 29 &&
-                selectedQuestionType == 3 ? (
-                // preposition
-                <div
-                  className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
-                  style={{ borderRadius: "10px", background: "transparent" }}
-                >
-                  <div
-                    style={{
-                      borderRadius: "30px",
-                      width: "90%",
-                      height: "94vh",
-                    }}
-                    id="languageSlider2"
-                    className="carousel bg-light p-4 ms-5"
-                    data-bs-ride="false"
-                    data-bs-interval="false"
-                    data-bs-pause="true"
-                  >
-                    <div className="carousel-inner">
-                      {filteredData.length > 0 ? (
-                        filteredData.map((item, index) => (
-                          <div
-                            key={item.id}
-                            className={`carousel-item ${
-                              index === 0 ? "active" : ""
-                            }`}
-                          >
-                            <div className="d-flex flex-column gap-2">
-                              <div className="d-flex flex-wrap gap-3 justify-content-around">
-                                {JSON.parse(item.image).map(
-                                  (imgName, imgIndex) => {
-                                    const shouldHighlight = highlightedIndexes.includes(
-                                      imgIndex
-                                    );
-                                    const serialLetter = String.fromCharCode(97 + imgIndex); // 65 is ASCII for 'A'
-                                    // Parse correct_option safely
-                                    let correctoption = [];
-                                    if (
-                                      typeof item.correct_option === "string"
-                                    ) {
-                                      try {
-                                        correctoption = JSON.parse(
-                                          item.correct_option
-                                        ).map(Number); // Convert to numbers
-                                      } catch (error) {
-                                        console.error(
-                                          "Error parsing correct_option:",
-                                          error
-                                        );
-                                      }
-                                    } else if (
-                                      Array.isArray(item.correct_option)
-                                    ) {
-                                      correctoption = item.correct_option.map(
-                                        Number
-                                      ); // Convert to numbers
-                                    }
-
-                                    console.log(
-                                      "Correct Option (Parsed):",
-                                      correctoption
-                                    );
-
-                                    // Check if the current index should be highlighted
-                                    const isCorrect = correctoption.includes(
-                                      imgIndex
-                                    );
-
-                                    return (
-                                      <div className="position-relative"
-                                        key={imgIndex}
-                                        style={{
-                                          height: "33vh",
-                                          width: "35%",
-                                         boxShadow:isCorrect?"1px -1px 5px 4px #6AB04C":""
-                                        }}
-                                      >
-                                        
-                                        <span
-            className="fw-bold position-absolute"
-            style={{
-              top: "5px",
-              left: "5px",
-              background: "rgba(0, 0, 0, 0.6)",
-              color: "#fff",
-              padding: "5px 10px",
-              borderRadius: "5px",
-            }}
-          >
-            {serialLetter}
-          </span>
-
-                                        <img
-                                          src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
-                                          className="d-block img-fluid h-100"
-                                          alt={`Slide ${index +
-                                            1} - Image ${imgIndex + 1}`}
-                                        />
-                                      </div>
-                                    );
-                                  }
-                                )}
-                              </div>
-                            </div>
-                            <div className="d-flex flex-column justify-content-center mt-5">
-                              <h4
-                               
-                                className="text-black fw-bold text-dark w-100  pe-5 "
-                              >
-                                {item.questions}
-                              </h4>
-                              <div className=" show_ans_multi  mt-0">
-                                {selectedSubCategory !== 8 && (
-                                  <div>
-                                    {!showAnswer && (
-                                      <button
-                                        className="px-3 py-2"
-                                        style={{
-                                          background: "#6AB04C",
-                                          borderRadius: "10px",
-                                          color: "#fff",
-                                          border: "none",
-                                          fontSize:"1.2rem",
-                                         
-                                        }}
-                                        onClick={() =>
-                                          handleShowAnswerMcq(
-                                            item.answers,
-                                            item.correct_option
-                                          )
-                                        } // Pass both answers and correct optio
-                                      >
-                                        Show Answer
-                                      </button>
-                                    )}
-
-                                    {showAnswer && (
-                                     <button  className="px-3 py-2"
-                                     style={{
-                                       background: "transparent",
-                                       borderRadius: "10px",
-                                       color: "#6AB04C",
-                                       border: "none",
-                                       fontSize:"1.2rem",
-                                       fontWeight:"bold",
-                                      
-                                     }}>  {popupContent}</button>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="carousel-item active">
-                          <img
-                            src="default-image-url"
-                            className="d-block w-100 img-fluid"
-                            alt="Default Slide"
-                            style={{ height: "600px", objectFit: "cover" }}
-                          />
-                          <div className="carousel-caption d-block">
-                            <h3 className="text-black fw-bold">
-                              No Data Available
-                            </h3>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div
-                      style={{ marginTop: "-1rem" }}
-                      className="d-flex align-items-center justify-content-center "
-                    >
-                      {/* Prev Button */}
-                      <button
-                        className="btn btn-light mx-2 position-absolute"
-                        type="button"
-                        data-bs-target="#languageSlider2"
-                        data-bs-slide="prev"
-                        onClick={() => {
-                          setHighlightedIndexes([]);
-                          setShowCorrectAnswer([]);
-                          setShowAnswers(false);
-                        }}
-                        // Clears correct answers
-                        style={{
-                          left: "-15%",
-                          border: "none",
-                          background: "transparent",
-                        }}
-                      >
-                        <img
-                          src={back_to_card}
-                          alt="Previous"
-                          style={{ width: "3rem" }}
-                        />
-                      </button>
-
-                      {/* Next Button */}
-                      <button
-                        className="btn btn-light mx-2 position-absolute"
-                        type="button"
-                        data-bs-target="#languageSlider2"
-                        onClick={() => {
-                          setShowCorrectAnswer([]);
-                          setHighlightedIndexes([]);
-
-                          setShowAnswers(false);
-                        }} // Clears correct answers
-                        data-bs-slide="next"
-                        style={{
-                          right: "-15%",
-                          border: "none",
-                          background: "transparent",
-                        }}
-                      >
-                        <img
-                          src={next_arrow}
-                          alt="Next"
-                          style={{ width: "3rem" }}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
               ) : activeSections === "language" && selectedQuestionType == 3 ? (
-                // sight words
+                // Show this section when selectedQuestionType is multiple image with single  question
                 <div
                   className="slider_section_for_language d-flex flex-column align-items-center w-75 mx-3 p-4"
                   style={{ borderRadius: "10px", background: "transparent" }}
@@ -3047,7 +2494,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                   <div
                     style={{
                       borderRadius: "30px",
-                      width: "80%",
+                      width: "44rem",
                       height: "94vh",
                     }}
                     id="languageSlider2"
@@ -3066,95 +2513,89 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                             }`}
                           >
                             <div className="d-flex flex-column gap-2">
-                              <div className="d-flex  gap-1 justify-content-between">
+                              <div className="d-flex flex-wrap gap-2 justify-content-between">
                                 {JSON.parse(item.image).map(
-                                  (imgName, imgIndex) => {
-                                    const shouldHighlight = highlightedIndexes.includes(
-                                      imgIndex
-                                    );
-                                    const serialLetter = String.fromCharCode(97 + imgIndex); // 65 is ASCII for 'A'
-                                    return (
-                                      <div className="position-relative"
-                                        key={imgIndex}
-                                        style={{
-                                          height: "55vh",
-                                          width: "50%",
-                                          boxShadow: shouldHighlight
-                                          ? " 0px 0px 4px 1px #6AB04C"
-                                          : "none", // Highlight the correct option
-                                        }}
-                                      >
-                                        <img src={icon_tick} style={{right:"0", display:shouldHighlight?"block":"none"}} alt="" className="img-fluid position-absolute w-25" />
-                                        <span
-            className="fw-bold position-absolute"
-            style={{
-              top: "5px",
-              left: "5px",
-              background: "rgba(0, 0, 0, 0.6)",
-              color: "#fff",
-              padding: "5px 10px",
-              borderRadius: "5px",
-            }}
-          >
-            {serialLetter}
-          </span>
-                                        <img
-                                          src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
-                                          className="d-block img-fluid h-100"
-                                          alt={`Slide ${index +
-                                            1} - Image ${imgIndex + 1}`}
-                                        />
-                                      </div>
-                                    );
-                                  }
+                                  (imgName, imgIndex) => (
+                                    <img
+                                      key={imgIndex}
+                                      src={`https://vtxgames.com/backend/assets/language_image/${imgName}`}
+                                      className="d-block img-fluid"
+                                      alt={`Slide ${index +
+                                        1} - Image ${imgIndex + 1}`}
+                                      style={{
+                                        height: "33vh",
+                                        width: "35%",
+                                      }}
+                                    />
+                                  )
                                 )}
                               </div>
                             </div>
-                            <div style={{marginTop:"10rem"}} className="d-flex flex-column justify-content-center ">
+                            <div>
                               <h4
-                            
+                                style={{ marginTop: "1rem" }}
                                 className="text-black fw-bold text-dark w-100  pe-5 "
                               >
                                 {item.questions}
                               </h4>
                               <div className=" show_ans_multi  mt-0">
-                                {selectedSubCategory !== 8 && (
-                                  <div>
-                                    {!showAnswer && (
-                                      <button
-                                        className="px-3 py-2"
-                                        style={{
-                                          background: "#6AB04C",
-                                          borderRadius: "10px",
-                                          color: "#fff",
-                                          border: "none",
-                                          fontSize:"1.2rem",
-                                        
-                                        }}
-                                        onClick={() =>
-                                          handleShowAnswerMcq(
-                                            item.answers,
-                                            item.correct_option
-                                          )
-                                        } // Pass both answers and correct optio
-                                      >
-                                        Show Answer
-                                      </button>
-                                    )}
+                                {isPopupVisible && (
+                                  <div
+                                    className="chat-popup "
+                                    style={{
+                                      width: "19rem",
+                                      color: "#fff",
+                                      position: "absolute",
+                                      left: "62%", // Center horizontally
+                                      transform:
+                                        "translateX(-0%) translateY(3%)", // Adjust position to center and move above
+                                      background: "#6AB04C", // Background color for the chat bubble
+                                      color: "white", // Text color
+                                      padding: "10px 15px",
+                                      borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                      border: "5px solid #fff", // Border color
+                                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                      zIndex: 1000,
 
-                                    {showAnswer && (
-                                     <button  className="px-3 py-2"
-                                     style={{
-                                       background: "transparent",
-                                       borderRadius: "10px",
-                                       color: "#6AB04C",
-                                       border: "none",
-                                       fontSize:"1.2rem",
-                                       fontWeight:"bold",
-                                      
-                                     }}> </button>
-                                    )}
+                                      opacity: 1,
+                                      marginBottom: "10px", // Space between popup and content
+                                    }}
+                                  >
+                                    <h6 className="text-light">
+                                      {popupContent}
+                                    </h6>
+                                    <div
+                                      className="chat-arrow d-none"
+                                      style={{
+                                        position: "absolute",
+                                        top: "100%", // Position the arrow below the popup
+                                        left: "6%", // Center the arrow
+                                        transform: "translateX(-50%)", // Center the arrow
+                                        width: "0",
+                                        height: "0",
+                                        borderLeft: "10px solid transparent",
+                                        borderRight: "10px solid transparent",
+                                        borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                      }}
+                                    />
                                   </div>
+                                )}
+                                {selectedSubCategory !== 8 && (
+                                  <button
+                                    className="px-3 py-2"
+                                    style={{
+                                      background: "#6AB04C",
+                                      borderRadius: "10px",
+                                      color: "#fff",
+                                      border: "none",
+                                      marginTop: "2rem",
+                                    }}
+                                    onClick={() =>
+                                      handleShowAnswerMcq(item.answers)
+                                    }
+                                  >
+                                    Show Answer
+                                  </button>
                                 )}
                               </div>
                             </div>
@@ -3186,14 +2627,9 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                         type="button"
                         data-bs-target="#languageSlider2"
                         data-bs-slide="prev"
-                        onClick={() => {
-                          setHighlightedIndexes([]);
-                          setShowCorrectAnswer([]);
-                          setShowAnswers(false);
-                        }}
-                        // Clears correct answers
+                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
                         style={{
-                          left: "-15%",
+                          right: "44rem",
                           border: "none",
                           background: "transparent",
                         }}
@@ -3210,15 +2646,10 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                         className="btn btn-light mx-2 position-absolute"
                         type="button"
                         data-bs-target="#languageSlider2"
-                        onClick={() => {
-                          setShowCorrectAnswer([]);
-                          setHighlightedIndexes([]);
-
-                          setShowAnswers(false);
-                        }} // Clears correct answers
+                        onClick={() => setShowCorrectAnswer([])} // Clears correct answers
                         data-bs-slide="next"
                         style={{
-                          right: "-15%",
+                          left: "44rem",
                           border: "none",
                           background: "transparent",
                         }}
@@ -3267,54 +2698,25 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                 style={{ height: "76vh", width: "91%" }}
                               />
                             </div>
-                            <div
-                              className="carousel-caption d-block"
-                              style={{ bottom: "-22%" }}
-                            >
+                            <div className="carousel-caption d-block" style={{bottom:"-20%"}}>
                               {selectedSubCategory !== 8 && (
-                                <div className="d-flex justify-content-center gap-5">
-                                  <h4 className="text-black fw-bold text-dark mt-4">
-                                    {item.questions}
-                                  </h4>
-
-                                  {/* Popup and other components */}
-                                </div>
+                                <h4 className="text-black fw-bold text-dark mt-4">
+                                  {item.questions}
+                                </h4>
                               )}
-                              {isShowanswer && selectedSubCategory !== 8 && (
-                                <div className="d-flex justify-content-center">
-                                  {!showAnswer && (
-                                    <button
-                                      onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
-                                      className="px-3 py-2"
-                                      style={{
-                                        background: "#6AB04C",
-                                        borderRadius: "10px",
-                                        color: "#fff",
-                                        border: "none",
-                                        fontSize: "1.2rem",
-                                      }}
-                                    >
-                                      Show Answer
-                                    </button>
-                                  )}
-
-                                  {showAnswer && (
-                                    <button
-                                      className="px-3 py-2"
-                                      style={{
-                                        background: "transparent",
-                                        borderRadius: "10px",
-                                        color: "#6AB04C",
-                                        border: "none",
-                                        fontSize: "1.2rem",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {" "}
-                                      {popupContent}
-                                    </button>
-                                  )}
-                                </div>
+                                {isShowanswer && selectedSubCategory !== 8 && (
+                                <button
+                                  onClick={() => ShowAns(item.answers)} // Wrap in an arrow function
+                                  className="px-3 py-2"
+                                  style={{
+                                    background: "#6AB04C",
+                                    borderRadius: "10px",
+                                    color: "#fff",
+                                    border: "none",
+                                  }}
+                                >
+                                  Show Answer
+                                </button>
                               )}
                             </div>
 
@@ -3326,7 +2728,49 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                                 width: "100%",
                               }}
                               className="show_ans  d-flex gap-2 justify-content-center align-items-center"
-                            ></div>
+                            >
+                              {/* Chat Popup */}
+                              {isPopupVisible && (
+                                <div
+                                  className="chat-popup "
+                                  style={{
+                                    width: "19rem",
+                                    color: "#fff",
+                                    position: "absolute",
+                                    left: "62%", // Center horizontally
+                                    transform: "translateX(-0%) translateY(3%)", // Adjust position to center and move above
+                                    background: "#6AB04C", // Background color for the chat bubble
+                                    color: "white", // Text color
+                                    padding: "10px 15px",
+                                    borderRadius: "15px 0px 15px 0px", // Semi-round shape with a flat bottom
+                                    border: "5px solid #fff", // Border color
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    zIndex: 1000,
+
+                                    opacity: 1,
+                                    marginBottom: "10px", // Space between popup and content
+                                  }}
+                                >
+                                  <h6 className="text-light">{popupMessage}</h6>
+                                  <div
+                                    className="chat-arrow d-none"
+                                    style={{
+                                      position: "absolute",
+                                      top: "100%", // Position the arrow below the popup
+                                      left: "6%", // Center the arrow
+                                      transform: "translateX(-50%)", // Center the arrow
+                                      width: "0",
+                                      height: "0",
+                                      borderLeft: "10px solid transparent",
+                                      borderRight: "10px solid transparent",
+                                      borderTop: "10px solid #6AB04C", // Same color as the popup background
+                                    }}
+                                  />
+                                </div>
+                              )}
+
+                            
+                            </div>
                           </div>
                         ))
                       ) : (
@@ -3417,6 +2861,7 @@ const GamePage = ({ isOpen, images, descriptions }) => {
               >
                 <div
                   style={{
+                   
                     borderRadius: "30px",
                     width: "90%",
                     height: "94vh",
@@ -3486,9 +2931,14 @@ const GamePage = ({ isOpen, images, descriptions }) => {
               {/* Right Section */}
               <div className="button_section d-flex w-25 flex-column  justify-content-center">
                 <div className="d-flex flex-column gap-5 align-items-center">
-                  <div className="rtg"
-                   
-                   
+                  <button
+                    className="px-5 py-2 mt-0"
+                    style={{
+                      borderRadius: "10px",
+                      border: "2px solid #0F2D45",
+                      color: "#0F2D45",
+                      fontWeight: "bold",
+                    }}
                     onClick={() => {
                       setIsNewModalOpen(false);
                       setIsSubLanguageModalOpen(false);
@@ -3498,8 +2948,8 @@ const GamePage = ({ isOpen, images, descriptions }) => {
                       setIsLanguageModalOpen(false);
                     }}
                   >
-                  
-                  </div>
+                    Return to Game
+                  </button>
 
                   {hasData.articulation && (
                     <div className="d-flex flex-column align-items-center gap-2 text-light">
@@ -3593,4 +3043,4 @@ const GamePage = ({ isOpen, images, descriptions }) => {
   );
 };
 
-export default GamePage;
+export default Activitycardnew;

@@ -62,10 +62,10 @@ const Exploregames = () => {
 
   return (
     <div>
-      <section className="explore_games_sec py-4 bg-white text-white">
+      <section className="explore_games_sec py-0 bg-white text-white py-xl-4 py-lg-4 py-md-3 py-2">
         <div className="container">
           <div className="row">
-            <div className="col-xl-6 mt-5 pt-5">
+            <div className="col-xl-6 mt-5 pt-xl-5 pt-lg-5 pt-md-4 pt-2">
               <h1
                 data-aos="fade-right"
                 className="text-dark fw-bold ps-5 pt-5 mt-5"
@@ -76,11 +76,7 @@ const Exploregames = () => {
                 data-aos="fade-right"
                 className="text-dark py-xl-3 py-lg-3 py-md-2 py-1 ps-xl-5 ps-lg-4 ps-md-3 ps-1 lh-lg"
               >
-                VTX Games is a collection of specialized therapy games
-                strategically developed to increase client engagement and
-                support a variety of clear therapy goals. Specific games can be
-                selected, and suggested, which encourages a client’s progression
-                towards even greater results!
+               Get ready to play and progress with VTXGames! Our specialized therapy games make sessions engaging and effective.  
               </p>
             </div>
             <div data-aos="fade-left" className="col-xl-6">
@@ -91,7 +87,7 @@ const Exploregames = () => {
       </section>
 
       {/* Category and Age Filters */}
-      <section className="dark_blue_bg p-xl-3 p-lg-3 p-md-3 p-2">
+      <section className="dark_blue_bg p-xl-3 p-lg-3 p-md-3 p-4">
         <div className="container">
           <div className="row d-flex justify-content-center">
             <div className="col-xl-3 col-lg-3 col-md-3 col-12">
@@ -104,14 +100,16 @@ const Exploregames = () => {
             </div>
 
             {/* Filter buttons positioned outside of "All Categories" */}
+           
+           
             <div className="col-xl-2 col-lg-2 col-md-2 col-12">
               <button
-                onClick={() => handleCategoryClick("MIND")}
+                onClick={() => handleCategoryClick("SLP")}
                 className={`btn py-xl-3 py-lg-3 py-md-2 py-2 my-xl-0 my-lg-0 my-md-0 my-2 text-center rounded w-100 mb-2 ${
-                  active_btn === "MIND" ? "active_class" : "grey_bg"
+                  active_btn === "SLP" ? "active_class" : "grey_bg"
                 }`}
               >
-                MIND
+                SLP
               </button>
             </div>
             <div className="col-xl-2 col-lg-2 col-md-2 col-12">
@@ -126,15 +124,14 @@ const Exploregames = () => {
             </div>
             <div className="col-xl-2 col-lg-2 col-md-2 col-12">
               <button
-                onClick={() => handleCategoryClick("SLP")}
+                onClick={() => handleCategoryClick("MIND")}
                 className={`btn py-xl-3 py-lg-3 py-md-2 py-2 my-xl-0 my-lg-0 my-md-0 my-2 text-center rounded w-100 mb-2 ${
-                  active_btn === "SLP" ? "active_class" : "grey_bg"
+                  active_btn === "MIND" ? "active_class" : "grey_bg"
                 }`}
               >
-                SLP
+                MIND
               </button>
             </div>
-
             <div className="col-xl-3 col-lg-3 col-md-3 col-12">
               <div className="dropdown">
                 <button

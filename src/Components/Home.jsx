@@ -15,9 +15,9 @@ import slider_img2 from "../assets/slider_img2.png";
 import slider_img3 from "../assets/slider_img3.png";
 import slider_img4 from "../assets/slider_img4.png";
 import slider_img5 from "../assets/slider_img5.png";
-import pc_pic from "../assets/pc_pic.png";
+
 import about_img from "../assets/about_img.png";
-import shareathought from "../assets/shareathought.png";
+
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Backtotop from "./Backtotop";
@@ -191,10 +191,10 @@ const Home = () => {
           <div className="row">
             <div className="col-12 col-lg-6 col-md-12 p-3 p-sm-3 p-lg-5 mt-xl-5 mt-lg-5 mt-md-3 mt-3 ">
               <h1 className="fw-bold fs-lg-5 fs-md-3 mt-xl-0 mt-lg-0 mt-md-2 mt-2">
-                VTX Games: Redefining Therapy Through Play!
+                VTXGames: Redefining Therapy Through Play!
               </h1>
               <p className="mb-0">
-                Dive into the realm of VTX Games, the next generation in
+                Dive into the realm of VTXGames, the next generation in
                 therapy. A curated library filled with custom-built, innovative
                 therapy and activity materials for pediatrics through adults.
                 These games aren't just fun; they're tailored to seamlessly fit
@@ -300,7 +300,7 @@ const Home = () => {
             >
               <div className="card-body orange_card  m-1 m-lg-0 m-md-0 pointer">
                 <h5 className="fs-5 lh-lg fw-bolder text-white pt-xl-3 pt-lg-3 pt-md-2 pt-2">
-                  Speech <br /> Therapist
+                  Speech <br /> Therapists
                 </h5>
                 <div className="py-3 py-lg-2 py-md-2 text-end">
                   <img src={card_img1} alt="card_img1" className="img-fluid" />
@@ -315,7 +315,7 @@ const Home = () => {
             >
               <div className="card-body orange_card2  m-1 m-lg-0 m-md-0">
                 <h5 className="lh-lg fw-bolder fs-5 text-white pt-xl-3 pt-lg-3 pt-md-2 pt-2">
-                  Occupational <br /> Therapist
+                  Occupational <br /> Therapists
                 </h5>
                 <div className="py-3 py-lg-2 py-md-2 text-end">
                   <img src={card_img2} alt="card_img1" className="img-fluid" />
@@ -328,9 +328,9 @@ const Home = () => {
               className="col-12 col-lg-3 col-md-3"
               onClick={handleClickpt}
             >
-              <div className="card-body orange_card3  m-1 m-lg-0 m-md-0">
+              <div className="card-body orange_card3  m-1 m-lg-0 m-md-0 ">
                 <h5 className="lh-lg fw-bolder fs-5 text-white pt-xl-3 pt-lg-3 pt-md-2 pt-2">
-                  Psychologist or <br /> Behavioral Therapists
+                Mental Health <br /> Providers
                 </h5>
                 <div className="py-3 py-lg-2 py-md-2 text-end">
                   <img src={card_img3} alt="card_img1" className="img-fluid" />
@@ -467,18 +467,10 @@ const Home = () => {
             </div>
             <div className="col-12 col-xl-5 col-lg-12  col-md-12 pt-4 pe-lg-4 pe-md-5 pe-3 ps-xl-3 ps-lg-5 ps-md-5 ps-4">
               <h3 data-aos="fade-left" className="fw-bold text-white">
-                About us
+                Know us better
               </h3>
-              <p data-aos="fade-left" className=" text-white lh-lg">
-                From the therapists and designers of RemoteSpeech, VTX Games is
-                a library of custom-built, innovative therapy and activity
-                materials specifically designed for therapy and educational
-                sessions. Along with interactive activity cards, and a variety
-                of lesson goals chosen by the therapist, games are adapted to
-                fit every therapy session! Without any prep or planning, busy
-                therapists will have targeted, interactive, engaging and
-                entertaining games for therapy sessions at their fingertips!
-                Therapy has never been so easy, or more fun!
+              <p data-aos="fade-left" className=" text-white" style={{fontSize:"1.3rem"}}>
+              VTXGames is developed by a team of experienced clinicians and innovators who understand the evolving needs of therapists and their clients. 
               </p>
             </div>
           </div>
@@ -511,10 +503,45 @@ const Home = () => {
 
       <section className="my-5">
         <div className="container banner_vtx p-xl-5 p-lg-5 p-md-4 p-4">
-          <div className="row">
-            <div className="col-xl-7 col-lg-7 col-md-12 col-12">
-              <img src={pc_pic} className="img-fluid w-100 " alt="pc_pic" />
+          <div className="row d-flex justify-content-end">
+           
+            <div className="col-xl-5 col-lg-5 col-md-12 col-12">
+              <h2 className="fw-bold text-light">
+                The One Stop Shop For <br />
+                Every Therapist
+              </h2>
+              <div className="row">
+                <div className="col-7">
+                  <ul className="ps-0 mt-xl-3 mt-lg-3 mt-md-2 mt-2">
+                    <li>Extensive Material Library</li>
+                    <li className="mt-2">build-in Video Teletherapy</li>
+                    <li className="mt-2">Interactive Therapy Games</li>
+                    <li className="mt-2">Easy Scheduling</li>
+                    <li className="mt-2">Patient Intake Forms</li>
+                    <li className="mt-2">Secure Online Payment</li>
+                  </ul>
+                </div>
+                <div className="col-5 p-0 ">
+                  <ul className="ps-0 mt-xl-3 mt-lg-3 mt-md-2 mt-2">
+                    <li>Patient Billing</li>
+                    <li className="mt-2">Chat Features</li>
+                    <li className="mt-2">24 Hr Tech Support</li>
+                    <li className="mt-2">HIPPA Compliant</li>
+                  </ul>
+                </div>
+              </div>
+              <button
+                style={{ border: "none" }}
+                className="px-5 py-3 mt-3 rounded "
+              >
+                Click here to visit VirtualTx
+              </button>
             </div>
+          </div>
+        </div>
+        <div className="container banner_vtx_mobile p-xl-5 p-lg-5 p-md-4 p-4">
+          <div className="row d-flex justify-content-end">
+           
             <div className="col-xl-5 col-lg-5 col-md-12 col-12">
               <h2 className="fw-bold text-light">
                 The One Stop Shop For <br />
@@ -552,7 +579,7 @@ const Home = () => {
       </section>
 
       {/* Share a thought */}
-      <section className="my-lg-5 my-md-5 my-2 py-2 py-lg-1 py-md-2">
+      {/* <section className="my-lg-5 my-md-5 my-2 py-2 py-lg-1 py-md-2">
       <div className="container share_thought">
         <div className="row">
           <div className="col-12 col-xl-7 col-lg-7 col-md-12 p-lg-4 p-md-4 p-3">
@@ -594,7 +621,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section> */}
       <Backtotop />
     </div>
   );

@@ -8,6 +8,7 @@ import bell from "../assets/vtx_bell_icon.png";
 import whitebell from "../assets/whitebell.png";
 import logo_beta from "../assets/logowithoutborder.png";
 import settings_img from "../assets/settings.png";
+import close_icon_ee from "../assets/close_icon_ee.png";
 
 const Navbar = () => {
   const [userDatas, setUserDatas] = useState(null);
@@ -109,11 +110,11 @@ const Navbar = () => {
               <li className="nav_link">
                 <NavLink to={"/"}>Home</NavLink>
               </li>
-              <li>
-              <NavLink to={"/"} onClick={handleAboutUsClick}>About us</NavLink>
+              <li className="d-none">
+              <NavLink to={"/"} onClick={handleAboutUsClick}>About Us</NavLink>
               </li>
               <li>
-                <NavLink to={"contactus"}>Contact us</NavLink>
+                <NavLink to={"contactus"}>Contact Us</NavLink>
               </li>
               <li>
                 <NavLink to={"pricing"}>Pricing</NavLink>
@@ -122,15 +123,17 @@ const Navbar = () => {
                 <NavLink to={"exploregames"}>All games</NavLink>
               </li>
               <li>
+                <NavLink to={"therapycard"}>Therapy Cards</NavLink>
+              </li>
+              <li>
                 {isAuthenticated ? (
                   <NavLink to={"myprofile"}>My Profile</NavLink>
                 ) : (
                   <NavLink to={"/login"}>Login</NavLink>
                 )}
               </li>
-              <li>
-                <NavLink to={"therapycard"}>Therapy card</NavLink>
-              </li>
+            
+             
             </ul>
             <div className="button_sec position-relative">
               <button className="button_class me-2 d-none">Free games</button>
@@ -162,14 +165,17 @@ const Navbar = () => {
               </div>
             </div>
             <ul className={menuopen ? "" : "d-none"}>
+            <li style={{background:"transparent", display:"flex", justifyContent:"end"}} onClick={() => Setmenuopen(!menuopen)}>
+                <NavLink  to={"/"}> <img src={close_icon_ee} className="w-50" alt="close_icon_ee" /> </NavLink>
+              </li>
               <li onClick={() => Setmenuopen(!menuopen)}>
                 <NavLink to={"/"}>Home</NavLink>
               </li>
               <li onClick={() => Setmenuopen(!menuopen)}>
-                <NavLink to={"about"}>About us</NavLink>
+                <NavLink to={"about"}>About Us</NavLink>
               </li>
               <li onClick={() => Setmenuopen(!menuopen)}>
-                <NavLink to={"contactus"}>Contact us</NavLink>
+                <NavLink to={"contactus"}>Contact Us</NavLink>
               </li>
               <li onClick={() => Setmenuopen(!menuopen)}>
                 <NavLink to={"pricing"}>Pricing</NavLink>

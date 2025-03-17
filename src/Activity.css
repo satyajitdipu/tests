@@ -16,7 +16,7 @@
 .overlay-button {
   position: absolute;
   bottom: 22%;
-  right: 10%;
+  right: -7%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,6 +123,14 @@
 #fluencySlider{
   background: #FFFF !important;
 }
+
+.tooltip {
+  background-color: #4cbb16 !important; /* Change this to your desired background color */
+  color: #4cbb16 !important; /* Change this to your desired text color */
+  padding: 1rem;
+  border-radius: 0.9rem;
+}
+
 
 
 /* slider */

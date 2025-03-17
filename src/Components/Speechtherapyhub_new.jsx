@@ -11,7 +11,27 @@ import my_plan_img from "../assets/my_plan_img.png";
 
 const Myprofile = () => {
   const navigate = useNavigate();
-
+  const [billingDetails, setBillingDetails] = useState(null);
+  const fetchBillingDetails = async () => {
+    try {
+      const response = await axios.get("https://virtualtxai.com/api/billing-details", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+  
+      console.log("Billing Details:", response.data);
+      setBillingDetails(response.data.data); // Assuming you have a state setter
+  
+    } catch (error) {
+      console.error(
+        "Error fetching billing details:",
+        error.response?.data || error.message
+      );
+    }
+  };
   const handleClick = () => {
     navigate("/");
   };
@@ -122,6 +142,7 @@ const Myprofile = () => {
   };
 
   const filteredgamepage = (occupation) => {
+    console.log(occupation);
     navigate(`/Filteredoage/${occupation}`);
   };
 
@@ -231,28 +252,33 @@ const Myprofile = () => {
               </div>
             </div>
             <div className="col-xl-5 col-lg-5 col-md-5 col-12 ">
-              {rightsec ? (
-                <div className="profile_bg_blue p-xl-5 p-lg-5 p-md-4 p-3">
-                  <h4 className="fw-bold text-light">Current Plan</h4>
-                  <p className="text-light">
-                    You've currently subscribed to the QUARTERLY PLAN. Next
-                    payment on 3 Feb, 2024
-                  </p>
-                </div>
-              ) : (
-                <div className="profile_bg_grey p-xl-5 p-lg-5 p-md-4 p-3">
-                  <h4 className="fw-bold text-light">
-                    Not Subscribed to any plan
-                  </h4>
-                  <p className="text-light">
-                    Lorem ipsum dusken sske kfioopn kwel
-                  </p>
-                  <button className="py-xl-3 py-lg-3 py-md-2 py-2 px-xl-5 px-lg-5 px-md-4 px-3">
-                    Go to Pricing page
-                  </button>
-                </div>
-              )}
-            </div>
+  {billingDetails?.subscription_status === "current" ? (
+    <div className="profile_bg_blue p-xl-5 p-lg-5 p-md-4 p-3">
+      <h4 className="fw-bold text-light">Current Plan</h4>
+      <p className="text-light">
+        You've currently subscribed to the{" "}
+        {billingDetails.plan_type === "1"
+          ? "MONTHLY PLAN"
+          : billingDetails.plan_type === "2"
+          ? "QUARTERLY PLAN"
+          : billingDetails.plan_type === "3"
+          ? "YEARLY PLAN"
+          : "UNKNOWN PLAN"}
+        . Next payment on {billingDetails.current_period_end}
+      </p>
+    </div>
+  ) : (
+    <div className="profile_bg_grey p-xl-5 p-lg-5 p-md-4 p-3">
+      <h4 className="fw-bold text-light">Not Subscribed to any plan</h4>
+      <p className="text-light">You are currently not subscribed to any plan.</p>
+      <button className="py-xl-3 py-lg-3 py-md-2 py-2 px-xl-5 px-lg-5 px-md-4 px-3">
+        Go to Pricing page
+      </button>
+    </div>
+  )}
+</div>;
+
+        
           </div>
         </div>
       </section>
@@ -304,7 +330,7 @@ const Myprofile = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      filteredgamepage(occupation);
+                      filteredgamepage(userDatas.occupation);
                     }}
                     className="button_class mt-3"
                   >
@@ -358,32 +384,38 @@ const Myprofile = () => {
         </div>
       </section>
 
-      <section className=" py-xl-5 py-lg-5 py-md-4 py-3">
-        <div className="container my_current_plan p-xl-4 p-lg-4 p-md-3 p-2">
-          <div className="row">
-            <div className="col-xl-9 col-lg-9 col-md-9 col-12 pt-xl-4 pt-lg-4 pt-md-3 pt-2 ps-xl-4 ps-lg-4 ps-md-3 ps-3">
-              <h4 className="fw-bold text-light">My Current Plan</h4>
-              <p className=" text-light">
-                You've currently subscribed to the <b>QUATERLY</b> <br /> PLAN
-                Next payment on 3 Feb, 2024 <br /> <br /> Upgrade for more
-                benefits
-              </p>
+    <section className="py-xl-5 py-lg-5 py-md-4 py-3">
+      <div className="container my_current_plan p-xl-4 p-lg-4 p-md-3 p-2">
+        <div className="row">
+          <div className="col-xl-9 col-lg-9 col-md-9 col-12 pt-xl-4 pt-lg-4 pt-md-3 pt-2 ps-xl-4 ps-lg-4 ps-md-3 ps-3">
+            <h4 className="fw-bold text-light">My Current Plan</h4>
+            <p className="text-light mb-4">
+              You've currently subscribed to the{" "}
+              <b>{billingDetails?.plan_name || "N/A"}</b> PLAN
+              <br />
+              Next payment on{" "}
+              <b>{billingDetails?.next_payment_date || "N/A"}</b>
+              <br />
+              <br />
+              Upgrade for more benefits
+            </p>
 
-              <div className="btn_sec_my_current_plan mt-xl-5 mt-lg-5 mt-md-4 mt-3 d-flex gap-2">
-                <button className="grey_btn px-xl-5 px-lg-5 px-md-4 px-3 py-xl-2 py-lg-2 py-md-1 py-1">
-                  Cancel Plan
-                </button>
-                <button className="px-xl-5 px-lg-5 px-md-4 px-3 py-xl-2 py-lg-2 py-md-1 py-1 bg-light">
-                  Upgrade Plan
-                </button>
-              </div>
-            </div>
-            <div className="col-xl-3 col-lg-3 col-md-3 col-12 my_plan_img">
-              <img src={my_plan_img} className="img-fluid" alt="my_plan_img" />
+            <div className="btn_sec_my_current_plan mt-xl-5 mt-lg-5 mt-md-4 mt-3 d-flex gap-2">
+              <button className="grey_btn px-xl-5 px-lg-5 px-md-4 px-3 py-xl-2 py-lg-2 py-md-1 py-1">
+                Cancel Plan
+              </button>
+              <button className="px-xl-5 px-lg-5 px-md-4 px-3 py-xl-2 py-lg-2 py-md-1 py-1 bg-light">
+                Upgrade Plan
+              </button>
             </div>
           </div>
+          <div className="col-xl-3 col-lg-3 col-md-3 col-12 text-center">
+            <img src={billingDetails?.image_url || "default-image.png"} className="img-fluid" alt="Plan" />
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
+
     </>
   );
 };

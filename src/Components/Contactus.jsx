@@ -52,7 +52,7 @@ const Contactus = () => {
                 ></textarea>
               </div>
               <div className="btn_sec text-end">
-                <button className="send_btn py-xl-3 py-lg-3 py-md-2 py-1 px-xl-5 px-lg-4 px-md-3 px-2 rounded">Send</button>
+                <button className="send_btn py-xl-2 py-lg-2 py-md-2 py-1 px-xl-5 px-lg-5 px-md-5 px-2 rounded">Send</button>
               </div>
             </form>
           </div>

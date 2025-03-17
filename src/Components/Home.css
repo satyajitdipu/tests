@@ -177,11 +177,11 @@
 }
 
 .banner_vtx {
-  /* background-image: url(../assets/vtx_banner_gamesite.png);
+  background-image: url(../assets/vtx_banner_gamesite.png);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover; */
-  background-image: linear-gradient(-90deg, #F7B733, #5ea92fc4 );
+  background-size: cover;
+ 
   border-radius: 10px;
   height: auto;
 }
@@ -200,6 +200,9 @@
 }
 .share_thought textarea {
   width: 95%;
+}
+.banner_vtx_mobile{
+  display: none;
 }
 
 .react-multi-carousel-dot-list {
@@ -220,4 +223,22 @@
   /* .share_thought input{
       width: 60%;
    } */
+}
+
+@media (max-width: 576px) {
+  .banner_vtx_mobile{
+    display: block;
+    background: #C2B232;
+  }
+  .banner_vtx{
+    display: none;
+  }
+  .copyright_sec{
+    font-size: 0.8rem;
+  }
+  .footer_sec {
+    background-color: #1D293A;
+    color: #fff;
+    padding: 1rem;
+}
 }
