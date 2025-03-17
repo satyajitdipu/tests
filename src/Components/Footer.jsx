@@ -24,9 +24,9 @@ const Footer = () => {
             <div className="col-12 col-xl-2 col-lg-2 col-md-2">
               <h6 className="fw-bold">Company</h6>
               <ul className="p-0">
-               <NavLink to={"/"}>Home</NavLink>
-                <li>About us</li>
-              <NavLink to={"pricing"}>Pricing</NavLink>
+               <NavLink to={"/"}>Home</NavLink> 
+               
+              <NavLink to={"pricing"}>Pricing</NavLink><br />
               <NavLink to={"exploregames"}>All games</NavLink>
                 <li>Privacy</li>
                 <li>Terms and conditions</li>
